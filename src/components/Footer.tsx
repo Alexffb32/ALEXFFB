@@ -19,6 +19,24 @@ export default function Footer() {
               {siteConfig.contactEmail}
             </a>
             <p className="mt-4 max-w-sm text-sm text-line-strong">{t("body")}</p>
+            <div className="mt-4 flex gap-4 text-sm font-medium">
+              <a
+                href="https://www.instagram.com/alexffb_"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-accent"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.youtube.com/@alexffb"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-accent"
+              >
+                YouTube
+              </a>
+            </div>
           </div>
 
           <nav aria-label={t("columns.site")}>

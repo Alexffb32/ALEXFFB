@@ -3,6 +3,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://alexffb.com",
   contactEmail: "contact@alexffb.com",
   sameAs: [
-    // TODO: Alex to confirm/add real social profile URLs (Instagram, LinkedIn, X...).
+    "https://www.instagram.com/alexffb_",
+    "https://www.youtube.com/@alexffb",
   ],
 };
