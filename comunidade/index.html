@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join the Community — Alex Bento</title>
+  <meta name="description" content="Be the first to know when Alex Bento's community opens. Join the waitlist today.">
+  <meta property="og:title" content="Join the Community — Alex Bento">
+  <meta property="og:description" content="Be the first to know when Alex Bento's community opens. Join the waitlist today.">
+  <meta property="og:image" content="https://alexffb.com/framerusercontent.com/assets/FUW0a0xmC72rhJaIURldTEDs.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://alexffb.com/comunidade/">
+  <link rel="icon" href="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/waitlist.css">
+</head>
+<body>
+  <header class="wl-header">
+    <a class="wl-logo" href="/">
+      <img src="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png" alt="Alex Bento">
+      Alex Bento
+    </a>
+    <a class="wl-back" href="/">&larr; Back to home</a>
+  </header>
+
+  <main class="wl-main">
+    <p class="wl-kicker">Coming Soon</p>
+    <h1 class="wl-title">Join the Community</h1>
+    <p class="wl-body">A space to connect, learn and grow with other young entrepreneurs and builders. Leave your name and email and I'll let you know the moment it opens.</p>
+
+    <div class="wl-card">
+      <form id="waitlist-form" data-list="comunidade" data-confirmed-url="/comunidade/confirmado/">
+        <div class="wl-field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+        </div>
+        <div class="wl-field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="wl-honeypot" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <button type="submit" class="wl-submit">Join the waitlist</button>
+        <div id="waitlist-message" class="wl-message" role="alert"></div>
+      </form>
+      <p class="wl-note">By joining, you agree to receive occasional emails about this list. No spam, unsubscribe anytime.</p>
+    </div>
+  </main>
+
+  <footer class="wl-footer">
+    Copyright © Alex Bento <span id="year"></span> — <a href="mailto:contact@alexffb.com">contact@alexffb.com</a>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="/assets/waitlist.js"></script>
+</body>
+</html>
