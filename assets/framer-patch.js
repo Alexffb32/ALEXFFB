@@ -36,6 +36,24 @@
     },
   };
 
+  // The footer's "Stay connected" block only has the email link — there's
+  // no address anywhere in this export (the real Contact page with an
+  // address block was never part of the original static export, only its
+  // search index was — see README). Adds a real one as a new sibling
+  // node rather than editing existing rich-text content, since editing
+  // Framer-managed text is what gets reverted on hydration; a freshly
+  // inserted node outside its managed subtree is left alone.
+  function addAddress() {
+    var mail = document.querySelector('[data-framer-name="Mail"]');
+    if (!mail || mail.dataset.addressAdded) return;
+    mail.dataset.addressAdded = "true";
+    var p = document.createElement("p");
+    p.textContent = "A Incubadora, A Praça, Fundão, Portugal";
+    p.style.cssText =
+      "font: inherit; font-size: 0.85em; opacity: 0.6; margin: 4px 0 0; color: inherit;";
+    mail.insertAdjacentElement("afterend", p);
+  }
+
   function fixServiceIcons() {
     Object.keys(SERVICE_ICONS).forEach(function (alt) {
       var img = document.querySelector('img[alt="' + alt + '"]');
@@ -158,27 +176,19 @@
     fix();
     fixServiceIcons();
     setupContactForward();
+    addAddress();
   }
 
   fixAll();
 
-  // Framer's runtime can re-render these components after our first pass
-  // (breakpoint switch, scroll-triggered animation, etc) — keep correcting.
-  // Coalesced via rAF since the page has its own scroll/hover animations
-  // that mutate the DOM far more often than our targets actually change.
-  var scheduled = false;
-  function scheduleFix() {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(function () {
-      scheduled = false;
-      fixAll();
-    });
-  }
-  new MutationObserver(scheduleFix).observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["href"],
-  });
+  // Framer's hydration revert happens once, within ~500ms of load (verified
+  // with Playwright). A couple of staggered re-checks catch that with
+  // margin. A continuous MutationObserver was tried here before and
+  // dropped: observing the whole document body during Framer's own hero
+  // entrance animation (which mounts/animates many nodes in that window)
+  // fired this patch dozens of times a second, competing with Framer's own
+  // animation loop for the main thread — the likely cause of the header's
+  // reveal animation appearing to freeze partway through in production.
+  setTimeout(fixAll, 800);
+  setTimeout(fixAll, 2000);
 })();

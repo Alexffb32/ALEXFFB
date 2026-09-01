@@ -13,7 +13,7 @@ IN="$1"
 TMP="${IN%.mp4}.tmp.mp4"
 
 ffmpeg -y -i "$IN" \
-  -vf "scale=720:-2,format=yuv420p" \
+  -vf "scale='min(720,iw)':-2,format=yuv420p" \
   -c:v libx264 -profile:v high -crf 30 -preset slow \
   -movflags +faststart -an \
   "$TMP"

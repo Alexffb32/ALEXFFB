@@ -77,6 +77,34 @@ static markup can look right and still be wrong once hydrated.
 *(`framer.com/` mirror folder was removed — verified unused, see "What was
 fixed" below.)*
 
+## What's still only in the live Framer project
+
+Chasing down a "Los Angeles" address the site was supposed to have led to
+a bigger discovery: this repo's Contact page is missing real content that
+exists on the actual, live Framer project — an address block, an FAQ
+accordion ("What does a project look like?", pricing, scope, ROI, etc.),
+none of which is anywhere in this export (confirmed by searching every
+HTML file, the hydrated DOM at every breakpoint, and every compiled `.mjs`
+chunk actually loaded by these two pages). It only turned up in a
+`searchIndex-*.json` file and one `.mjs` chunk that **isn't loaded by
+either `index.html` or `contact/index.html`** — i.e. it belongs to a page
+this original export never captured, same as the About/Work/Blog pages
+documented in "Nav restructure" above. The fake address has been replaced
+with a real one (see "Bugs fixed" below), but if there's more real Contact
+page content (FAQ answers, etc.) worth having, it needs to be written from
+scratch here — there's nothing to "restore," the original was never
+exported.
+
+Also found while investigating: the "Shots By Me" / photography section
+on the homepage uses **stock template images**, not real photos of Alex —
+`alt` text gives it away (`Woman In The Water`, `Car`, `Spray Bottle`,
+`Woman In The Glass Way`, `Blue Space`, `Man Wearing Black Coat`, `Wine
+Bottle`). Left untouched this round since it wasn't asked for and — per
+the standing rule from earlier in this project — template content gets
+flagged for confirmation before being touched, not changed unilaterally.
+Worth a decision: remove the section, or replace with real photos if
+Alex has any to use.
+
 ## Bugs fixed
 
 - **`mailto:` pointed to `dummy@mail.com`** instead of the displayed
@@ -103,6 +131,33 @@ fixed" below.)*
   which only worked at the original nested Framer export path. Normalized
   to root-relative (`/framerusercontent.com/...`) so the site works
   self-hosted at the domain root.
+- **Framer's "Create a free website with Framer" watermark badge was
+  still showing** despite being hidden via `#__framer-badge-container` —
+  strengthened the CSS to also target `.__framer-badge` directly as a
+  second, redundant selector in case a different build/breakpoint renders
+  it under a different wrapper. Confirmed via Playwright that the actual
+  badge element on this site (there is only one — the "Use for Free"
+  button some earlier screenshots showed belongs to a page/template not
+  part of this export, its component chunk isn't even loaded here) has
+  `display: none`; if it's still visible after this, it's very likely a
+  stale cached page load — hard-refresh.
+- **The header/hero's entrance animation ("Loader" element) could freeze
+  partway through** — traced to `assets/framer-patch.js`'s own
+  `MutationObserver`, which was watching the entire document body
+  (`childList`+`subtree`) and re-ran on every DOM change. During the
+  hero's own multi-second entrance animation (which mounts/animates many
+  nodes), that fired this patch dozens of times a second, competing with
+  Framer's animation loop for the main thread. Replaced the continuous
+  observer with two staggered one-time re-checks (800ms/2000ms) — enough
+  to catch the known, one-time hydration revert (verified to happen
+  within ~500ms) without ever competing with an in-progress animation.
+- **No address anywhere on the site.** The real Contact page (with an
+  address, FAQ, etc.) was never part of this export — see "What's still
+  only in the live Framer project" below. Added a real one via
+  `assets/framer-patch.js` next to the footer's email link: **A
+  Incubadora, A Praça, Fundão, Portugal** (replacing the placeholder "49th
+  St. Los Angeles, California(CA), 90011" address that only existed in
+  the un-exported Contact page's search index — see below).
 
 ## Removed (verified unused first)
 
@@ -139,17 +194,28 @@ just the HTML.**
 
 ## Performance
 
-- The 5 videos actually used on the page were re-encoded (H.264, scaled
-  down, audio stripped since they're already `muted`, `faststart`) —
-  same visual content, same filenames (no HTML changes needed):
+- The videos actually used on the page were re-encoded (H.264, scaled
+  down — never upscaled, the script now caps at `min(720, original width)`
+  — audio stripped since they're already `muted`, `faststart`) — same
+  visual content, same filenames (no HTML changes needed):
   - `i52Lqt6...mp4`: 46 MB → 3.0 MB
   - `HLnii1d...mp4`: 42 MB → 2.4 MB
   - `fio0Geu...mp4`: 32 MB → 3.3 MB
   - `wCXHBJD...mp4`: 6.2 MB → 2.9 MB
-  - `ZxMUyWv...mp4`: 4.8 MB → 0.27 MB
-  - Spot-checked a frame from the largest change before/after — visually
-    identical. Script to repeat this for any future video:
-    `scripts/compress-video.sh` (see below).
+  - `ZrNTj0qE...mp4`: 713 KB → 264 KB — **missed in the earlier pass**: an
+    earlier session compressed `ZxMUyWv...mp4` instead, which turns out to
+    not actually be rendered anywhere on either page (verified by querying
+    the live, hydrated DOM for every `<video>` element) — this is the
+    video that's genuinely on the homepage/contact hero and it still had
+    its (unused, since the element is `muted`) audio track until now.
+  - `MLWPbW1d...mp4`: 1.7 MB → 370 KB — not found in the rendered DOM on
+    either page either; compressed anyway since that's a safe, non-risky
+    optimization regardless of whether it's still used somewhere (unlike
+    deleting it, which needs more certainty — see the
+    framerusercontent.com/{images,...} lesson above).
+  - Spot-checked a frame from each before/after — visually identical.
+    Script to repeat this for any future video: `scripts/compress-video.sh`
+    (see below).
 - Images already had no `loading` attribute anywhere; added
   `loading="lazy" decoding="async"` to all of them except the header logo
   and the hero photo (kept eager so the first paint isn't delayed).
@@ -230,6 +296,28 @@ as the waitlist endpoint. **Needs `RESEND_API_KEY`** (already set for the
 waitlist to work) **and a new `CONTACT_NOTIFY_EMAIL` env var** — set it
 to Alex's personal inbox in Vercel's Environment Variables.
 
+**Why it looked broken after that was added:** Vercel's custom domain
+(`www.alexffb.com`) doesn't automatically follow new commits on this
+branch — someone has to promote each new deployment (or merge to `main`,
+if that's the Production Branch) for it to go live. Checking Vercel's
+runtime logs for `/api/contact` showed **zero invocations ever** —
+confirming the endpoint was never actually reachable at the domain being
+tested, because the deployment carrying it hadn't been promoted yet. Not
+a code bug; see "Deploying" below.
+
+## Newsletter page redesign
+
+Originally built as a plain white-background form page, same as
+Comunidade/Merch. Restyled to open with a dark hero matching the
+homepage's actual visual language instead: the real background video
+already used elsewhere on the site (`ZrNTj0qEN7aJXpnd6hGG9lxM.mp4` — a
+genuine clip of Alex at his desk, not stock), the same italic
+"Instrument Serif" display font and red asterisk accent as the homepage's
+"Alexandre*" title, and the same thin red top bar — then the actual
+signup form sits below in its own section, in place of where an articles
+list would go. Comunidade/Merch were left as plain form pages since only
+Newsletter was asked to change; ask if you want the same treatment there.
+
 ## Analytics
 
 Google Analytics (`gtag.js`, same measurement ID already on the homepage)
@@ -291,6 +379,21 @@ the values, they're intentionally not in this repo. **The Newsletter
 audience still needs to be created** in the Resend dashboard — this
 sandbox has no network access to `api.resend.com` to do it directly — then
 set `RESEND_AUDIENCE_ID_NEWSLETTER` in Vercel's env vars.)
+
+## Deploying
+
+This project's Vercel custom domain (`www.alexffb.com`/`alexffb.com`)
+**does not automatically follow new commits on this branch** — pushing
+here only creates a new Preview deployment; something has to explicitly
+promote a deployment to Production (or merge to `main`, if that's set as
+the project's Production Branch in Settings → Git) for the live domain to
+actually update. This caused real confusion earlier: a fix would be
+pushed, verified working on the preview URL, reported as done — and the
+custom domain would still be serving the previous deployment, making a
+genuinely-fixed bug look unfixed. **Before concluding something "doesn't
+work" on the live domain, check which deployment it's actually serving**
+(Vercel dashboard → Deployments, or compare a distinguishing string in the
+page source against what the target commit should have).
 
 ## Security
 
