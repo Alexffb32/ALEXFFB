@@ -1,0 +1,241 @@
+{
+  "Metadata": {
+    "home": {
+      "title": "Alex Bento — Entrepreneur & Digital Systems Consultant",
+      "description": "Alex Bento — 18-year-old entrepreneur from Portugal building without a degree. VP of Selfmade Association. Digital systems, strategy & content.",
+      "ogDescription": "18. No degree. Built a five-figure business before I turned 18. Now I help businesses grow — and building something bigger."
+    },
+    "contact": {
+      "title": "Contact Alex Bento — Let's Talk",
+      "description": "Get in touch with Alex Bento for digital systems, marketing funnels, AI automation and design projects."
+    },
+    "comunidade": {
+      "title": "Join the Community Waitlist — Alex Bento",
+      "description": "Be the first to know when Alex Bento's community opens. Join the waitlist today."
+    },
+    "merch": {
+      "title": "Merch Waitlist — Alex Bento",
+      "description": "Sign up to be notified as soon as the Alex Bento merch drop is live."
+    }
+  },
+  "Nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Work",
+    "community": "Community",
+    "merch": "Merch",
+    "contact": "Get in touch",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "pt": "Português"
+  },
+  "Hero": {
+    "eyebrow": "Hey, Just An Intro",
+    "greeting": "Hi, I'm Alex",
+    "intro": "Hi, I'm Alex — 18, from Portugal, building without a university degree. Vice-President of Selfmade Association, founder of a five-figure agency before I turned 18, and today I help businesses build the digital systems and strategies that help them grow and scale online.",
+    "cta": "Let's Start a Conversation"
+  },
+  "AboutIntro": {
+    "kicker": "Selfmade Association",
+    "title": "Vice-President, Selfmade Association",
+    "body": "I'm the Vice-President of Selfmade Association, a youth organization based in Fundão that promotes entrepreneurship and international mobility through Erasmus+ programs. We connect young people from the interior of Portugal with opportunities abroad, and bring international youth to our region.",
+    "cta": "More about me",
+    "lifestyleLabel": "Lifestyle",
+    "lifestyleQuote": "Over 12 years of football taught me more about discipline than anything else ever could. Today I channel that same energy into the gym, into learning and into every project I take on.",
+    "lifestyleTagline": "The moment you stop evolving is the moment someone else takes your spot."
+  },
+  "Journey": {
+    "kicker": "(CQ® — 02)",
+    "title": "My Journey",
+    "items": [
+      {
+        "year": "2024",
+        "org": "Layout Agency",
+        "role": "Co-Founder",
+        "body": "I co-founded a digital agency at 16, creating funnels and digital strategies for businesses across Portugal. Before turning 18, I had already crossed five figures in revenue. I eventually left to pursue a bigger vision, but watching that agency keep growing without me is something I'll always be proud of."
+      },
+      {
+        "year": "2025",
+        "org": "Selfmade Ass.",
+        "role": "Vice-President",
+        "body": "I joined Selfmade Association and was elected Vice-President. We're a Fundão-based youth organization that uses Erasmus+ to fight for something simple: giving young people from the interior of Portugal the same international opportunities as everyone else."
+      },
+      {
+        "year": "2026",
+        "org": "Aeternus Progressus",
+        "role": "Consultant",
+        "body": "I joined Aeternus Progressus as a consultant and team member, working on marketing and business strategy while helping public and private organizations across Portugal and Europe secure European funding and navigate digitalization projects. Real clients, real projects, already running."
+      }
+    ],
+    "cta": "Contact now"
+  },
+  "Stats": {
+    "kicker": "Stats & Facts",
+    "title": "Stats & Facts",
+    "intro": "I started with no budget, no team and no roadmap. Just a clear belief that hard work and the right systems could make a difference. Every number below was earned, not given.",
+    "education": "From 2022 to 2025 I completed a Computer Programming course at Escola Profissional do Fundão, where I served as class and course representative and graduated as a merited student with a final grade of 18 out of 20.",
+    "business": [
+      { "label": "Revenue Generated", "value": "+10", "suffix": "k€", "detail": "Before turning 18 years old." },
+      { "label": "Projects Delivered", "value": "+15", "suffix": "", "detail": "Across Portugal and worldwide." },
+      { "label": "Satisfaction Rate", "value": "200", "suffix": "%", "detail": "With every client, every project." }
+    ],
+    "real": [
+      { "label": "Hackathons", "value": "3", "suffix": "×", "detail": "Times Winner" },
+      { "label": "Youth political initiatives", "value": "4", "suffix": "×", "detail": "Presidential Terms" },
+      { "label": "Erasmus Projects", "value": "5", "suffix": "×", "detail": "International Projects" },
+      { "label": "Events & Communities", "value": "6", "suffix": "×", "detail": "Successfully Organized" }
+    ]
+  },
+  "Services": {
+    "kicker": "(CQ® — 05)",
+    "title": "Premium Services",
+    "eyebrow": "Pro Services®",
+    "subtitle": "Systems, marketing, AI and design, built to work together as one.",
+    "tag1": "Convert More, Grow Faster",
+    "tag2": "Future-Proof & Scalable",
+    "cta": "View about",
+    "items": [
+      {
+        "title": "Marketing and Funnels",
+        "body": "Strategy, branding, social media and funnels that turn attention into paying clients."
+      },
+      {
+        "title": "Artificial Intelligence",
+        "body": "AI agents and automation that save time, cut costs and scale your output."
+      },
+      {
+        "title": "Design & Development",
+        "body": "Websites, apps, software and visual identities built to earn trust, convert and grow your revenue."
+      },
+      {
+        "title": "Systems & Operations",
+        "body": "Digital processes and frameworks that make your business ready to scale."
+      }
+    ]
+  },
+  "Benefits": {
+    "kicker": "(CQ® — 06)",
+    "title": "Benefits of Hiring Me",
+    "items": [
+      {
+        "title": "From idea to live. Fast",
+        "body": "Lightning-fast delivery without compromising quality.",
+        "badge": "From 0 to live in one step"
+      },
+      {
+        "title": "All in one person",
+        "body": "Direct access to me, always. You'll never wonder where things stand or what comes next. That's a promise.",
+        "badge": "Full-time support, 24/7"
+      }
+    ]
+  },
+  "Photography": {
+    "kicker": "(CQ® — 08)",
+    "eyebrow": "Shots By Me",
+    "title": "Every Pixel Clicked.",
+    "body": "Capturing moments, creating memories. Through my lens, I capture stunning visuals that bring your brand to life with clarity, emotion, and impact.",
+    "cta": "Book an appointment",
+    "alt": {
+      "horse": "Alex petting a horse in a field at dusk",
+      "paris": "Alex looking at the Eiffel Tower at night in Paris",
+      "townSquare": "Alex standing in a park in front of a historic building in Portugal",
+      "friendsNight": "Alex and a friend making a playful face at an evening event",
+      "onStage": "Alex presenting on stage next to a colleague at a youth event",
+      "lisbonBridge": "Alex looking out over the Tagus River toward the 25 de Abril bridge in Lisbon",
+      "gym": "Alex taking a mirror selfie at the gym wearing headphones"
+    }
+  },
+  "Story": {
+    "kicker": "(CQ® — 09)",
+    "eyebrow": "Framer Developer",
+    "question": "How it Started?",
+    "titleLine1": "The Beginning of",
+    "titleLine2": "My Own Story.",
+    "highlight": "Five-figure business before turning 18",
+    "body1": "I started in the business world at 16, and after trying several models, I joined forces with a friend and we founded an agency where we built digital funnels to help companies in the interior of Portugal grow online. At the time, I gave up on going to university, and even before I was 18, we had already made five figures in revenue with our own business.",
+    "body2": "However, despite being a co-founder, I decided to leave to take advantage of a better opportunity, but I love continuing to see the agency I founded grow even though I'm no longer involved in operations.",
+    "cta": "View portfolio",
+    "badge": "50+ People Rated"
+  },
+  "ContactCta": {
+    "kicker": "(CQ® — 13)",
+    "eyebrow": "Contact Now",
+    "title": "Let's Work Together",
+    "subtitle": "Contact Me!",
+    "body": "Let's create something amazing together! Reach out, I'd love to hear about your project and ideas.",
+    "badge1": "24/7 Full-Time Support",
+    "badge2": "Available Worldwide",
+    "cta": "Contact now"
+  },
+  "ContactForm": {
+    "title": "Send a message",
+    "nameLabel": "Name",
+    "namePlaceholder": "Name*",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email*",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Message*",
+    "submit": "Submit Now",
+    "submitting": "Sending…",
+    "success": "Thanks — your message is on its way. I'll get back to you soon.",
+    "error": "Something went wrong. Please try again in a moment.",
+    "errorTooMany": "Too many attempts — please try again in a minute.",
+    "validation": {
+      "nameMin": "Please enter your name.",
+      "emailInvalid": "Please enter a valid email address.",
+      "messageMin": "Tell me a little more (at least 10 characters)."
+    }
+  },
+  "Footer": {
+    "kicker": "Stay connected®",
+    "body": "Crafted with creativity and passion. Let's stay connected, reach out anytime!",
+    "cta": "Contact Now",
+    "columns": {
+      "site": "Site",
+      "legal": "Legal"
+    },
+    "links": {
+      "home": "Home",
+      "about": "About",
+      "services": "Work",
+      "community": "Community",
+      "contact": "Contact"
+    },
+    "copyright": "Copyright © Alex Bento {year}",
+    "backToTop": "Back to top"
+  },
+  "Waitlist": {
+    "comunidade": {
+      "kicker": "Coming Soon",
+      "title": "Join the Community",
+      "body": "A space to connect, learn and grow with other young entrepreneurs and builders. Leave your name and email and I'll let you know the moment it opens.",
+      "confirmedTitle": "You're on the list!",
+      "confirmedBody": "Thanks for joining the Community waitlist. Keep an eye on your inbox — I'll email you the moment it opens."
+    },
+    "merch": {
+      "kicker": "Coming Soon",
+      "title": "Merch Waitlist",
+      "body": "Something's in the works. Join the waitlist and be first to know when the drop goes live.",
+      "confirmedTitle": "You're on the list!",
+      "confirmedBody": "Thanks for joining the Merch waitlist. I'll email you as soon as the drop is ready."
+    },
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "submit": "Join the waitlist",
+    "submitting": "Joining…",
+    "backHome": "Back to home",
+    "error": "Something went wrong. Please try again in a moment.",
+    "errorTooMany": "Too many attempts — please try again in a minute.",
+    "validation": {
+      "nameMin": "Please enter your name.",
+      "emailInvalid": "Please enter a valid email address."
+    },
+    "privacyNote": "By joining, you agree to receive occasional emails about this list. No spam, unsubscribe anytime."
+  }
+}
