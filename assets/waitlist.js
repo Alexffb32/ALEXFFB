@@ -8,6 +8,7 @@
   var submitBtn = form.querySelector("button[type=submit]");
   var messageEl = document.getElementById("waitlist-message");
   var confirmedUrl = form.getAttribute("data-confirmed-url");
+  var submitLabel = submitBtn.textContent;
 
   function showMessage(text, isError) {
     messageEl.textContent = text;
@@ -59,12 +60,12 @@
           showMessage("Something went wrong. Please try again in a moment.", true);
         }
         submitBtn.disabled = false;
-        submitBtn.textContent = "Join the waitlist";
+        submitBtn.textContent = submitLabel;
       })
       .catch(function () {
         showMessage("Something went wrong. Please try again in a moment.", true);
         submitBtn.disabled = false;
-        submitBtn.textContent = "Join the waitlist";
+        submitBtn.textContent = submitLabel;
       });
   });
 })();

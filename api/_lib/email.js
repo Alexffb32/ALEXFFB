@@ -3,6 +3,7 @@ const { Resend } = require("resend");
 const AUDIENCE_IDS = {
   comunidade: process.env.RESEND_AUDIENCE_ID_COMUNIDADE,
   merch: process.env.RESEND_AUDIENCE_ID_MERCH,
+  newsletter: process.env.RESEND_AUDIENCE_ID_NEWSLETTER,
 };
 
 const CONFIRMATION_COPY = {
@@ -15,6 +16,11 @@ const CONFIRMATION_COPY = {
     subject: "You're on the Merch waitlist!",
     html: (firstName) =>
       `<p>Hi ${escapeHtml(firstName)},</p><p>Thanks for joining the Merch waitlist. We'll let you know as soon as the drop is ready.</p><p>— Alex</p>`,
+  },
+  newsletter: {
+    subject: "You're subscribed!",
+    html: (firstName) =>
+      `<p>Hi ${escapeHtml(firstName)},</p><p>Thanks for subscribing. Keep an eye on your inbox for the next issue.</p><p>— Alex</p>`,
   },
 };
 

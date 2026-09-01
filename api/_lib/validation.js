@@ -8,7 +8,7 @@ const waitlistSchema = z.object({
     .max(100, "Name is too long")
     .regex(/^[\p{L}\p{M}\s'.-]+$/u, "Name contains invalid characters"),
   email: z.string().trim().toLowerCase().min(5).max(254).email("Invalid email address"),
-  list: z.enum(["comunidade", "merch"]),
+  list: z.enum(["comunidade", "merch", "newsletter"]),
   // Honeypot: real visitors never fill this in; bots that auto-fill every
   // input on the page do. Accept any value here (don't reject in the
   // schema) so a filled honeypot doesn't surface as a validation error —

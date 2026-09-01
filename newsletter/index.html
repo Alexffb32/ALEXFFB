@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Newsletter — Alex Bento</title>
+  <meta name="description" content="Weekly notes from Alex Bento on what he's building, real lessons from doing (not theorizing), and resources worth your time.">
+  <meta property="og:title" content="Newsletter — Alex Bento">
+  <meta property="og:description" content="Weekly notes from Alex Bento on what he's building, real lessons from doing (not theorizing), and resources worth your time.">
+  <meta property="og:image" content="https://alexffb.com/framerusercontent.com/assets/FUW0a0xmC72rhJaIURldTEDs.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://alexffb.com/newsletter/">
+  <link rel="icon" href="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/waitlist.css">
+</head>
+<body>
+  <header class="wl-header">
+    <a class="wl-logo" href="/">
+      <img src="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png" alt="Alex Bento">
+      Alex Bento
+    </a>
+    <a class="wl-back" href="/">&larr; Back to home</a>
+  </header>
+
+  <main class="wl-main">
+    <p class="wl-kicker">Newsletter</p>
+    <h1 class="wl-title">Stay in the loop</h1>
+    <p class="wl-body">What I'm building, real lessons from doing it (not theorizing), and resources worth your time — straight to your inbox.</p>
+
+    <div class="wl-card">
+      <form id="waitlist-form" data-list="newsletter" data-confirmed-url="/newsletter/confirmado/">
+        <div class="wl-field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+        </div>
+        <div class="wl-field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="wl-honeypot" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <button type="submit" class="wl-submit">Subscribe</button>
+        <div id="waitlist-message" class="wl-message" role="alert"></div>
+      </form>
+      <p class="wl-note">By subscribing, you agree to receive occasional emails about this list. No spam, unsubscribe anytime.</p>
+    </div>
+  </main>
+
+  <footer class="wl-footer">
+    Copyright © Alex Bento <span id="year"></span> — <a href="mailto:contact@alexffb.com">contact@alexffb.com</a>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="/assets/waitlist.js"></script>
+</body>
+</html>
