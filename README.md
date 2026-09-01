@@ -191,10 +191,53 @@ All three submit to `POST /api/waitlist`, which:
 4. Logs the same signup into a Supabase table as a backup registry
    (best-effort — never blocks the response).
 
-The existing "Submit Now" contact form on the main page (Framer's own form
-component) was **not** touched or verified — it was out of scope for this
-pass. If it doesn't submit anywhere now that the site isn't Framer-hosted,
-that's a separate, pre-existing thing to look at.
+**The existing "Submit Now" contact form was tested this round** (filled it
+out and watched the network in a real headless browser): it POSTs to
+`https://api.framer.com/forms/v1/forms/ee267207-6115-45f5-8a93-373713c69389/submit`
+— Framer's own hosted Forms API, tied to that form's ID in the original
+Framer project, independent of where the exported HTML is hosted. That
+endpoint is blocked by this sandbox's network policy, so **the actual
+delivery could not be confirmed end-to-end from here** — the form is not
+broken by the export/self-hosting (it's calling a real, still-live Framer
+API, not a dead relative path), but whether submissions still land
+somewhere Alex checks depends on that Framer project/account staying
+active. **Action needed:** submit a real test message on `/contact/` in
+production and confirm it arrives (Framer's dashboard and/or the email
+notification tied to that project).
+
+## Analytics
+
+Google Analytics (`gtag.js`, same measurement ID already on the homepage)
+was added to all three waitlist pages and their `/confirmado/` pages,
+which previously had no analytics at all. Each `/confirmado/` page fires a
+`waitlist_signup` event with a `list` parameter (`comunidade`/`merch`/
+`newsletter`) on load — the standard, reliable way to track a form
+conversion (rather than firing from the form's JS right before navigating
+away, which risks the event never sending). To see these in GA4: Admin →
+Events, or build a report filtered to `waitlist_signup`, broken down by
+the `list` parameter.
+
+## Accessibility
+
+- Audited every `<img>` on the two Framer-compiled pages: all 34 have an
+  `alt` attribute; 6 are `alt=""` and are genuinely decorative background
+  shapes/blurs (correct per WCAG — decorative images should be silent to
+  screen readers, not padded with meaningless alt text).
+- **Fixed a real contrast failure**: white button text on the `#ff462e`
+  accent (the waitlist "Subscribe"/"Join the waitlist" buttons) measured
+  3.40:1, short of the 4.5:1 WCAG AA minimum for normal text. Rather than
+  touch the brand accent color, the button text is now 19px/700 weight,
+  which qualifies as "large text" under WCAG (3:1 minimum) — passes at the
+  same color, same brand red.
+- **Fixed a real keyboard-accessibility bug**: form inputs had
+  `outline: none` on focus with no replacement — a real WCAG 2.4.7
+  failure (keyboard users couldn't see which field was focused). Added a
+  visible focus ring (`box-shadow` + border-color) on inputs and a
+  standard `outline` on links/buttons, all via `:focus-visible` (so it
+  only shows for keyboard navigation, not every mouse click).
+- Verified with Playwright: Tab order on the waitlist forms correctly
+  skips the honeypot field (`tabindex="-1"`) and reaches
+  name → email → submit in order.
 
 ## Setup
 
@@ -232,11 +275,19 @@ set `RESEND_AUDIENCE_ID_NEWSLETTER` in Vercel's env vars.)
   serverless).
 - `vercel.json` sets `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and HSTS.
-- **No Content-Security-Policy was added.** The page already loads Google
-  Analytics (`googletagmanager.com`), a third-party WebGL background
-  library (`cdn.unicorn.studio`), and Framer's own editor-detection script
-  (`framer.com`) — getting a CSP allowlist exactly right for all of these
-  without being able to load the page in a real browser from this
-  environment felt too risky to ship blind (a wrong CSP silently breaks
-  scripts, no error most people would notice). Happy to add one if you
-  want it enough to verify it after deploying.
+- **Content-Security-Policy added** in `vercel.json`, now that there's a
+  way to verify it: tested by serving the site locally behind a Python
+  server that sets the exact same CSP header and loading every page
+  (`/`, `/contact/`, `/comunidade/`, `/merch/`, `/newsletter/`, plus
+  submitting both the waitlist form and the native contact form) in a
+  real headless browser, checking for CSP violation console messages.
+  Zero violations. The policy allows exactly what the page actually uses
+  — `googletagmanager.com` (Analytics), `cdn.unicorn.studio` (the WebGL
+  background), `framer.com` (icon loader + editor-detection),
+  `fonts.googleapis.com`/`fonts.gstatic.com`, `api.framer.com` (the native
+  contact form's submit target) — and blocks everything else, including
+  `object-src 'none'`, `frame-ancestors 'none'`, and a restricted
+  `form-action`. `script-src`/`style-src` need `'unsafe-inline'` because
+  the compiled Framer output has many inline `<script>` tags and
+  `style="..."` attributes with no build step available to add nonces —
+  a real static site with build tooling could tighten this further.

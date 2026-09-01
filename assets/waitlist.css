@@ -128,9 +128,16 @@ a {
   color: var(--ink);
 }
 
-.wl-field input:focus {
+.wl-field input:focus-visible {
   outline: none;
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-pale);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .wl-honeypot {
@@ -144,8 +151,8 @@ a {
 .wl-submit {
   width: 100%;
   padding: 15px 24px;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 19px;
+  font-weight: 700;
   font-family: inherit;
   color: var(--white);
   background: var(--accent);
