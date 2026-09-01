@@ -55,6 +55,43 @@
     });
   }
 
+  // The native "Submit Now" form posts to Framer's own hosted Forms API
+  // (independent of self-hosting, but not verifiable end-to-end from here
+  // — see README). This adds a second, guaranteed channel: on submit,
+  // forward the same fields to our own /api/contact, which emails them
+  // via Resend. Registered on the CAPTURE phase so it reads the field
+  // values before Framer's own handler (bubble phase) has a chance to
+  // clear/reset the form — both handlers fire independently, this one
+  // never calls preventDefault so Framer's own submission still proceeds.
+  function setupContactForward() {
+    var form = document.querySelector("form");
+    if (!form || form.__contactForwardAttached) return;
+    form.__contactForwardAttached = true;
+
+    form.addEventListener(
+      "submit",
+      function () {
+        var name = form.querySelector('input[name="Name"]');
+        var email = form.querySelector('input[name="Email"]');
+        var message = form.querySelector('textarea[name="Message"]');
+        var honeypot = form.querySelector('input[name="website"]');
+        if (!name || !email || !message) return;
+
+        fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.value,
+            email: email.value,
+            message: message.value,
+            company: honeypot ? honeypot.value : "",
+          }),
+        }).catch(function () {});
+      },
+      true,
+    );
+  }
+
   function replaceWord(a, oldWord, newWord) {
     var walker = document.createTreeWalker(a, NodeFilter.SHOW_TEXT);
     var node;
@@ -120,6 +157,7 @@
   function fixAll() {
     fix();
     fixServiceIcons();
+    setupContactForward();
   }
 
   fixAll();

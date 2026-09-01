@@ -157,6 +157,12 @@ just the HTML.**
   below-the-fold images.
 - `Cache-Control: public, max-age=31536000, immutable` on
   `/framerusercontent.com/*` via `vercel.json`.
+- [Vercel Speed Insights](https://vercel.com/docs/speed-insights) added
+  (`<script defer src="/_vercel/speed-insights/script.js">` on every
+  page) — this is the static-site integration method (no npm package;
+  that's only for framework projects like Next.js). If the dashboard
+  still shows "no data" after visiting the site a few times, check
+  Project → Speed Insights is turned on for this project.
 
 ## SEO
 
@@ -186,8 +192,13 @@ All three submit to `POST /api/waitlist`, which:
 1. Validates input (zod) and rate-limits by IP (5/min).
 2. Silently no-ops on a filled honeypot field (bots don't learn they were
    caught).
-3. Adds the contact to the matching Resend Audience and sends a
-   confirmation email.
+3. Adds the contact to the matching Resend Audience **and sends that
+   person a confirmation/thank-you email** (`api/_lib/email.js` has
+   distinct copy per list — Comunidade, Merch, Newsletter each get their
+   own message). This was already built in an earlier pass; it just needs
+   `RESEND_API_KEY` and each list's `RESEND_AUDIENCE_ID_*` set in Vercel
+   to actually send (Comunidade/Merch should already work if those were
+   set up before; Newsletter's is the one still pending — see Setup).
 4. Logs the same signup into a Supabase table as a backup registry
    (best-effort — never blocks the response).
 
@@ -201,9 +212,23 @@ delivery could not be confirmed end-to-end from here** — the form is not
 broken by the export/self-hosting (it's calling a real, still-live Framer
 API, not a dead relative path), but whether submissions still land
 somewhere Alex checks depends on that Framer project/account staying
-active. **Action needed:** submit a real test message on `/contact/` in
-production and confirm it arrives (Framer's dashboard and/or the email
-notification tied to that project).
+active.
+
+**Because that couldn't be confirmed, a second, guaranteed channel was
+added** (`assets/framer-patch.js` + `api/contact.js`): every submission is
+also forwarded straight to `POST /api/contact`, which emails it via
+Resend to `CONTACT_NOTIFY_EMAIL`. Both happen independently on the same
+submit — nothing is removed from the native Framer path, this only adds
+a path that doesn't depend on a third-party account staying active.
+Verified with Playwright: filling and submitting the form fires both
+`https://api.framer.com/forms/...` and `/api/contact` on the same click,
+with the real field values reaching `/api/contact` intact (the forward
+listener runs in the capture phase so it reads the fields before
+Framer's own bubble-phase handler can reset them). Same honeypot
+(`name="website"`), rate limiting (5/min/IP) and zod validation pattern
+as the waitlist endpoint. **Needs `RESEND_API_KEY`** (already set for the
+waitlist to work) **and a new `CONTACT_NOTIFY_EMAIL` env var** — set it
+to Alex's personal inbox in Vercel's Environment Variables.
 
 ## Analytics
 
@@ -256,6 +281,8 @@ variables in the Vercel project's Environment Variables for production:
 - `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
 - `RESEND_AUDIENCE_ID_COMUNIDADE`, `RESEND_AUDIENCE_ID_MERCH`,
   `RESEND_AUDIENCE_ID_NEWSLETTER`
+- `CONTACT_NOTIFY_EMAIL` — where `/contact/`'s "Submit Now" form's
+  messages get emailed (new this round, see "Waitlist pages" above)
 - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 (Names/IDs for Resend and Supabase were already created in an earlier pass
