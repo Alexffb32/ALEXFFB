@@ -72,37 +72,27 @@ public/
 - **Broken email link**: the footer/contact links now point to
   `mailto:contact@alexffb.com` everywhere (previously `dummy@mail.com`).
 - **Placeholder text**: searched for `dummy`, `test`, `lorem`, `TODO` across
-  the previous export; the only legitimate `TODO` left is the Stats & Facts
-  business figures (see below) — the code deliberately never renders a bare
-  `0` for those.
+  the previous export — none left. Stats & Facts now shows Alex's confirmed
+  real figures (revenue, projects delivered, satisfaction rate) instead of
+  the `0` the old site rendered before those were provided.
 - **Copy**: hero intro, meta description and OG/Twitter description now
   match the approved copy verbatim (see `messages/en.json`).
 
 ## What's left for Alex
 
-- [ ] **Real Stats & Facts numbers.** Revenue generated, projects delivered
-  and client satisfaction rate are not published — see the `TODO` comment in
-  `src/components/sections/StatsSection.tsx` and `Stats.businessNote` in
-  `messages/en.json` / `messages/pt.json`. The hackathon/Erasmus/youth-politics/events
-  stats are already real and live.
-- [ ] **Confirm the contact email.** Using `contact@alexffb.com` throughout —
-  please confirm this is the address you want live (and that it's actually
-  receiving mail / forwarding somewhere you check).
-- [ ] **Resend API key** (or tell us if you'd rather use a different ESP —
-  Mailchimp, ConvertKit, etc., the integration lives in one file:
-  `src/lib/email.ts`). Until `RESEND_API_KEY` is set, waitlist/contact
+- [x] **Real Stats & Facts numbers.** Confirmed by Alex: +10k€ revenue
+  generated (before turning 18), +15 projects delivered, 200% satisfaction
+  rate — see `Stats.business` in `messages/en.json` / `messages/pt.json`.
+- [x] **Contact email confirmed** — `contact@alexffb.com`.
+- [x] **Social links confirmed** — Instagram (`@alexffb_`) and YouTube
+  (`@alexffb`), live in the footer and in the `Person` JSON-LD `sameAs`.
+- [ ] **Resend API key.** A key was provided but this environment's network
+  policy blocks direct calls to `api.resend.com` (and the Resend Connector
+  needs an interactive OAuth step this session can't do), so the domain
+  verification and the two Audiences still need to be created by hand in the
+  Resend dashboard — see "Resend setup" below. Until then, waitlist/contact
   submissions still succeed (so the forms are fully testable end-to-end) but
-  no email is actually sent — a warning is logged instead. To wire it up:
-  1. Create a [Resend](https://resend.com) account and verify your sending
-     domain.
-  2. Create **two separate Audiences** in Resend — one for `/comunidade`,
-     one for `/merch` — so the two lists never mix.
-  3. Fill in `.env.local` (copy from `.env.example`): `RESEND_API_KEY`,
-     `RESEND_AUDIENCE_ID_COMUNIDADE`, `RESEND_AUDIENCE_ID_MERCH`,
-     `RESEND_FROM_EMAIL`.
-- [ ] **Social links.** `src/lib/site.ts` has a `sameAs` array (used in the
-  JSON-LD `Person` schema) that's currently empty — add Instagram/LinkedIn/X
-  URLs if you want them picked up by Google's Knowledge Graph.
+  no email is actually sent — a warning is logged instead.
 - [ ] **Photography section alt text** was rewritten to actually describe
   each photo (the Framer export had leftover template alt text like "Wine
   Bottle" and "Coffee Pack" on photos that are actually of you) — please
@@ -117,9 +107,27 @@ public/
   "accent-text" shade used only where accent-colored text sits on a light
   background (kickers, labels) — happy to add that if you confirm you're
   OK with a small variant of the palette for that specific case.
-- [ ] **Domain/hosting.** `NEXT_PUBLIC_SITE_URL` in `.env.example` assumes
-  `https://alexffb.com` — update it (and the Vercel/Netlify project's env
-  vars) to whatever the real production domain ends up being.
+- [x] **Domain confirmed** — `https://alexffb.com`, already the default in
+  `.env.example`.
+
+### Resend setup (manual — do this in the Resend dashboard)
+
+The API key is meant to live only in Vercel's environment variables, never
+in the repo. This environment couldn't reach `api.resend.com` or use the
+Resend Connector to do this for you, so:
+
+1. [resend.com/domains](https://resend.com/domains) → **Add Domain** →
+   `alexffb.com` → add the DNS records Resend shows you wherever
+   `alexffb.com`'s DNS is managed → **Verify**.
+2. [resend.com/audiences](https://resend.com/audiences) → **Create
+   Audience** twice: `Comunidade` and `Merch`. Copy each audience's ID.
+3. In Vercel → Project Settings → Environment Variables, set:
+   - `RESEND_API_KEY`
+   - `RESEND_AUDIENCE_ID_COMUNIDADE` / `RESEND_AUDIENCE_ID_MERCH` (from
+     step 2)
+   - `RESEND_FROM_EMAIL` — needs a mailbox on the verified domain, e.g.
+     `Alex Bento <no-reply@alexffb.com>`
+   - `CONTACT_EMAIL_TO=contact@alexffb.com`
 
 ## Performance notes
 

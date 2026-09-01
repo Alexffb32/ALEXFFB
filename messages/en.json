@@ -78,13 +78,17 @@
     "title": "Stats & Facts",
     "intro": "I started with no budget, no team and no roadmap. Just a clear belief that hard work and the right systems could make a difference. Every number below was earned, not given.",
     "education": "From 2022 to 2025 I completed a Computer Programming course at Escola Profissional do Fundão, where I served as class and course representative and graduated as a merited student with a final grade of 18 out of 20.",
+    "business": [
+      { "label": "Revenue Generated", "value": "+10", "suffix": "k€", "detail": "Before turning 18 years old." },
+      { "label": "Projects Delivered", "value": "+15", "suffix": "", "detail": "Across Portugal and worldwide." },
+      { "label": "Satisfaction Rate", "value": "200", "suffix": "%", "detail": "With every client, every project." }
+    ],
     "real": [
       { "label": "Hackathons", "value": "3", "suffix": "×", "detail": "Times Winner" },
       { "label": "Youth political initiatives", "value": "4", "suffix": "×", "detail": "Presidential Terms" },
       { "label": "Erasmus Projects", "value": "5", "suffix": "×", "detail": "International Projects" },
       { "label": "Events & Communities", "value": "6", "suffix": "×", "detail": "Successfully Organized" }
-    ],
-    "businessNote": "Revenue, project and client-satisfaction figures are being finalized with Alex and will be published here once confirmed — no placeholder numbers in the meantime."
+    ]
   },
   "Services": {
     "kicker": "(CQ® — 05)",

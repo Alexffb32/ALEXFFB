@@ -1,14 +1,11 @@
 import { useTranslations } from "next-intl";
 
-type RealStat = { label: string; value: string; suffix: string; detail: string };
+type Stat = { label: string; value: string; suffix: string; detail: string };
 
-// TODO: Alex to provide real figures for revenue generated, projects delivered
-// and client satisfaction rate. Until then we deliberately do not render "0"
-// or any placeholder number for these — see Stats.businessNote in the
-// messages files, shown below instead of a stat grid.
 export default function StatsSection() {
   const t = useTranslations("Stats");
-  const realStats = t.raw("real") as RealStat[];
+  const businessStats = t.raw("business") as Stat[];
+  const realStats = t.raw("real") as Stat[];
 
   return (
     <section className="border-b border-line bg-paper-soft">
@@ -20,6 +17,19 @@ export default function StatsSection() {
           {t("title")}
         </h2>
         <p className="mt-5 max-w-2xl leading-relaxed text-stone">{t("intro")}</p>
+
+        <dl className="mt-12 grid gap-6 sm:grid-cols-3">
+          {businessStats.map((stat) => (
+            <div key={stat.label} className="border-b border-line pb-6 sm:border-b-0">
+              <dd className="text-5xl font-bold text-ink">
+                {stat.value}
+                <span className="text-accent">{stat.suffix}</span>
+              </dd>
+              <dt className="mt-3 text-lg font-semibold text-ink">{stat.label}</dt>
+              <p className="mt-1 text-sm text-stone-light">{stat.detail}</p>
+            </div>
+          ))}
+        </dl>
 
         <dl className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4">
           {realStats.map((stat) => (
@@ -35,10 +45,6 @@ export default function StatsSection() {
             </div>
           ))}
         </dl>
-
-        <p className="mt-8 max-w-2xl rounded-xl border border-dashed border-line-strong bg-white/60 p-4 text-sm text-stone-light">
-          {t("businessNote")}
-        </p>
 
         <p className="mt-8 max-w-3xl text-sm leading-relaxed text-stone">{t("education")}</p>
       </div>

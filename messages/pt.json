@@ -78,13 +78,17 @@
     "title": "Números & Factos",
     "intro": "Comecei sem orçamento, sem equipa e sem plano. Apenas a convicção clara de que trabalho árduo e os sistemas certos podiam fazer a diferença. Cada número abaixo foi conquistado, não oferecido.",
     "education": "Entre 2022 e 2025 concluí o curso profissional de Programação de Sistemas Informáticos na Escola Profissional do Fundão, onde fui delegado de turma e de curso, e terminei como aluno mérito com uma média final de 18 valores.",
+    "business": [
+      { "label": "Receita Gerada", "value": "+10", "suffix": "k€", "detail": "Antes de fazer 18 anos." },
+      { "label": "Projetos Entregues", "value": "+15", "suffix": "", "detail": "Em Portugal e no mundo." },
+      { "label": "Taxa de Satisfação", "value": "200", "suffix": "%", "detail": "Com cada cliente, cada projeto." }
+    ],
     "real": [
       { "label": "Hackathons", "value": "3", "suffix": "×", "detail": "Vezes Vencedor" },
       { "label": "Iniciativas jovens de política", "value": "4", "suffix": "×", "detail": "Mandatos Presidenciais" },
       { "label": "Projetos Erasmus", "value": "5", "suffix": "×", "detail": "Projetos Internacionais" },
       { "label": "Eventos & Comunidades", "value": "6", "suffix": "×", "detail": "Organizados com Sucesso" }
-    ],
-    "businessNote": "Os números de receita, projetos entregues e satisfação de clientes estão a ser confirmados com o Alex e serão publicados aqui assim que estiverem validados — sem números fictícios enquanto isso."
+    ]
   },
   "Services": {
     "kicker": "(CQ® — 05)",
