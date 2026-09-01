@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { waitlistSchema } from "@/lib/validation";
 import { subscribeToWaitlist } from "@/lib/email";
+import { logWaitlistSubmission } from "@/lib/supabase";
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
@@ -54,6 +55,15 @@ export async function POST(request: NextRequest) {
       { status: 502 },
     );
   }
+
+  // Best-effort backup log in Supabase — never blocks the response, since
+  // Resend above is already the source of truth for the signup succeeding.
+  await logWaitlistSubmission({
+    name: parsed.data.name,
+    email: parsed.data.email,
+    list: parsed.data.list,
+    locale,
+  });
 
   return NextResponse.json({ ok: true });
 }

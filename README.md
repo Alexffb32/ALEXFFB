@@ -18,8 +18,11 @@ hardening.
   intentionally left unchanged per the project brief
 - **react-hook-form + zod** for the contact and waitlist forms (validated
   both client- and server-side)
-- **Resend** for the waitlist confirmation emails / audience tagging (not
-  wired to a real account yet — see "What's left for Alex" below)
+- **Resend** for the waitlist confirmation emails / audience tagging (a key
+  exists but the domain/audiences still need manual setup — see "What's left
+  for Alex" below)
+- **Supabase** (dedicated project, `alexffb`) as a write-only backup log of
+  every waitlist signup, alongside Resend — see `src/lib/supabase.ts`
 
 ## Getting started
 
@@ -109,6 +112,30 @@ public/
   OK with a small variant of the palette for that specific case.
 - [x] **Domain confirmed** — `https://alexffb.com`, already the default in
   `.env.example`.
+- [x] **Supabase backup log wired up** — a dedicated Supabase project
+  (`alexffb`, separate from the `toolstack` project's database) with a
+  `waitlist_submissions` table, RLS-restricted to insert-only. Credentials
+  are in the Vercel env var block below.
+- [ ] **Vercel project.** The connected Vercel integration doesn't have
+  permission to create a new project or to reconnect an existing project's
+  GitHub repo — see "Vercel setup" below for the one manual step needed.
+
+### Vercel setup (manual — one step)
+
+There's an existing Vercel project named `alexffb`, but it's linked to a
+different, unrelated GitHub repo (`Alexffb32/alexffb.com`) and has no custom
+domain attached. The connected Vercel integration in this environment can
+neither create a new project (403 — out of the token's permission scope) nor
+change an existing project's Git connection, so:
+
+- Easiest: [vercel.com/new](https://vercel.com/new) → import
+  `Alexffb32/ALEXFFB` as a **new** project (any name, e.g. `alexffb-site`) →
+  add the environment variables below → once it deploys, point
+  `alexffb.com`'s DNS at it (or add it as the project's domain in Vercel,
+  which shows you the DNS to set).
+- Alternative: in the existing `alexffb` project → Settings → Git →
+  disconnect `alexffb.com` → connect `Alexffb32/ALEXFFB` instead. Keeps the
+  same project/URL.
 
 ### Resend setup (manual — do this in the Resend dashboard)
 
@@ -128,6 +155,9 @@ Resend Connector to do this for you, so:
    - `RESEND_FROM_EMAIL` — needs a mailbox on the verified domain, e.g.
      `Alex Bento <no-reply@alexffb.com>`
    - `CONTACT_EMAIL_TO=contact@alexffb.com`
+   - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — from the
+     `alexffb` Supabase project's Settings → API page (the publishable key,
+     safe to expose — see `src/lib/supabase.ts`).
 
 ## Performance notes
 
