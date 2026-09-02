@@ -41,4 +41,21 @@
     height: auto !important;
     overflow: visible !important;
   }
+
+  /* "Lifestyle" video gallery: doesn't render usefully on a phone
+     viewport, hidden here per request. A stylesheet rule survives
+     Framer's React re-rendering these elements — an inline style set
+     from JS would get silently wiped the next time React touches them. */
+  .framer-1qy6mcn,
+  .framer-1vuq3rr {
+    display: none !important;
+  }
+
+  /* Photography section's 3D photo carousel: replaced on mobile by a
+     horizontal-scroll strip built from the same photos (framer-patch.js).
+     Same reasoning — hide via stylesheet, not inline style, so it stays
+     hidden even if React re-renders this subtree later. */
+  [data-framer-name="Custom Carousel"] {
+    display: none !important;
+  }
 }

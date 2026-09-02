@@ -73,6 +73,49 @@
     });
   }
 
+  // Mobile breakpoint renders a different variant of the "What I Do" cards
+  // with no <img> at all (text only) — fixServiceIcons() above has nothing
+  // to swap in on a phone. Insert a small icon badge instead, matched by
+  // each card's own title text and reusing the same icon paths.
+  var MOBILE_SERVICE_ICONS = [
+    { match: "Marketing and Funnels", paths: SERVICE_ICONS["Man Wearing Glasses"].paths },
+    { match: "Artificial Intelligence", paths: SERVICE_ICONS["Coffee Pack"].paths },
+    { match: "Design & Development", paths: SERVICE_ICONS.Cream.paths },
+    { match: "Systems & Operations", paths: SERVICE_ICONS.Bottle.paths },
+  ];
+
+  function fixMobileServiceIcons() {
+    if (!window.matchMedia("(max-width: 809px)").matches) return;
+    document.querySelectorAll(".framer-8o6qg7").forEach(function (card) {
+      var content = card.querySelector(".framer-1jgnho9");
+      if (!content || content.querySelector("[data-service-icon]")) return;
+      var titleEl = content.querySelector(".framer-v902ng p");
+      if (!titleEl) return;
+      var title = titleEl.textContent.trim();
+      var icon = MOBILE_SERVICE_ICONS.filter(function (s) {
+        return title.indexOf(s.match) !== -1;
+      })[0];
+      if (!icon) return;
+      var badge = document.createElement("div");
+      badge.setAttribute("data-service-icon", "true");
+      badge.style.cssText =
+        "width:40px;height:40px;border-radius:10px;background:#0a0a0a;display:flex;" +
+        "align-items:center;justify-content:center;margin-bottom:12px;flex-shrink:0;";
+      badge.innerHTML =
+        '<svg width="22" height="22" viewBox="0 0 128 128" fill="none" stroke="#ff462e" ' +
+        'stroke-width="8" stroke-linecap="round" stroke-linejoin="round">' +
+        icon.paths +
+        "</svg>";
+      content.insertBefore(badge, content.firstChild);
+      if (!content.dataset.serviceIconWatched) {
+        content.dataset.serviceIconWatched = "true";
+        new MutationObserver(function () {
+          fixMobileServiceIcons();
+        }).observe(content, { childList: true });
+      }
+    });
+  }
+
   // The native "Submit Now" form posts to Framer's own hosted Forms API
   // (independent of self-hosting, but not verifiable end-to-end from here
   // — see README). This adds a second, guaranteed channel: on submit,
@@ -242,11 +285,23 @@
   function fixPhotoGalleryMobile() {
     if (!window.matchMedia("(max-width: 809px)").matches) return;
     var carousel = document.querySelector('[data-framer-name="Custom Carousel"]');
-    if (!carousel || carousel.dataset.mobileFixed) return;
+    if (!carousel) return;
+    // The carousel itself is hidden via a CSS rule (mobile-fixes.css),
+    // not an inline style — a stylesheet rule survives Framer's React
+    // re-rendering this element, where an inline style set from here
+    // would get wiped the next time React touches it. Only the strip
+    // insertion needs to be idempotent/re-checked here.
+    if (
+      carousel.nextElementSibling &&
+      carousel.nextElementSibling.dataset.mobilePhotoStrip === "true"
+    ) {
+      return;
+    }
     var imgs = carousel.querySelectorAll("img");
     if (!imgs.length) return;
 
     var strip = document.createElement("div");
+    strip.dataset.mobilePhotoStrip = "true";
     strip.style.cssText =
       "display:flex;gap:12px;overflow-x:auto;padding:24px 20px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;";
 
@@ -261,9 +316,14 @@
       strip.appendChild(clone);
     });
 
-    carousel.style.display = "none";
     carousel.parentNode.insertBefore(strip, carousel.nextSibling);
-    carousel.dataset.mobileFixed = "true";
+
+    if (!carousel.dataset.mobileGalleryWatched) {
+      carousel.dataset.mobileGalleryWatched = "true";
+      new MutationObserver(function () {
+        fixPhotoGalleryMobile();
+      }).observe(carousel.parentNode, { childList: true });
+    }
   }
 
   // "Born to Build. Since 2007®" (the small overline above the huge
@@ -330,6 +390,7 @@
     }
 
     rebuildMobileStorySection();
+    watchMobileStorySection();
   }
 
   // The "Five-figure business" story block's text (badge/heading/body/
@@ -345,11 +406,22 @@
   // the 809px breakpoint.
   function rebuildMobileStorySection() {
     var container = document.querySelector(".framer-1llmjrj");
-    if (!container || container.dataset.mobileRebuilt) return;
+    if (!container) return;
+    // Structural check, not a one-shot flag: Framer's React tree can
+    // re-render this subtree later (e.g. when its own scroll-triggered
+    // entrance animation fires), which would silently restore the
+    // original broken markup and undo a one-shot fix. Checking "is my
+    // rebuilt wrapper still the only child" makes this call idempotent —
+    // safe to re-run from the watcher below every time React touches it.
+    if (
+      container.children.length === 1 &&
+      container.firstElementChild.dataset.mobileStoryWrap === "true"
+    ) {
+      return;
+    }
     var video = container.querySelector("video");
     var heading = container.querySelector("h3");
     if (!video || !heading) return;
-    container.dataset.mobileRebuilt = "true";
 
     var badgeTextEl = container.querySelector('[data-framer-name="Primary"] .framer-ef7rhz');
     var subtitleEl = container.querySelector("h5");
@@ -358,6 +430,7 @@
     var ratingText = container.querySelector('[data-framer-name="Rating"] p');
 
     var wrap = document.createElement("div");
+    wrap.dataset.mobileStoryWrap = "true";
     wrap.style.cssText = "display:flex;flex-direction:column;width:100%;";
 
     var videoBox = document.createElement("div");
@@ -418,6 +491,22 @@
     container.innerHTML = "";
     container.style.cssText += ";height:auto !important;overflow:visible !important;display:block !important;padding:0 20px;";
     container.appendChild(wrap);
+  }
+
+  // Belt-and-suspenders for the rebuild above: watch just this one small
+  // subtree (not the whole document — that's what caused the header
+  // animation freeze bug earlier) and re-run the idempotent rebuild
+  // whenever Framer's React mutates it, in case a later re-render ever
+  // restores the original broken markup after the initial fixAll() runs
+  // have already finished.
+  function watchMobileStorySection() {
+    if (!window.matchMedia("(max-width: 809px)").matches) return;
+    var container = document.querySelector(".framer-1llmjrj");
+    if (!container || container.dataset.mobileStoryWatched) return;
+    container.dataset.mobileStoryWatched = "true";
+    new MutationObserver(function () {
+      rebuildMobileStorySection();
+    }).observe(container, { childList: true });
   }
 
   // The site is genuinely still being reshaped (waitlist pages, copy
@@ -493,6 +582,7 @@
   function fixAll() {
     fix();
     fixServiceIcons();
+    fixMobileServiceIcons();
     setupContactForward();
     addAddress();
     fixContentText();
