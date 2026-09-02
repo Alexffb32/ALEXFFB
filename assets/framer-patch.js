@@ -10,6 +10,102 @@
 (function () {
   "use strict";
 
+  // "Stats & Facts" counters ("Revenue Generated"/"Projects Delivered"/
+  // "Satisfaction Rate") ship in the Framer export with their target value
+  // literally set to 0 — never configured with real numbers, not a broken
+  // animation (verified: the SSR HTML itself already reads "+0k€" etc, and
+  // hydration re-asserts that same 0 from the bundle). Confirmed real
+  // figures below.
+  var STATS_VALUES = {
+    "Revenue Generated": "+10k€",
+    "Projects Delivered": "+15",
+    "Satisfaction Rate": "200%",
+  };
+
+  function findStatsCounter(label) {
+    var labelEl = [].slice
+      .call(document.querySelectorAll("p"))
+      .filter(function (p) {
+        return p.textContent.trim() === label;
+      })[0];
+    if (!labelEl) return null;
+    // Each breakpoint renders this block under a differently-named variant
+    // wrapper (desktop: data-framer-name="L", mobile: "S") — walk up from
+    // the label instead of hardcoding one variant name, stopping at the
+    // first ancestor whose subtree contains the actual Counter node.
+    var el = labelEl.parentElement;
+    for (var i = 0; i < 8 && el; i++) {
+      var counter = el.querySelector('[data-framer-name="Counter"]');
+      if (counter) return counter;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function fixStatsNumbers() {
+    Object.keys(STATS_VALUES).forEach(function (label) {
+      var counter = findStatsCounter(label);
+      if (!counter) return;
+      var target = STATS_VALUES[label];
+      counter.querySelectorAll("p").forEach(function (p) {
+        if (p.textContent !== target) p.textContent = target;
+      });
+    });
+  }
+
+  // The counter is an animated component (counts up when scrolled into
+  // view) — scoped observer per counter in case a later scroll-triggered
+  // re-render restores the bundled 0, same class of bug already found and
+  // fixed for the mobile story-section rebuild elsewhere in this file.
+  function watchStatsNumbers() {
+    Object.keys(STATS_VALUES).forEach(function (label) {
+      var counter = findStatsCounter(label);
+      if (!counter || counter.dataset.statsWatched) return;
+      counter.dataset.statsWatched = "true";
+      new MutationObserver(function () {
+        fixStatsNumbers();
+      }).observe(counter, { childList: true, subtree: true, characterData: true });
+    });
+  }
+
+  // The Photography carousel's real photos still carry the Framer
+  // template's generic stock-photo alt text ("Wine Bottle", "Coffee
+  // Pack", etc — the same placeholder names some of them coincidentally
+  // share with SERVICE_ICONS' keys below). Real descriptions, written by
+  // looking at each actual photo (matched by the unique hash in its own
+  // filename, which survives Framer's various resized/format srcset
+  // variants of the same source image).
+  var PHOTOGRAPHY_ALT = {
+    "59bR0YzrNlNy1F8ridWYRImpJGQ": "Alex petting a horse in a field at dusk",
+    otTcjBmzgoKP2bAbQfDlzuJI74: "Alex sitting at an outdoor bar table at night, holding a drink",
+    LTGGpS68YVFGIKbQUPdendlRXM: "Alex looking at the Eiffel Tower at night in Paris",
+    "BPv2Mfxz0yf9Vo3wTA7JjLuQ": "Alex standing in a park in front of a historic building in Portugal",
+    V0LXLZQ2XChMipHbvhYXquZKOYQ:
+      "Alex adjusting his sunglasses in a town square with historic buildings behind him",
+    "6ZTVQKUyvqPzsmb0GpTRvSo9bSE": "Alex sitting in an armchair during an interview-style conversation",
+    pEW6wChEJ9oPtq5AC9J2W7ZUPUw: "Alex and a friend making a playful face at an evening event",
+    "63gZFNfxW0mHwO8cun7flzmgSW8": "Alex working at his computer desk with a European Union flag on the wall",
+    bZBgulqVOgVYyMIJsyUiLXnCc: "Alex presenting on stage next to a colleague at a youth event",
+    bhd4psKJlNHYiCYZgaKbss87o: "Alex sitting at a restaurant table with his chin resting on his hand",
+    "dTLF38MUP0jQ26ES47bluAH51B0":
+      "Alex looking out over the Tagus River toward the 25 de Abril bridge in Lisbon",
+    Q05APsVgevvdhUTegZpbMNUywE:
+      "Alex standing by a marina wearing sunglasses, with sailboats and a castle in the background",
+    efcSlJOeyVcyJLg0QElKzmGhZuo: "Alex taking a mirror selfie at the gym wearing headphones",
+    BsoCOoH3Y4yAY9hkjScrxaq6sI: "Alex sitting at an outdoor café table at night wearing a blazer",
+  };
+
+  function fixPhotographyAltText() {
+    document.querySelectorAll('[data-framer-name="Custom Carousel"] img').forEach(function (img) {
+      var src = img.currentSrc || img.src;
+      Object.keys(PHOTOGRAPHY_ALT).forEach(function (hash) {
+        if (src.indexOf(hash) !== -1 && img.alt !== PHOTOGRAPHY_ALT[hash]) {
+          img.alt = PHOTOGRAPHY_ALT[hash];
+        }
+      });
+    });
+  }
+
   var SERVICE_ICONS = {
     "Man Wearing Glasses": {
       label: "Marketing and Funnels icon",
@@ -48,10 +144,39 @@
     if (!mail || mail.dataset.addressAdded) return;
     mail.dataset.addressAdded = "true";
     var p = document.createElement("p");
+    p.id = "footer-address";
     p.textContent = "A Incubadora, A Praça, Fundão, Portugal";
     p.style.cssText =
       "font: inherit; font-size: 0.85em; opacity: 0.6; margin: 4px 0 0; color: inherit;";
     mail.insertAdjacentElement("afterend", p);
+  }
+
+  // Confirmed real social links (Instagram/YouTube) — small text row under
+  // the footer address, same "new node inserted after hydration" approach
+  // as addAddress()/addConstructionNote() since there's nowhere in the
+  // original Framer export to edit an existing social-links block into.
+  var SOCIAL_LINKS = [
+    { label: "Instagram", href: "https://www.instagram.com/alexffb_" },
+    { label: "YouTube", href: "https://www.youtube.com/@alexffb" },
+  ];
+
+  function addSocialLinks() {
+    var address = document.getElementById("footer-address");
+    if (!address || address.dataset.socialLinksAdded) return;
+    address.dataset.socialLinksAdded = "true";
+    var row = document.createElement("p");
+    row.style.cssText =
+      "font: inherit; font-size: 0.85em; opacity: 0.6; margin: 8px 0 0; color: inherit; display: flex; gap: 12px;";
+    SOCIAL_LINKS.forEach(function (social) {
+      var a = document.createElement("a");
+      a.href = social.href;
+      a.textContent = social.label;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.style.cssText = "color: inherit; text-decoration: underline;";
+      row.appendChild(a);
+    });
+    address.insertAdjacentElement("afterend", row);
   }
 
   function fixServiceIcons() {
@@ -124,6 +249,60 @@
   // values before Framer's own handler (bubble phase) has a chance to
   // clear/reset the form — both handlers fire independently, this one
   // never calls preventDefault so Framer's own submission still proceeds.
+  // Splits the single generic "get in touch" contact flow into two named
+  // intents (B2B work vs. partnerships/media) without touching any of the
+  // ~8 existing "Contact"/"Get in touch" CTA buttons scattered across
+  // Home (all Framer-managed components, risky to restructure). Instead
+  // this adds a small picker directly above the Contact page's own form:
+  // clicking an option seeds the message textarea with a starter line,
+  // so the same single form still works for anyone who arrives without
+  // clicking either option.
+  var CONTACT_INTENTS = [
+    { label: "Work with me", prefix: "Re: Work with me — " },
+    { label: "Partnerships & Media", prefix: "Re: Partnerships & Media — " },
+  ];
+
+  function addContactIntentPicker() {
+    var form = document.querySelector("form");
+    if (!form) return;
+    var textarea = form.querySelector('textarea[name="Message"]');
+    if (!textarea || form.dataset.intentPickerAdded) return;
+    form.dataset.intentPickerAdded = "true";
+
+    var wrap = document.createElement("div");
+    wrap.style.cssText = "display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap;";
+
+    var buttons = CONTACT_INTENTS.map(function (opt) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = opt.label;
+      btn.style.cssText =
+        "padding:8px 16px;border-radius:999px;border:1px solid rgba(9,9,9,.15);" +
+        "background:#fff;font:inherit;font-size:13px;cursor:pointer;color:inherit;" +
+        "transition:background .15s ease,color .15s ease;";
+      btn.addEventListener("click", function () {
+        buttons.forEach(function (b) {
+          b.style.background = "#fff";
+          b.style.color = "inherit";
+        });
+        btn.style.background = "#1e1e1e";
+        btn.style.color = "#fff";
+        var alreadyPrefixed = CONTACT_INTENTS.some(function (o) {
+          return textarea.value.indexOf(o.prefix) === 0;
+        });
+        if (!textarea.value || alreadyPrefixed) {
+          textarea.value = opt.prefix;
+        }
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      });
+      wrap.appendChild(btn);
+      return btn;
+    });
+
+    form.insertBefore(wrap, form.firstChild);
+  }
+
   function setupContactForward() {
     var form = document.querySelector("form");
     if (!form || form.__contactForwardAttached) return;
@@ -201,6 +380,26 @@
     // (every other section's divider repeats its own kicker — this one
     // didn't).
     ["Framer Developer", "Photography"],
+    // Hero intro: the generic "young entrepreneur ... passionate about
+    // tech" copy didn't say anything specific about Alex. Replaced with
+    // the approved bio-driven version (18, no degree, Selfmade VP,
+    // five-figure agency before turning 18), split across the same 4
+    // <br>-separated lines the original used. The last pair's new text
+    // deliberately reorders "grow & scale" -> "scale & grow" so it
+    // doesn't contain its own old string as a substring — fixAll() runs
+    // 3 times (immediate + 2 staggered re-checks), and a new value that
+    // contains its own old value keeps growing a duplicate prefix on
+    // every re-run otherwise (caught by testing, not guesswork).
+    [",a young entrepreneur", "— 18, from Portugal, building without a university degree."],
+    [
+      "from Portugal, passionate about business, self-improvement & tech.",
+      "Vice-President of Selfmade Association, founder of a five-figure",
+    ],
+    [
+      "I build the digital systems & strategies that help businesses worldwide",
+      "agency before I turned 18. Today I help businesses build the digital",
+    ],
+    ["grow & scale online.", "systems & strategies that help them scale & grow online."],
   ];
 
   function fixContentText() {
@@ -583,8 +782,13 @@
     fix();
     fixServiceIcons();
     fixMobileServiceIcons();
+    fixStatsNumbers();
+    watchStatsNumbers();
+    fixPhotographyAltText();
     setupContactForward();
+    addContactIntentPicker();
     addAddress();
+    addSocialLinks();
     fixContentText();
     fixPhotoGalleryMobile();
     fixMobileHeroTitle();
