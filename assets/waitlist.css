@@ -229,7 +229,9 @@ button:focus-visible {
   color: var(--stone-light);
 }
 
-/* ---- Dark video/image hero, shared by all three waitlist pages ---- */
+/* ---- Dark gradient hero with an orange "horizon glow", shared by all
+   three waitlist pages. No photo/video — a pure CSS starfield + glow,
+   built to Alex's own brand color instead of a stock template look. ---- */
 
 @font-face {
   font-family: "Instrument Serif";
@@ -251,23 +253,47 @@ button:focus-visible {
   flex-direction: column;
   color: var(--white);
   overflow: hidden;
+  background-color: #0a0503;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(1px 1px at 26% 58%, rgba(255, 255, 255, 0.35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 41% 14%, rgba(255, 255, 255, 0.45), transparent 60%),
+    radial-gradient(1px 1px at 57% 34%, rgba(255, 255, 255, 0.3), transparent 60%),
+    radial-gradient(1.5px 1.5px at 72% 19%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 86% 46%, rgba(255, 255, 255, 0.3), transparent 60%),
+    radial-gradient(1.5px 1.5px at 94% 62%, rgba(255, 255, 255, 0.4), transparent 60%),
+    radial-gradient(1px 1px at 6% 68%, rgba(255, 255, 255, 0.3), transparent 60%),
+    linear-gradient(180deg, #0a0503 0%, #120705 55%, #1d0b06 100%);
 }
 
-.wl-hero > img {
+.wl-hero::before {
+  content: "";
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  left: 50%;
+  bottom: -160px;
+  width: 140%;
+  height: 420px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(255, 100, 55, 0.6) 0%, rgba(255, 70, 46, 0.25) 40%, rgba(255, 70, 46, 0) 72%);
   z-index: 0;
+  pointer-events: none;
 }
 
 .wl-hero::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(9, 9, 9, 0.5) 0%, rgba(9, 9, 9, 0.8) 100%);
+  left: 50%;
+  bottom: -110px;
+  width: 160%;
+  height: 220px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #0a0503;
+  box-shadow:
+    0 -6px 50px 8px rgba(255, 120, 70, 0.6),
+    0 -1px 0 1px rgba(255, 180, 140, 0.85);
   z-index: 1;
+  pointer-events: none;
 }
 
 .wl-hero > * {
@@ -295,28 +321,37 @@ button:focus-visible {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   padding: 40px 40px 64px;
-  max-width: 900px;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 .wl-hero-kicker {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--accent);
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
   font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin: 0 0 16px;
+  letter-spacing: 0.02em;
+  padding: 8px 18px 8px 14px;
+  border-radius: 999px;
+  margin: 0 0 24px;
+  backdrop-filter: blur(6px);
 }
 
 .wl-hero-kicker::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
   background: var(--accent);
+  box-shadow: 0 0 8px 1px rgba(255, 70, 46, 0.9);
   display: inline-block;
   flex-shrink: 0;
 }
@@ -341,7 +376,7 @@ button:focus-visible {
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.85);
   max-width: 560px;
-  margin: 0;
+  margin: 0 auto;
 }
 
 .wl-form-section {
