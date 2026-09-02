@@ -4,8 +4,9 @@
   "private": true,
   "description": "Alex Bento — static site + waitlist API functions (Vercel)",
   "dependencies": {
-    "resend": "6.25.0",
     "@supabase/supabase-js": "2.112.4",
+    "@vercel/analytics": "^2.0.1",
+    "resend": "6.25.0",
     "zod": "3.23.8"
   }
 }
