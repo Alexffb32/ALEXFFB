@@ -1,0 +1,563 @@
+/* Shared styles for the /comunidade and /merch waitlist pages.
+   Colors and type reuse the same tokens as the main site:
+   background #f9f9f9, text #090909, accent #ff462e, Inter Display / Inter. */
+
+:root {
+  --bg: #f9f9f9;
+  --ink: #090909;
+  --stone: #63615e;
+  --stone-light: #7f7f80;
+  --line: #eaeaea;
+  --accent: #ff462e;
+  --accent-pale: #f7e3df;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Inter Display", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+}
+
+.wl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.wl-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.wl-logo img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: block;
+}
+
+.wl-back {
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--stone);
+}
+
+.wl-back:hover {
+  color: var(--ink);
+}
+
+.wl-main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 72px 24px 96px;
+}
+
+.wl-kicker {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 16px;
+}
+
+.wl-title {
+  font-size: 40px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+}
+
+.wl-body {
+  font-size: 17px;
+  color: var(--stone);
+  margin: 0 0 40px;
+}
+
+.wl-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.wl-field {
+  margin-bottom: 18px;
+}
+
+.wl-field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.wl-field input {
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 16px;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  background: rgb(245, 244, 243);
+  color: var(--ink);
+}
+
+.wl-field input::placeholder {
+  color: rgba(9, 9, 9, 0.5);
+}
+
+.wl-field input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.wl-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.wl-submit {
+  width: 100%;
+  padding: 18px 24px;
+  font-size: 17px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--white);
+  background: rgb(30, 30, 30);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.wl-submit:hover {
+  opacity: 0.9;
+}
+
+.wl-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.wl-note {
+  font-size: 13px;
+  color: var(--stone-light);
+  margin: 16px 0 0;
+}
+
+.wl-message {
+  margin-top: 16px;
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  display: none;
+}
+
+.wl-message.is-visible {
+  display: block;
+}
+
+.wl-message.is-error {
+  background: var(--accent-pale);
+  color: var(--accent);
+}
+
+.wl-message.is-success {
+  background: #eafaf0;
+  color: #1e7d3a;
+}
+
+.wl-confirmed {
+  text-align: center;
+}
+
+.wl-confirmed .wl-title {
+  margin-top: 8px;
+}
+
+.wl-cta {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 13px 28px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.wl-footer {
+  text-align: center;
+  padding: 32px 24px 48px;
+  font-size: 13px;
+  color: var(--stone-light);
+}
+
+/* ---- Dark gradient hero with an orange "horizon glow", shared by all
+   three waitlist pages. No photo/video — a pure CSS starfield + glow,
+   built to Alex's own brand color instead of a stock template look. ---- */
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url('/fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zATjnTNgNq55w.woff2');
+  font-display: swap;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.wl-topbar {
+  height: 4px;
+  background: var(--accent);
+}
+
+.wl-hero {
+  position: relative;
+  min-height: 64vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+  overflow: hidden;
+  background-color: #0a0503;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(1px 1px at 26% 58%, rgba(255, 255, 255, 0.35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 41% 14%, rgba(255, 255, 255, 0.45), transparent 60%),
+    radial-gradient(1px 1px at 57% 34%, rgba(255, 255, 255, 0.3), transparent 60%),
+    radial-gradient(1.5px 1.5px at 72% 19%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 86% 46%, rgba(255, 255, 255, 0.3), transparent 60%),
+    radial-gradient(1.5px 1.5px at 94% 62%, rgba(255, 255, 255, 0.4), transparent 60%),
+    radial-gradient(1px 1px at 6% 68%, rgba(255, 255, 255, 0.3), transparent 60%),
+    linear-gradient(180deg, #0a0503 0%, #120705 55%, #1d0b06 100%);
+}
+
+.wl-hero::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -160px;
+  width: 140%;
+  height: 420px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(255, 100, 55, 0.6) 0%, rgba(255, 70, 46, 0.25) 40%, rgba(255, 70, 46, 0) 72%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wl-hero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -110px;
+  width: 160%;
+  height: 220px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #0a0503;
+  box-shadow:
+    0 -6px 50px 8px rgba(255, 120, 70, 0.6),
+    0 -1px 0 1px rgba(255, 180, 140, 0.85);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wl-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.wl-hero .wl-header {
+  border-bottom: none;
+}
+
+.wl-hero .wl-header a {
+  color: var(--white);
+}
+
+.wl-hero .wl-back {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wl-hero .wl-back:hover {
+  color: var(--white);
+}
+
+.wl-hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 40px 64px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.wl-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 8px 18px 8px 14px;
+  border-radius: 999px;
+  margin: 0 0 24px;
+  backdrop-filter: blur(6px);
+}
+
+.wl-hero-kicker::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px 1px rgba(255, 70, 46, 0.9);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.wl-hero-title {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(44px, 9vw, 96px);
+  line-height: 1;
+  margin: 0 0 20px;
+}
+
+.wl-hero-title .accent {
+  color: var(--accent);
+  font-family: inherit;
+  font-style: normal;
+}
+
+.wl-hero-body {
+  font-size: 18px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.wl-form-section {
+  padding: 64px 40px 96px;
+}
+
+.wl-form-section .wl-card {
+  margin: 0 auto;
+  max-width: 480px;
+}
+
+/* ---- Entrance animation, used on hero content + form card ---- */
+
+@keyframes wl-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wl-animate {
+  animation: wl-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.wl-animate-1 {
+  animation-delay: 0.05s;
+}
+.wl-animate-2 {
+  animation-delay: 0.15s;
+}
+.wl-animate-3 {
+  animation-delay: 0.25s;
+}
+.wl-animate-4 {
+  animation-delay: 0.35s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-animate {
+    animation: none;
+  }
+}
+
+/* ---- Slim single-field subscribe bar (Newsletter) ---- */
+
+.wl-email-bar {
+  display: flex;
+  gap: 6px;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px;
+}
+
+.wl-email-bar input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.wl-email-bar input:focus-visible {
+  outline: none;
+}
+
+.wl-email-bar .wl-submit {
+  width: auto;
+  white-space: nowrap;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 999px;
+}
+
+@media (max-width: 480px) {
+  .wl-email-bar {
+    flex-direction: column;
+    border-radius: 20px;
+  }
+  .wl-email-bar .wl-submit {
+    width: 100%;
+  }
+}
+
+/* ---- "Articles coming soon" placeholder cards (Newsletter) ---- */
+
+.wl-articles-head {
+  max-width: 640px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.wl-articles-head .wl-kicker {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wl-articles-head .wl-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.wl-articles-placeholders {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto 48px;
+}
+
+@media (max-width: 900px) {
+  .wl-articles-placeholders {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.wl-article-card {
+  aspect-ratio: 4 / 3;
+  border: 1.5px dashed var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wl-article-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent-pale) 0%, transparent 60%);
+  animation: wl-shimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes wl-shimmer {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-article-card::before {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+.wl-article-tag {
+  position: relative;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--stone);
+  background: var(--bg);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+@media (max-width: 700px) {
+  .wl-articles-placeholders {
+    grid-template-columns: 1fr;
+  }
+}

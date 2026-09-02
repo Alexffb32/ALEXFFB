@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HB6KZCJCSE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HB6KZCJCSE');
+  </script>
+  <title>Merch Waitlist — Alex Bento</title>
+  <meta name="description" content="Sign up to be notified as soon as the Alex Bento merch drop is live.">
+  <meta property="og:title" content="Merch Waitlist — Alex Bento">
+  <meta property="og:description" content="Sign up to be notified as soon as the Alex Bento merch drop is live.">
+  <meta property="og:image" content="https://alexffb.com/framerusercontent.com/assets/FUW0a0xmC72rhJaIURldTEDs.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://alexffb.com/merch/">
+  <link rel="icon" href="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/waitlist.css">
+  <script defer src="/_vercel/speed-insights/script.js"></script><script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <div class="wl-topbar"></div>
+  <section class="wl-hero">
+    <header class="wl-header">
+      <a class="wl-logo" href="/">
+        <img src="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png" alt="Alex Bento">
+        Alex Bento
+      </a>
+      <a class="wl-back" href="/">&larr; Back to home</a>
+    </header>
+    <div class="wl-hero-content">
+      <p class="wl-hero-kicker wl-animate wl-animate-1">Merch</p>
+      <h1 class="wl-hero-title wl-animate wl-animate-2">Merch<span class="accent">*</span></h1>
+      <p class="wl-hero-body wl-animate wl-animate-3">Something's in the works. Join the waitlist to be first in line when the drop goes live.</p>
+    </div>
+  </section>
+
+  <main class="wl-form-section">
+    <div class="wl-card wl-animate wl-animate-1">
+      <form id="waitlist-form" data-list="merch" data-confirmed-url="/merch/confirmado/">
+        <div class="wl-field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+        </div>
+        <div class="wl-field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="wl-honeypot" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <button type="submit" class="wl-submit">Join the waitlist</button>
+        <div id="waitlist-message" class="wl-message" role="alert"></div>
+      </form>
+      <p class="wl-note">Join the waitlist and be first to know when the drop goes live. No spam, unsubscribe anytime.</p>
+    </div>
+  </main>
+
+  <footer class="wl-footer">
+    Copyright © Alex Bento <span id="year"></span> — <a href="mailto:contact@alexffb.com">contact@alexffb.com</a>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="/assets/waitlist.js"></script>
+</body>
+</html>
