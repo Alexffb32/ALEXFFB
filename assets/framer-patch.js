@@ -117,17 +117,24 @@
   var CONTENT_EDITS = [
     ["Convert More, Grow Faster", "Vice-President, Selfmade Association"],
     ["Future-Proof & Scalable", "Project Manager, Aeternus Progressus"],
+    ["Premium Services", "What I Do"],
+    ["Pro ", "What I"],
+    ["Services®", "Do"],
+    [
+      "Systems, marketing, AI and design, built to work together as one.",
+      "Marketing, AI, design and systems — how I help the companies inside Aeternus Progressus grow, and what I do for Selfmade Association.",
+    ],
     [
       "Strategy, branding, social media and funnels that turn attention into paying clients.",
-      "Strategy, branding and marketing — the work I do day to day at Aeternus Progressus and Layout Agency.",
+      "Strategy, branding and marketing — how I help the companies inside Aeternus Progressus grow, alongside my own work at Layout Agency.",
     ],
     [
       "AI agents and automation that save time, cut costs and scale your output.",
-      "Building AI agents and automations for the projects and teams I work with.",
+      "Building AI agents and automations for the companies inside Aeternus Progressus.",
     ],
     [
       "Websites, apps, software and visual identities built to earn trust, convert and grow your revenue",
-      "Websites, software and visual identities — the same systems-building work that took Layout Agency to five-figure revenue before I turned 18",
+      "Websites, software and visual identities for the companies inside Aeternus Progressus — the same systems-building work that took Layout Agency to five-figure revenue before I turned 18",
     ],
     [
       "Digital processes and frameworks that make your business ready to scale.",
