@@ -119,19 +119,22 @@ a {
 
 .wl-field input {
   width: 100%;
-  padding: 13px 16px;
+  padding: 18px 20px;
   font-size: 16px;
   font-family: inherit;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--bg);
+  border: none;
+  border-radius: 8px;
+  background: rgb(245, 244, 243);
   color: var(--ink);
+}
+
+.wl-field input::placeholder {
+  color: rgba(9, 9, 9, 0.5);
 }
 
 .wl-field input:focus-visible {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-pale);
+  box-shadow: 0 0 0 2px var(--ink);
 }
 
 a:focus-visible,
@@ -150,14 +153,14 @@ button:focus-visible {
 
 .wl-submit {
   width: 100%;
-  padding: 15px 24px;
-  font-size: 19px;
-  font-weight: 700;
+  padding: 18px 24px;
+  font-size: 17px;
+  font-weight: 600;
   font-family: inherit;
   color: var(--white);
-  background: var(--accent);
+  background: rgb(30, 30, 30);
   border: none;
-  border-radius: 999px;
+  border-radius: 10px;
   cursor: pointer;
   transition: opacity 0.15s ease;
 }
@@ -250,7 +253,7 @@ button:focus-visible {
   overflow: hidden;
 }
 
-.wl-hero video {
+.wl-hero > img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -419,6 +422,7 @@ button:focus-visible {
   white-space: nowrap;
   padding: 12px 24px;
   font-size: 16px;
+  border-radius: 999px;
 }
 
 @media (max-width: 480px) {
@@ -456,10 +460,16 @@ button:focus-visible {
 
 .wl-articles-placeholders {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   max-width: 900px;
   margin: 0 auto 48px;
+}
+
+@media (max-width: 900px) {
+  .wl-articles-placeholders {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .wl-article-card {

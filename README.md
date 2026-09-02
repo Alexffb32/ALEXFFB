@@ -339,31 +339,55 @@ final rendered page and every old string is gone.
 
 All three waitlist pages were originally a plain white-background form,
 which didn't feel like part of the same site. All three now open with a
-dark video hero matching the homepage's actual visual language: real
-background footage already used elsewhere on the site (not stock), the
-same italic "Instrument Serif" display font + red asterisk accent as the
+dark hero matching the homepage's actual visual language: the same
+italic "Instrument Serif" display font + red asterisk accent as the
 homepage's "Alexandre*" title, the same thin red top bar, and a staggered
 fade-up entrance animation on the hero text and the form card
-(`prefers-reduced-motion` respected). Each page got its own real clip:
-`ZrNTj0qE...mp4` (Newsletter — Alex at his desk), `HLnii1d...mp4`
-(Comunidade — a real conference/audience clip), `i52Lqt6...mp4` (Merch —
-a real casual clip). Copy was tightened too: Merch's hero now uses the
-actual planned collection name from the project brief, "Anti University
-Social Club", instead of a generic "Merch Waitlist" label.
+(`prefers-reduced-motion` respected).
+
+The hero background is a still image on all three pages (originally a
+looping video per page — replaced per Alex's request to drop video
+headers on the waitlist pages). Each image is a frame extracted from the
+same real footage already used elsewhere on the site (not stock):
+`hero-newsletter.jpg` (Alex at his desk), `hero-comunidade.jpg` (a real
+conference/audience clip), `hero-merch.jpg` (a real casual clip) — saved
+under `assets/images/`.
+
+The waitlist form fields (`.wl-field input`, `.wl-submit`) now match the
+native Contact page's real form styling exactly — light-grey `rgb(245,
+244, 243)` inputs with no border and an 8px radius, and a solid dark
+`rgb(30, 30, 30)` submit button with a 10px radius — pulled from the
+Contact page's actual computed styles so the two forms feel identical.
+
+**Correction:** Merch's hero briefly used the actual planned collection
+name from the project brief instead of a generic "Merch" label — reverted
+per Alex's request, since that name isn't public yet. Keep it generic
+("Merch") on this page until he announces it himself.
 
 **Newsletter specifically** no longer shows the Name+Email card at all —
-per request, it now mirrors what a real "Articles" page looks like: an
-"Articles — Coming soon" section with 3 placeholder cards (a subtle
-animated shimmer, `prefers-reduced-motion`-safe) explaining real content
-is coming, under a slim single-field **email bar** (not the heavier
-waitlist card used on the other two pages) so subscribing is effectively
-frictionless. This needed a small backend change: `name` is now optional
-in the waitlist schema
-(`api/_lib/validation.js`) — Comunidade/Merch still collect it for
+per request, it now mirrors what a real "Articles" page looks like: a
+"Coming Soon" section with 4 placeholder cards (Articles, Stories,
+Resources, Infoprodutos — a subtle animated shimmer,
+`prefers-reduced-motion`-safe) explaining real content is coming, under a
+slim single-field **email bar** (not the heavier waitlist card used on
+the other two pages) so subscribing is effectively frictionless. This
+needed a small backend change: `name` is now optional in the waitlist
+schema (`api/_lib/validation.js`) — Comunidade/Merch still collect it for
 personalized confirmation emails, Newsletter's bar only asks for email
 and the confirmation email falls back to "Hi there,". Verified end-to-end
 with Playwright: a Newsletter signup with no name field submits, passes
 validation, and redirects to `/confirmado/` correctly.
+
+**Bug fix (header logo):** the hero background rule (`.wl-hero img`,
+`position: absolute; inset: 0; width/height: 100%`) was a descendant
+selector, so it also matched the small circular logo `<img>` nested
+inside the header — and with equal CSS specificity, it won by source
+order and stretched the 32px logo into a full-size, absolutely
+positioned image, corrupting the header on all three pages. Fixed by
+scoping the hero-background rule to `.wl-hero > img` (direct child only),
+which only matches the background image and leaves the nested logo
+untouched. Verified visually and with Playwright on all three pages
+after the fix.
 
 There's no real Articles/Blog page yet — see "What's still only in the
 live Framer project" above — so this is deliberately a "coming soon"
