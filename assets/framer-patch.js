@@ -110,6 +110,50 @@
     );
   }
 
+  // Real-content rewrites (Pro Services copy, Aeternus Progressus role,
+  // Selfmade Association texts) — same hydration-revert problem as
+  // everything else here, so applied the same way: after hydration,
+  // walking text nodes rather than editing the raw HTML.
+  var CONTENT_EDITS = [
+    ["Convert More, Grow Faster", "Vice-President, Selfmade Association"],
+    ["Future-Proof & Scalable", "Project Manager, Aeternus Progressus"],
+    [
+      "Strategy, branding, social media and funnels that turn attention into paying clients.",
+      "Strategy, branding and marketing — the work I do day to day at Aeternus Progressus and Layout Agency.",
+    ],
+    [
+      "AI agents and automation that save time, cut costs and scale your output.",
+      "Building AI agents and automations for the projects and teams I work with.",
+    ],
+    [
+      "Websites, apps, software and visual identities built to earn trust, convert and grow your revenue",
+      "Websites, software and visual identities — the same systems-building work that took Layout Agency to five-figure revenue before I turned 18",
+    ],
+    [
+      "Digital processes and frameworks that make your business ready to scale.",
+      "Coordinating teams and processes, from Erasmus+ mobility at Selfmade to project delivery at Aeternus Progressus.",
+    ],
+    ["Consultant", "Project Manager"],
+    [
+      "I joined Aeternus Progressus as a consultant and team member, working on marketing and business strategy",
+      "I joined Aeternus Progressus as a Project Manager, working on marketing and business strategy",
+    ],
+    [
+      "I'm the Vice-President of Selfmade Association, a youth organization based in Fundão that promotes entrepreneurship and international mobility through Erasmus+ programs. We connect young people from the interior of Portugal with opportunities abroad, and bring international youth to our region.",
+      "Selfmade Association is a youth organization based in Fundão that promotes entrepreneurship and international mobility through Erasmus+ programs — connecting young people from the interior of Portugal with opportunities abroad, and bringing international youth to our region. I'm the Vice-President.",
+    ],
+    [
+      "I joined Selfmade Association and was elected Vice-President. We're a Fundão-based youth organization that uses Erasmus+ to fight for something simple: giving young people from the interior of Portugal the same international opportunities as everyone else.",
+      "As Vice-President, I help run the podcast we produce together, coordinate Erasmus+ mobility opportunities, and push entrepreneurship programs that give young people from the interior of Portugal practical tools to build something of their own — not just motivational talk.",
+    ],
+  ];
+
+  function fixContentText() {
+    CONTENT_EDITS.forEach(function (pair) {
+      replaceWord(document.body, pair[0], pair[1]);
+    });
+  }
+
   function replaceWord(a, oldWord, newWord) {
     var walker = document.createTreeWalker(a, NodeFilter.SHOW_TEXT);
     var node;
@@ -177,6 +221,7 @@
     fixServiceIcons();
     setupContactForward();
     addAddress();
+    fixContentText();
   }
 
   fixAll();

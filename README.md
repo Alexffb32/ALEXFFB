@@ -305,6 +305,36 @@ confirming the endpoint was never actually reachable at the domain being
 tested, because the deployment carrying it hadn't been promoted yet. Not
 a code bug; see "Deploying" below.
 
+## Real-content rewrites (Pro Services, Aeternus Progressus, Selfmade)
+
+Some of the homepage's copy read like a freelance agency's sales pitch
+("Convert More, Grow Faster", "that turn attention into paying clients",
+"built to earn trust, convert and grow your revenue") rather than
+describing what Alex actually does. Rewritten:
+
+- **Pro Services bullets**: "Convert More, Grow Faster" / "Future-Proof &
+  Scalable" → his actual roles, "Vice-President, Selfmade Association" /
+  "Project Manager, Aeternus Progressus".
+- **The 4 service card descriptions**: reframed from client-facing pitch
+  copy to first-person descriptions of his real work (Aeternus Progressus,
+  Layout Agency, Selfmade) — see the git diff for exact before/after text.
+- **Aeternus Progressus role**: "Consultant" → "Project Manager" (his
+  actual title there), in both the role label and the body text.
+- **The two Selfmade Association texts** were near-duplicates of each
+  other. Rebalanced so the first (in the About section) leads with what
+  Selfmade *is*, and the second (in the Journey timeline) leads with what
+  *Alex does* there — running the podcast, coordinating Erasmus+ mobility,
+  pushing entrepreneurship programs — instead of repeating the same
+  organization description twice.
+
+Same hydration-revert problem as everything else on these two pages: a
+raw-HTML-only edit here silently reverts after ~500ms in a real browser
+(verified again on this batch specifically). Fixed the same way — edited
+the HTML for first paint/crawlers, and added the same replacements to
+`assets/framer-patch.js`'s text-walking patch so they actually stick.
+Verified with Playwright that every rewritten string is present in the
+final rendered page and every old string is gone.
+
 ## Newsletter page redesign
 
 Originally built as a plain white-background form page, same as
