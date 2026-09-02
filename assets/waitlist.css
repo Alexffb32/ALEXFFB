@@ -225,3 +225,294 @@ button:focus-visible {
   font-size: 13px;
   color: var(--stone-light);
 }
+
+/* ---- Dark video/image hero, shared by all three waitlist pages ---- */
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url('/fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zATjnTNgNq55w.woff2');
+  font-display: swap;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.wl-topbar {
+  height: 4px;
+  background: var(--accent);
+}
+
+.wl-hero {
+  position: relative;
+  min-height: 64vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+  overflow: hidden;
+}
+
+.wl-hero video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.wl-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(9, 9, 9, 0.5) 0%, rgba(9, 9, 9, 0.8) 100%);
+  z-index: 1;
+}
+
+.wl-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.wl-hero .wl-header {
+  border-bottom: none;
+}
+
+.wl-hero .wl-header a {
+  color: var(--white);
+}
+
+.wl-hero .wl-back {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wl-hero .wl-back:hover {
+  color: var(--white);
+}
+
+.wl-hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px 40px 64px;
+  max-width: 900px;
+}
+
+.wl-hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+}
+
+.wl-hero-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.wl-hero-title {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(44px, 9vw, 96px);
+  line-height: 1;
+  margin: 0 0 20px;
+}
+
+.wl-hero-title .accent {
+  color: var(--accent);
+  font-family: inherit;
+  font-style: normal;
+}
+
+.wl-hero-body {
+  font-size: 18px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 560px;
+  margin: 0;
+}
+
+.wl-form-section {
+  padding: 64px 40px 96px;
+}
+
+.wl-form-section .wl-card {
+  margin: 0 auto;
+  max-width: 480px;
+}
+
+/* ---- Entrance animation, used on hero content + form card ---- */
+
+@keyframes wl-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wl-animate {
+  animation: wl-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.wl-animate-1 {
+  animation-delay: 0.05s;
+}
+.wl-animate-2 {
+  animation-delay: 0.15s;
+}
+.wl-animate-3 {
+  animation-delay: 0.25s;
+}
+.wl-animate-4 {
+  animation-delay: 0.35s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-animate {
+    animation: none;
+  }
+}
+
+/* ---- Slim single-field subscribe bar (Newsletter) ---- */
+
+.wl-email-bar {
+  display: flex;
+  gap: 6px;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px;
+}
+
+.wl-email-bar input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.wl-email-bar input:focus-visible {
+  outline: none;
+}
+
+.wl-email-bar .wl-submit {
+  width: auto;
+  white-space: nowrap;
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+@media (max-width: 480px) {
+  .wl-email-bar {
+    flex-direction: column;
+    border-radius: 20px;
+  }
+  .wl-email-bar .wl-submit {
+    width: 100%;
+  }
+}
+
+/* ---- "Articles coming soon" placeholder cards (Newsletter) ---- */
+
+.wl-articles-head {
+  max-width: 640px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.wl-articles-head .wl-kicker {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wl-articles-head .wl-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.wl-articles-placeholders {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto 48px;
+}
+
+.wl-article-card {
+  aspect-ratio: 4 / 3;
+  border: 1.5px dashed var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wl-article-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent-pale) 0%, transparent 60%);
+  animation: wl-shimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes wl-shimmer {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-article-card::before {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+.wl-article-tag {
+  position: relative;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--stone);
+  background: var(--bg);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+@media (max-width: 700px) {
+  .wl-articles-placeholders {
+    grid-template-columns: 1fr;
+  }
+}

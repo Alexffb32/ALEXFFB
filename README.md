@@ -335,18 +335,40 @@ the HTML for first paint/crawlers, and added the same replacements to
 Verified with Playwright that every rewritten string is present in the
 final rendered page and every old string is gone.
 
-## Newsletter page redesign
+## Waitlist page redesign: dark hero + articles teaser
 
-Originally built as a plain white-background form page, same as
-Comunidade/Merch. Restyled to open with a dark hero matching the
-homepage's actual visual language instead: the real background video
-already used elsewhere on the site (`ZrNTj0qEN7aJXpnd6hGG9lxM.mp4` — a
-genuine clip of Alex at his desk, not stock), the same italic
-"Instrument Serif" display font and red asterisk accent as the homepage's
-"Alexandre*" title, and the same thin red top bar — then the actual
-signup form sits below in its own section, in place of where an articles
-list would go. Comunidade/Merch were left as plain form pages since only
-Newsletter was asked to change; ask if you want the same treatment there.
+All three waitlist pages were originally a plain white-background form,
+which didn't feel like part of the same site. All three now open with a
+dark video hero matching the homepage's actual visual language: real
+background footage already used elsewhere on the site (not stock), the
+same italic "Instrument Serif" display font + red asterisk accent as the
+homepage's "Alexandre*" title, the same thin red top bar, and a staggered
+fade-up entrance animation on the hero text and the form card
+(`prefers-reduced-motion` respected). Each page got its own real clip:
+`ZrNTj0qE...mp4` (Newsletter — Alex at his desk), `HLnii1d...mp4`
+(Comunidade — a real conference/audience clip), `i52Lqt6...mp4` (Merch —
+a real casual clip). Copy was tightened too: Merch's hero now uses the
+actual planned collection name from the project brief, "Anti University
+Social Club", instead of a generic "Merch Waitlist" label.
+
+**Newsletter specifically** no longer shows the Name+Email card at all —
+per request, it now mirrors what a real "Articles" page looks like: an
+"Articles — Coming soon" section with 3 placeholder cards (a subtle
+animated shimmer, `prefers-reduced-motion`-safe) explaining real content
+is coming, under a slim single-field **email bar** (not the heavier
+waitlist card used on the other two pages) so subscribing is effectively
+frictionless. This needed a small backend change: `name` is now optional
+in the waitlist schema
+(`api/_lib/validation.js`) — Comunidade/Merch still collect it for
+personalized confirmation emails, Newsletter's bar only asks for email
+and the confirmation email falls back to "Hi there,". Verified end-to-end
+with Playwright: a Newsletter signup with no name field submits, passes
+validation, and redirects to `/confirmado/` correctly.
+
+There's no real Articles/Blog page yet — see "What's still only in the
+live Framer project" above — so this is deliberately a "coming soon"
+teaser, not a promise of content that doesn't exist. Update it once real
+articles are written.
 
 ## Analytics
 
@@ -359,6 +381,13 @@ conversion (rather than firing from the form's JS right before navigating
 away, which risks the event never sending). To see these in GA4: Admin →
 Events, or build a report filtered to `waitlist_signup`, broken down by
 the `list` parameter.
+
+**Vercel Analytics** (`<script defer src="/_vercel/insights/script.js">`)
+added alongside Speed Insights on every page — same static-site method
+(a script tag, not the `@vercel/analytics` npm package, which is for
+framework projects). Tracks visitors/page views; shows up in the
+project's Analytics tab in the Vercel dashboard once it's collected a
+few real visits.
 
 ## Accessibility
 

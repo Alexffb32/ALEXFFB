@@ -47,7 +47,7 @@ async function subscribeToWaitlist({ name, email, list }) {
     return { configured: false };
   }
 
-  const [firstName, ...rest] = name.split(" ");
+  const [firstName, ...rest] = name ? name.split(" ") : [undefined];
 
   await resend.contacts.create({
     email,
@@ -64,7 +64,7 @@ async function subscribeToWaitlist({ name, email, list }) {
     from: fromEmail,
     to: email,
     subject: copy.subject,
-    html: copy.html(firstName || name),
+    html: copy.html(firstName || "there"),
   });
 
   return { configured: true };

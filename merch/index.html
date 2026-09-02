@@ -20,23 +20,28 @@
   <link rel="icon" href="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/waitlist.css">
-  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script><script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-  <header class="wl-header">
-    <a class="wl-logo" href="/">
-      <img src="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png" alt="Alex Bento">
-      Alex Bento
-    </a>
-    <a class="wl-back" href="/">&larr; Back to home</a>
-  </header>
+  <div class="wl-topbar"></div>
+  <section class="wl-hero">
+    <video src="/framerusercontent.com/assets/i52Lqt6owFfOO5qsXuogRS8cesY.mp4" autoplay muted loop playsinline></video>
+    <header class="wl-header">
+      <a class="wl-logo" href="/">
+        <img src="/framerusercontent.com/images/7iepUUn3PK5Xkjr7TnTEE4Fxg.png" alt="Alex Bento">
+        Alex Bento
+      </a>
+      <a class="wl-back" href="/">&larr; Back to home</a>
+    </header>
+    <div class="wl-hero-content">
+      <p class="wl-hero-kicker wl-animate wl-animate-1">Merch</p>
+      <h1 class="wl-hero-title wl-animate wl-animate-2">Anti University<br>Social Club<span class="accent">*</span></h1>
+      <p class="wl-hero-body wl-animate wl-animate-3">Gear for people building without waiting for permission. The first drop is coming — join the waitlist to be first in line.</p>
+    </div>
+  </section>
 
-  <main class="wl-main">
-    <p class="wl-kicker">Coming Soon</p>
-    <h1 class="wl-title">Merch Waitlist</h1>
-    <p class="wl-body">Something's in the works. Join the waitlist and be first to know when the drop goes live.</p>
-
-    <div class="wl-card">
+  <main class="wl-form-section">
+    <div class="wl-card wl-animate wl-animate-1">
       <form id="waitlist-form" data-list="merch" data-confirmed-url="/merch/confirmado/">
         <div class="wl-field">
           <label for="name">Name</label>
@@ -53,7 +58,7 @@
         <button type="submit" class="wl-submit">Join the waitlist</button>
         <div id="waitlist-message" class="wl-message" role="alert"></div>
       </form>
-      <p class="wl-note">By joining, you agree to receive occasional emails about this list. No spam, unsubscribe anytime.</p>
+      <p class="wl-note">Join the waitlist and be first to know when the drop goes live. No spam, unsubscribe anytime.</p>
     </div>
   </main>
 

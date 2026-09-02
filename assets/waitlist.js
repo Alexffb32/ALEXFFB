@@ -23,11 +23,12 @@
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    var name = form.elements["name"].value.trim();
+    var hasNameField = !!form.elements["name"];
+    var name = hasNameField ? form.elements["name"].value.trim() : "";
     var email = form.elements["email"].value.trim();
     var company = form.elements["company"] ? form.elements["company"].value : "";
 
-    if (name.length < 2) {
+    if (hasNameField && name.length < 2) {
       showMessage("Please enter your name.", true);
       return;
     }
@@ -39,10 +40,13 @@
     submitBtn.disabled = true;
     submitBtn.textContent = "Joining…";
 
+    var payload = { email: email, list: list, company: company };
+    if (name) payload.name = name;
+
     fetch("/api/waitlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name, email: email, list: list, company: company }),
+      body: JSON.stringify(payload),
     })
       .then(function (response) {
         return response.json().then(function (data) {
