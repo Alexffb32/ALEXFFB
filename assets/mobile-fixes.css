@@ -1,0 +1,44 @@
+/* Smooth cross-page transitions (native browser feature, Chromium 126+;
+   no-op elsewhere) between this page and any other same-origin page —
+   the waitlist pages included, since they're plain HTML documents
+   outside Framer's own app bundle and would otherwise hard-cut on
+   navigation instead of fading like Framer's own internal routing. */
+@view-transition {
+  navigation: auto;
+}
+
+/* Mobile-only layout fixes for the Framer-compiled pages (index.html,
+   contact/index.html). These target real bugs in the original export's
+   narrow-breakpoint CSS — none of this touches desktop (min-width 810px). */
+
+@media (max-width: 809px) {
+  /* Service cards ("What I Do" section): the card box has a fixed
+     height:102px + overflow:hidden at every breakpoint. At desktop width
+     the description text fits in that height; at mobile width the same
+     text wraps onto many more lines, so the box clips itself and the
+     next card starts immediately after, reading as an overlapping mess.
+     Letting height grow to fit its own content fixes it. */
+  .framer-8o6qg7 {
+    height: auto !important;
+    min-height: -moz-min-content !important;
+    min-height: min-content !important;
+    overflow: visible !important;
+  }
+
+  /* "Five-figure business before turning 18" story video: was a fixed
+     380px-tall landscape-ish box. Switch to a real portrait 9:16 frame
+     on mobile, matching how this clip was actually shot. */
+  .framer-1xprq8r {
+    height: auto !important;
+    aspect-ratio: 9 / 16 !important;
+  }
+
+  /* Its grandparent row/column wrapper had a fixed height:668px sized
+     for the original short video box, with overflow:hidden — with the
+     video now taller (9:16 instead of 380px), that fixed height clips
+     and overlaps the heading/text stacked below it. Let it grow. */
+  .framer-1llmjrj {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}

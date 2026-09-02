@@ -153,6 +153,11 @@
       "I joined Selfmade Association and was elected Vice-President. We're a Fundão-based youth organization that uses Erasmus+ to fight for something simple: giving young people from the interior of Portugal the same international opportunities as everyone else.",
       "As Vice-President, I help run the podcast we produce together, coordinate Erasmus+ mobility opportunities, and push entrepreneurship programs that give young people from the interior of Portugal practical tools to build something of their own — not just motivational talk.",
     ],
+    // The Photography section's own divider bar was left saying the
+    // Framer template's default label instead of the section's real name
+    // (every other section's divider repeats its own kicker — this one
+    // didn't).
+    ["Framer Developer", "Photography"],
   ];
 
   function fixContentText() {
@@ -261,6 +266,230 @@
     carousel.dataset.mobileFixed = "true";
   }
 
+  // "Born to Build. Since 2007®" (the small overline above the huge
+  // "Alexandre Bento*" name) is set with an inline font-size baked for
+  // desktop widths. At phone widths "Since 2007®" wraps onto a second
+  // line and collides with the giant name title sitting right below it
+  // (verified visually). Shrinking just this line to fit its own row
+  // fixes the collision without touching the name title itself.
+  function fixMobileHeroTitle() {
+    if (!window.matchMedia("(max-width: 809px)").matches) return;
+    var h4 = [].slice
+      .call(document.querySelectorAll("h4"))
+      .filter(function (h) {
+        return h.textContent.indexOf("Born to Build") !== -1;
+      })[0];
+    if (!h4 || h4.dataset.mobileFitted) return;
+    var span = h4.querySelector("span");
+    h4.dataset.mobileFitted = "true";
+    h4.style.fontSize = "24px";
+    h4.style.lineHeight = "30px";
+    h4.style.whiteSpace = "nowrap";
+    if (span) span.style.fontSize = "27px";
+  }
+
+  // Three mobile-only fixes bundled together since they all target real
+  // video/media playback problems on phones (verified locally: these
+  // clips never reach readyState > 0 on a narrow viewport, unlike
+  // desktop):
+  //  - "Lifestyle" gallery (3 background-video cards): never renders
+  //    usefully on phones, so it's hidden there rather than shown broken.
+  //  - The "Five-figure business" story clip: never starts loading on
+  //    its own on mobile; forced to load/play here, and given a real
+  //    portrait 9:16 frame (mobile-fixes.css) instead of its fixed
+  //    380px-tall landscape-ish box.
+  //  - The mobile hamburger overlay's nav links only exist in the DOM
+  //    once a person actually opens the menu — every earlier fixAll()
+  //    pass runs before that, so it was still shipping the original
+  //    About/Work/Blog links (About even 404s, since that page was
+  //    removed). Re-running the link fixer right after the menu opens
+  //    catches it.
+  function fixMobileMedia() {
+    if (!window.matchMedia("(max-width: 809px)").matches) return;
+
+    document.querySelectorAll(".framer-1qy6mcn, .framer-1vuq3rr").forEach(function (el) {
+      el.style.display = "none";
+    });
+
+    var storyVideo = document.querySelector('video[src*="wCXHBJD62Phepy"]');
+    if (storyVideo && !storyVideo.dataset.mobileForced) {
+      storyVideo.dataset.mobileForced = "true";
+      storyVideo.muted = true;
+      storyVideo.setAttribute("playsinline", "");
+      storyVideo.load();
+      storyVideo.play().catch(function () {});
+    }
+
+    var menuToggle = document.querySelector('[data-framer-name="Mobile Menu Icon"]');
+    if (menuToggle && !menuToggle.dataset.menuFixHooked) {
+      menuToggle.dataset.menuFixHooked = "true";
+      menuToggle.addEventListener("click", function () {
+        setTimeout(fix, 250);
+        setTimeout(fix, 600);
+      });
+    }
+
+    rebuildMobileStorySection();
+  }
+
+  // The "Five-figure business" story block's text (badge/heading/body/
+  // CTA) sits in a flex tree where every element checks out as
+  // position:relative with zero margins, yet it visually renders on top
+  // of the video image instead of below it — margin/position/DOM-order
+  // fixes all measured "correct" while the browser kept painting it
+  // overlapping. Rather than keep chasing whichever Framer flex quirk
+  // causes that, this rebuilds the block from its own real content
+  // (the actual DOM nodes, not copies, so the real link/video keep
+  // working) into a plain, guaranteed-correct stacked layout: video,
+  // then text below it. Desktop is untouched — this only runs under
+  // the 809px breakpoint.
+  function rebuildMobileStorySection() {
+    var container = document.querySelector(".framer-1llmjrj");
+    if (!container || container.dataset.mobileRebuilt) return;
+    var video = container.querySelector("video");
+    var heading = container.querySelector("h3");
+    if (!video || !heading) return;
+    container.dataset.mobileRebuilt = "true";
+
+    var badgeTextEl = container.querySelector('[data-framer-name="Primary"] .framer-ef7rhz');
+    var subtitleEl = container.querySelector("h5");
+    var bodyEl = container.querySelector('[data-framer-name="Body Text"] p');
+    var ctaLink = container.querySelector('a[href="/comunidade/"]');
+    var ratingText = container.querySelector('[data-framer-name="Rating"] p');
+
+    var wrap = document.createElement("div");
+    wrap.style.cssText = "display:flex;flex-direction:column;width:100%;";
+
+    var videoBox = document.createElement("div");
+    videoBox.style.cssText =
+      "width:100%;aspect-ratio:9/16;border-radius:16px;overflow:hidden;position:relative;background:#0a0a0a;";
+    video.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;";
+    videoBox.appendChild(video);
+
+    var textBox = document.createElement("div");
+    textBox.style.cssText = "padding:24px 0 0;";
+
+    if (badgeTextEl) {
+      var badge = document.createElement("span");
+      badge.textContent = badgeTextEl.textContent;
+      badge.style.cssText =
+        "display:inline-block;background:rgba(255,70,46,.1);color:#ff462e;font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;margin-bottom:16px;";
+      textBox.appendChild(badge);
+    }
+
+    var h = document.createElement("h3");
+    h.innerHTML = heading.innerHTML;
+    h.style.cssText = "font-size:32px;line-height:1.15;font-weight:600;margin:0 0 16px;color:#1e1e1e;";
+    textBox.appendChild(h);
+
+    if (subtitleEl) {
+      var sub = document.createElement("p");
+      sub.textContent = subtitleEl.textContent;
+      sub.style.cssText = "font-size:16px;font-weight:600;margin:0 0 8px;color:#1e1e1e;";
+      textBox.appendChild(sub);
+    }
+
+    if (bodyEl) {
+      var body = document.createElement("p");
+      body.textContent = bodyEl.textContent;
+      body.style.cssText = "font-size:15px;line-height:1.5;color:#63615e;margin:0 0 20px;white-space:pre-line;";
+      textBox.appendChild(body);
+    }
+
+    if (ctaLink) {
+      var cta = document.createElement("a");
+      cta.href = ctaLink.getAttribute("href");
+      cta.textContent = "Join the waitlist";
+      cta.style.cssText =
+        "display:inline-flex;align-items:center;gap:8px;background:#eaeaea;color:#090909;font-weight:600;font-size:15px;padding:14px 22px;border-radius:50px;text-decoration:none;margin-bottom:12px;";
+      textBox.appendChild(cta);
+    }
+
+    if (ratingText) {
+      var rating = document.createElement("p");
+      rating.textContent = "★★★★★ " + ratingText.textContent;
+      rating.style.cssText = "font-size:13px;color:#63615e;margin:0;";
+      textBox.appendChild(rating);
+    }
+
+    wrap.appendChild(videoBox);
+    wrap.appendChild(textBox);
+
+    container.innerHTML = "";
+    container.style.cssText += ";height:auto !important;overflow:visible !important;display:block !important;padding:0 20px;";
+    container.appendChild(wrap);
+  }
+
+  // The site is genuinely still being reshaped (waitlist pages, copy
+  // rewrites, this same round of mobile fixes) — a small, honest note in
+  // the footer instead of presenting it as a finished product.
+  function addConstructionNote() {
+    var mail = document.querySelector('[data-framer-name="Mail"]');
+    var anchor = mail && mail.closest("section, footer");
+    if (!anchor || anchor.dataset.constructionNoteAdded) return;
+    anchor.dataset.constructionNoteAdded = "true";
+    var p = document.createElement("p");
+    p.textContent = "This site is a work in progress and gets updated often.";
+    p.style.cssText =
+      "font-size: 12px; opacity: 0.5; text-align: center; margin: 24px 0 0; padding: 0 20px;";
+    anchor.appendChild(p);
+  }
+
+  // Subtle EN/PT switch in the header, next to the logo — plain text,
+  // no flags or dropdown. Only English copy exists on the site today, so
+  // this only marks EN as the active language for now and lets PT show a
+  // brief "coming soon" note instead of silently doing nothing.
+  function addLanguageToggle() {
+    var logo = document.querySelector('a[data-framer-name="Logo"]');
+    if (!logo || logo.dataset.langToggleAdded) return;
+    logo.dataset.langToggleAdded = "true";
+
+    // Anchored right next to the logo (not the nav-links list) so it
+    // never collides with the desktop link row or the mobile hamburger
+    // icon, whose exact layout/width differs by breakpoint.
+    var wrap = document.createElement("div");
+    wrap.id = "lang-toggle";
+    wrap.style.cssText =
+      "display:inline-flex;align-items:center;gap:6px;margin-left:14px;" +
+      "font-size:13px;font-weight:600;color:#090909;position:relative;" +
+      "text-shadow:0 1px 2px rgba(255,255,255,.9),0 0 6px rgba(255,255,255,.7);";
+
+    var en = document.createElement("span");
+    en.textContent = "EN";
+    en.style.cssText = "opacity:1;cursor:default;";
+
+    var sep = document.createElement("span");
+    sep.textContent = "/";
+    sep.style.cssText = "opacity:0.3;";
+
+    var pt = document.createElement("button");
+    pt.textContent = "PT";
+    pt.type = "button";
+    pt.style.cssText =
+      "background:none;border:none;padding:0;font:inherit;color:inherit;opacity:0.45;cursor:pointer;";
+
+    var note = document.createElement("span");
+    note.textContent = "Tradução chega em breve";
+    note.style.cssText =
+      "position:absolute;top:100%;left:0;margin-top:6px;background:#fff;border-radius:6px;padding:4px 8px;" +
+      "box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:11px;font-weight:400;opacity:0;pointer-events:none;" +
+      "transition:opacity .2s ease;white-space:nowrap;";
+
+    pt.addEventListener("click", function () {
+      note.style.opacity = "1";
+      setTimeout(function () {
+        note.style.opacity = "0";
+      }, 2200);
+    });
+
+    wrap.appendChild(en);
+    wrap.appendChild(sep);
+    wrap.appendChild(pt);
+    wrap.appendChild(note);
+
+    logo.insertAdjacentElement("afterend", wrap);
+  }
+
   function fixAll() {
     fix();
     fixServiceIcons();
@@ -268,6 +497,10 @@
     addAddress();
     fixContentText();
     fixPhotoGalleryMobile();
+    fixMobileHeroTitle();
+    fixMobileMedia();
+    addConstructionNote();
+    addLanguageToggle();
   }
 
   fixAll();

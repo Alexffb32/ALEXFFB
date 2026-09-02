@@ -2,6 +2,14 @@
    Colors and type reuse the same tokens as the main site:
    background #f9f9f9, text #090909, accent #ff462e, Inter Display / Inter. */
 
+/* Smooth cross-page transitions (native browser feature, Chromium 126+;
+   no-op elsewhere) to and from the main site — these pages are plain
+   HTML outside Framer's app bundle and would otherwise hard-cut on
+   navigation instead of fading like Framer's own internal routing. */
+@view-transition {
+  navigation: auto;
+}
+
 :root {
   --bg: #f9f9f9;
   --ink: #090909;
