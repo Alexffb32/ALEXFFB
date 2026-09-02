@@ -223,12 +223,51 @@
     });
   }
 
+  // The Photography section's "Custom Carousel" (a 3D fan of real photos,
+  // 7 arms x 2 faces = 14 images) was exported from Framer with fixed
+  // desktop pixel widths baked into inline styles (one arm alone is
+  // 2800px wide) and no responsive recompute at this static-export
+  // runtime. On a real phone viewport that means only whichever 2-3 cards
+  // happen to overlap the narrow screen are visible — a different, much
+  // smaller slice of the same 14 photos than desktop shows, not a content
+  // difference. Below 810px (matching the site's own mobile breakpoint),
+  // swap it for a plain horizontal-scroll strip built from the exact same
+  // <img> elements already in the DOM, so mobile can reach every photo
+  // desktop can.
+  function fixPhotoGalleryMobile() {
+    if (!window.matchMedia("(max-width: 809px)").matches) return;
+    var carousel = document.querySelector('[data-framer-name="Custom Carousel"]');
+    if (!carousel || carousel.dataset.mobileFixed) return;
+    var imgs = carousel.querySelectorAll("img");
+    if (!imgs.length) return;
+
+    var strip = document.createElement("div");
+    strip.style.cssText =
+      "display:flex;gap:12px;overflow-x:auto;padding:24px 20px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;";
+
+    imgs.forEach(function (img) {
+      var clone = document.createElement("img");
+      clone.src = img.currentSrc || img.src;
+      clone.alt = "Alex Bento";
+      clone.loading = "lazy";
+      clone.decoding = "async";
+      clone.style.cssText =
+        "flex:0 0 auto;width:180px;height:240px;object-fit:cover;border-radius:20px;scroll-snap-align:start;";
+      strip.appendChild(clone);
+    });
+
+    carousel.style.display = "none";
+    carousel.parentNode.insertBefore(strip, carousel.nextSibling);
+    carousel.dataset.mobileFixed = "true";
+  }
+
   function fixAll() {
     fix();
     fixServiceIcons();
     setupContactForward();
     addAddress();
     fixContentText();
+    fixPhotoGalleryMobile();
   }
 
   fixAll();
