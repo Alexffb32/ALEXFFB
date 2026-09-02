@@ -5,9 +5,44 @@
 /* Smooth cross-page transitions (native browser feature, Chromium 126+;
    no-op elsewhere) to and from the main site — these pages are plain
    HTML outside Framer's app bundle and would otherwise hard-cut on
-   navigation instead of fading like Framer's own internal routing. */
+   navigation instead of fading like Framer's own internal routing.
+   The fade+slide timing/easing below is kept byte-identical to the same
+   block in mobile-fixes.css (index.html/contact) so every page-to-page
+   hop on the site — Home→Contact, Home→Comunidade, Comunidade→Merch,
+   etc — animates the same way instead of some hops feeling "real" and
+   others feeling like a different site. */
 @view-transition {
   navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(root) {
+  animation-name: wl-page-out;
+}
+::view-transition-new(root) {
+  animation-name: wl-page-in;
+}
+@keyframes wl-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+@keyframes wl-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
 
 :root {
@@ -99,8 +134,13 @@ a {
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  color: var(--stone);
+  color: var(--ink);
   padding-bottom: 2px;
+  /* Home's own nav dims every link except the current page (opacity:0.5
+     on "Not Active" links, verified against the site's own compiled
+     markup) and brings it to full strength on hover/current. */
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
 }
 
 .wl-nav-links a sup {
@@ -121,7 +161,7 @@ a {
 }
 
 .wl-nav-links a:hover {
-  color: var(--ink);
+  opacity: 1;
 }
 
 .wl-nav-links a:hover::after {
@@ -129,26 +169,70 @@ a {
 }
 
 .wl-nav-links a.is-current {
-  color: var(--ink);
+  opacity: 1;
   font-weight: 600;
 }
 
+/* CTA button: replicates Home's own "Get in touch" hover (verified against
+   its compiled markup — a small accent-colored circle anchored at the
+   left edge that expands with a fixed pixel border-radius, not a percent
+   one, so it stays a rounded "stadium" shape as it grows to fill the
+   whole pill instead of stretching into an oval). Pure CSS here since
+   these waitlist pages have no framer-motion runtime to drive it. */
 .wl-nav-cta {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: var(--ink);
-  color: var(--white);
+  gap: 10px;
+  background: rgb(245, 244, 243);
+  color: var(--ink);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  padding: 10px 18px;
+  padding: 7px 20px 7px 7px;
   border-radius: 999px;
-  transition: opacity 0.15s ease;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.wl-nav-cta:hover {
-  opacity: 0.85;
+.wl-nav-cta-fill {
+  position: absolute;
+  z-index: -1;
+  left: 5px;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translateY(-50%);
+  background: var(--accent);
+  border-radius: 30px;
+  transition: width 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.wl-nav-cta:hover .wl-nav-cta-fill {
+  width: calc(100% - 10px);
+}
+
+.wl-nav-cta-icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  color: var(--white);
+  font-size: 15px;
+}
+
+.wl-nav-cta-label {
+  position: relative;
+  z-index: 1;
+  transition: color 0.2s ease;
+}
+
+.wl-nav-cta:hover .wl-nav-cta-label {
+  color: var(--white);
 }
 
 .wl-main {

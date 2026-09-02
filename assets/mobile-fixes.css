@@ -2,9 +2,41 @@
    no-op elsewhere) between this page and any other same-origin page —
    the waitlist pages included, since they're plain HTML documents
    outside Framer's own app bundle and would otherwise hard-cut on
-   navigation instead of fading like Framer's own internal routing. */
+   navigation instead of fading like Framer's own internal routing.
+   Kept byte-identical to the same block in waitlist.css so every
+   page-to-page hop on the site animates the same way. */
 @view-transition {
   navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(root) {
+  animation-name: wl-page-out;
+}
+::view-transition-new(root) {
+  animation-name: wl-page-in;
+}
+@keyframes wl-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+@keyframes wl-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
 
 /* Mobile-only layout fixes for the Framer-compiled pages (index.html,
