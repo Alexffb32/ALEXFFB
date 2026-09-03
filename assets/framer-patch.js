@@ -439,6 +439,14 @@
   // (e.g. "Contact Me!" / "Contact Now" / "Contact now" all before the
   // bare "Contact"; "Work with me" before bare "Work"; "My Journey"
   // before bare "My").
+  //
+  // Two visible EN strings are deliberately NOT in this dictionary:
+  // "Hackathons" (a stats badge label) is a common loanword in PT tech/
+  // entrepreneurship contexts — left as-is on purpose, not a missed
+  // translation. "Selfmade Ass." (a Journey-timeline card's short-form
+  // badge) is an abbreviation of the org's proper name "Selfmade
+  // Association", same as the full form elsewhere in this dictionary —
+  // proper nouns aren't translated anywhere in this file.
   var TRANSLATIONS_PT = [
     // Hero
     ["Born to Build.", "Nascido Para Construir."],
@@ -769,7 +777,11 @@
     imgs.forEach(function (img) {
       var clone = document.createElement("img");
       clone.src = img.currentSrc || img.src;
-      clone.alt = "Alex Bento";
+      // fixPhotographyAltText() runs before this in fixAll(), so img.alt is
+      // already the real per-photo description (PHOTOGRAPHY_ALT) by now —
+      // copy it instead of a generic fallback, or the mobile-only strip
+      // silently drops all 14 real descriptions the desktop carousel keeps.
+      clone.alt = img.alt || "Alex Bento";
       clone.loading = "lazy";
       clone.decoding = "async";
       clone.style.cssText =
@@ -1018,7 +1030,6 @@
       navRow.dataset[flagKey] = "true";
       var clone = comunidadeContainer.cloneNode(true);
       var cloneLink = clone.querySelector("a");
-      cloneLink.setAttribute("href", "/work/");
       cloneLink.setAttribute("data-work-nav-link", "true");
       var t1 = clone.querySelector(".framer-1xn2lzr p");
       var t2 = clone.querySelector(".framer-17j7mkn p");
@@ -1026,11 +1037,10 @@
       if (t1) t1.textContent = "Work";
       if (t2) t2.textContent = "Work";
       if (indicator) indicator.textContent = "02";
-      // Same reasoning as finalize() below: a cloned Page Link still
-      // carries React's fiber reference until re-cloned, so a real click
-      // would route to wherever this node's original href pointed.
-      var freshLink = cloneLink.cloneNode(true);
-      cloneLink.parentNode.replaceChild(freshLink, cloneLink);
+      // Reuses finalize()'s clone+replaceChild trick (defined above) to
+      // drop the cloned Page Link's inherited React fiber reference,
+      // instead of duplicating that same logic inline.
+      finalize(cloneLink, "/work/");
       comunidadeContainer.insertAdjacentElement("beforebegin", clone);
     }
 
