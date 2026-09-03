@@ -20,7 +20,12 @@ runs `/api/waitlist.js` as a Node function.
 ```
 /
 ├── index.html, contact/             — the original site (unchanged design)
+├── work/                            — client-work + own-products page (Fase 2)
 ├── comunidade/, merch/, newsletter/ — waitlist pages (each + /confirmado/)
+├── pt/                              — European Portuguese mirror of every page
+│   ├── index.html, contact/         — same Framer bundle, translated at runtime
+│   └── work/, comunidade/, merch/,  — plain translated HTML (each + /confirmado/
+│       newsletter/                    where applicable)
 ├── assets/
 │   ├── waitlist.css, waitlist.js    — the waitlist pages' own styling/logic
 │   └── framer-patch.js              — see "Nav restructure" below
@@ -44,8 +49,17 @@ entries did, pointing at `https://alexffb.com/work` and `/blog`, which don't
 resolve to anything real. Since none of that was genuine content, those
 three nav/footer slots were repurposed in place instead of leaving dead
 links: **About → Comunidade, Work → Merch, Blog/Insights → Newsletter**.
-`/about/` itself was deleted; `vercel.json` redirects `/about`, `/work` and
-`/blog` so old links don't 404.
+`/about/` itself was deleted; `vercel.json` redirected `/about`, `/work` and
+`/blog` so old links didn't 404.
+
+**`/work/` was later reintroduced as real content** (a later phase, once
+Aeternus Progressus/Layout Agency client work existed to describe) — a new,
+genuinely 4th nav slot (client work + own products, see
+`addWorkNavLinkForVariant()` in `assets/framer-patch.js`), not a repurpose of
+the old dead `/work` link, which had already become the Merch link by then.
+The `vercel.json` redirect for `/work` was removed once the real page
+shipped; `/about` and `/blog` still redirect (to `/` and `/newsletter/`
+respectively) since those two never got real content of their own.
 
 **Important technical finding, worth knowing before touching this site
 again:** this is a *compiled Framer export*, not plain static HTML — it
@@ -240,9 +254,15 @@ just the HTML.**
   with the homepage in search results. (`/about/` was deleted outright
   rather than kept canonicalized — see "Nav restructure" above.)
 - `Person` + `Organization` JSON-LD added to the homepage.
-- `robots.txt` and `sitemap.xml` added (sitemap lists the homepage and the
-  three waitlist pages; `/contact/` is intentionally excluded since it
-  canonicalizes away).
+- `robots.txt` and `sitemap.xml` added. `sitemap.xml` now lists all 6 real
+  pages (`/`, `/contact/`, `/work/`, `/comunidade/`, `/merch/`,
+  `/newsletter/`) plus their `/pt/` counterparts — 12 `<url>` entries total,
+  each with `<xhtml:link rel="alternate" hreflang="...">` pointing at its
+  EN/PT pair. `/contact/` is included despite its own canonical still
+  pointing at the homepage (see above) — added when `/pt/contact/` shipped
+  and needed a real hreflang pair; the underlying canonical/sitemap tension
+  this creates hasn't been resolved, just noting it here for whoever
+  revisits SEO next.
 
 ## Waitlist pages
 
