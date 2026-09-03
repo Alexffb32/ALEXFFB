@@ -984,8 +984,12 @@
     anchor.dataset.constructionNoteAdded = "true";
     var p = document.createElement("p");
     p.textContent = "This site is a work in progress and gets updated often.";
+    // opacity:0.5 (on inherited near-black text, over a white footer)
+    // measured at 3.94:1 in a Lighthouse audit — fails WCAG AA's 4.5:1
+    // for normal-size text. 0.6 reaches ~5.7:1, comfortably passing,
+    // while still reading as a muted footnote.
     p.style.cssText =
-      "font-size: 12px; opacity: 0.5; text-align: center; margin: 24px 0 0; padding: 0 20px;";
+      "font-size: 12px; opacity: 0.6; text-align: center; margin: 24px 0 0; padding: 0 20px;";
     anchor.appendChild(p);
   }
 

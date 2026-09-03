@@ -49,7 +49,11 @@
   --bg: #f9f9f9;
   --ink: #090909;
   --stone: #63615e;
-  --stone-light: #7f7f80;
+  /* Darkened from the original #7f7f80 — that value fails WCAG AA
+     (4.5:1) for normal text on --bg (#f9f9f9), confirmed by a Lighthouse
+     audit against every wl-* page. #6e6e6e passes at ~4.8:1 and reads as
+     the same "muted secondary" weight. */
+  --stone-light: #6e6e6e;
   --line: #eaeaea;
   --accent: #ff462e;
   --accent-pale: #f7e3df;
@@ -126,18 +130,18 @@ a {
 
 .wl-lang-toggle a {
   text-decoration: none;
-  color: var(--stone);
-  opacity: 0.5;
+  /* Same fix as .wl-nav-links a above: color(--stone) + opacity:0.5
+     failed WCAG AA contrast against --bg (confirmed by Lighthouse). */
+  color: var(--stone-light);
 }
 
 .wl-lang-toggle a.is-current {
   color: var(--ink);
-  opacity: 1;
   cursor: default;
 }
 
 .wl-lang-toggle a:not(.is-current):hover {
-  opacity: 1;
+  color: var(--ink);
 }
 
 .wl-lang-toggle span {
@@ -168,19 +172,18 @@ a {
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  color: var(--ink);
+  /* Home's own nav dims every link except the current page. That was
+     originally done with opacity:0.5 on var(--ink), which fails WCAG AA
+     contrast (confirmed by Lighthouse) — a solid, already-accessible
+     color reads the same "dimmed" weight without the contrast hit. */
+  color: var(--stone-light);
   padding-bottom: 2px;
-  /* Home's own nav dims every link except the current page (opacity:0.5
-     on "Not Active" links, verified against the site's own compiled
-     markup) and brings it to full strength on hover/current. */
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .wl-nav-links a sup {
   font-size: 9px;
   margin-left: 1px;
-  opacity: 0.6;
 }
 
 .wl-nav-links a::after {
@@ -195,7 +198,7 @@ a {
 }
 
 .wl-nav-links a:hover {
-  opacity: 1;
+  color: var(--ink);
 }
 
 .wl-nav-links a:hover::after {
@@ -203,7 +206,7 @@ a {
 }
 
 .wl-nav-links a.is-current {
-  opacity: 1;
+  color: var(--ink);
   font-weight: 600;
 }
 
@@ -459,7 +462,10 @@ button:focus-visible {
 .wl-footer-nav a sup {
   font-size: 10px;
   font-weight: 500;
-  opacity: 0.6;
+  /* No opacity dimming here (unlike the header nav's sup) — .wl-footer-nav
+     a already uses var(--stone), which passes WCAG AA contrast on its
+     own; adding opacity on top of it was the exact bug that failed
+     contrast on the header nav's own sup, so it's not repeated here. */
   margin-right: 6px;
 }
 
