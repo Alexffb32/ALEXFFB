@@ -258,8 +258,16 @@
   // so the same single form still works for anyone who arrives without
   // clicking either option.
   var CONTACT_INTENTS = [
-    { label: "Work with me", prefix: "Re: Work with me — " },
-    { label: "Partnerships & Media", prefix: "Re: Partnerships & Media — " },
+    {
+      label: "Work with me",
+      prefix: "Re: Work with me — ",
+      ptPrefix: "Re: Trabalha comigo — ",
+    },
+    {
+      label: "Partnerships & Media",
+      prefix: "Re: Partnerships & Media — ",
+      ptPrefix: "Re: Parcerias & Media — ",
+    },
   ];
 
   function addContactIntentPicker() {
@@ -287,11 +295,15 @@
         });
         btn.style.background = "#1e1e1e";
         btn.style.color = "#fff";
+        var isPt = document.documentElement.lang === "pt";
+        var prefix = isPt ? opt.ptPrefix : opt.prefix;
         var alreadyPrefixed = CONTACT_INTENTS.some(function (o) {
-          return textarea.value.indexOf(o.prefix) === 0;
+          return (
+            textarea.value.indexOf(o.prefix) === 0 || textarea.value.indexOf(o.ptPrefix) === 0
+          );
         });
         if (!textarea.value || alreadyPrefixed) {
-          textarea.value = opt.prefix;
+          textarea.value = prefix;
         }
         textarea.focus();
         textarea.setSelectionRange(textarea.value.length, textarea.value.length);
@@ -405,6 +417,250 @@
   function fixContentText() {
     CONTENT_EDITS.forEach(function (pair) {
       replaceWord(document.body, pair[0], pair[1]);
+    });
+  }
+
+  // European Portuguese translation of every visible EN string on Home
+  // and Contact (pt/index.html, pt/contact/index.html — same HTML shell,
+  // same hydrated Framer bundle, only <html lang="pt"> + head meta differ).
+  // Applied only when document.documentElement.lang === "pt", using the
+  // exact same replaceWord()/TreeWalker substring mechanism as
+  // CONTENT_EDITS above — so it also survives hydration-revert and, since
+  // it's run at the very end of fixAll(), it also catches JS-inserted
+  // strings (nav "Work" label, footer address/social links, construction
+  // note, contact-intent picker buttons) that only exist after the other
+  // fixAll() steps have run.
+  //
+  // Ordering matters: replaceWord does a plain substring .replace() per
+  // text node, so a shorter/generic entry placed before a longer one that
+  // contains it as a substring would corrupt the longer phrase before its
+  // own (more specific) translation ever gets a chance to match. Every
+  // entry below is ordered longest/most-specific first within its group
+  // (e.g. "Contact Me!" / "Contact Now" / "Contact now" all before the
+  // bare "Contact"; "Work with me" before bare "Work"; "My Journey"
+  // before bare "My").
+  var TRANSLATIONS_PT = [
+    // Hero
+    ["Born to Build.", "Nascido Para Construir."],
+    ["Since 2007", "Desde 2007"],
+    ["Hey, Just An Intro", "Só Uma Introdução"],
+    ["Hi, I'm", "Olá, sou o"],
+    ["Let's Start a Conversation", "Vamos Começar uma Conversa"],
+    // Hero intro (matches CONTENT_EDITS' own rewritten EN text above,
+    // split across the same 4 fragments/text nodes as the original)
+    [
+      "— 18, from Portugal, building without a university degree.",
+      "— 18 anos, de Portugal, a construir sem tirar um curso superior.",
+    ],
+    [
+      "Vice-President of Selfmade Association, founder of a five-figure",
+      "Vice-Presidente da Selfmade Association, fundador de uma agência de cinco dígitos",
+    ],
+    [
+      "agency before I turned 18. Today I help businesses build the digital",
+      "antes dos 18 anos. Hoje ajudo negócios a construir os sistemas",
+    ],
+    [
+      "systems & strategies that help them scale & grow online.",
+      "e estratégias digitais que os ajudam a crescer e a escalar online.",
+    ],
+    // About / Selfmade
+    [
+      "Selfmade Association is a youth organization based in Fundão that promotes entrepreneurship and international mobility through Erasmus+ programs — connecting young people from the interior of Portugal with opportunities abroad, and bringing international youth to our region. I'm the Vice-President.",
+      "A Selfmade Association é uma organização juvenil sediada no Fundão que promove o empreendedorismo e a mobilidade internacional através de programas Erasmus+ — ligando jovens do interior de Portugal a oportunidades no estrangeiro, e trazendo jovens internacionais para a nossa região. Sou o Vice-Presidente.",
+    ],
+    ["More about me", "Mais sobre mim"],
+    [
+      "Over 12 years of football taught me more about discipline than anything else ever could. Today I channel that same energy into the gym, into\nlearning and into every project I take on.\nThe moment you stop evolving is the moment someone else takes your spot.",
+      "Mais de 12 anos de futebol ensinaram-me mais sobre disciplina do que qualquer outra coisa alguma vez poderia. Hoje canalizo essa mesma energia para o ginásio, para\naprender e para cada projeto que assumo.\nO momento em que paras de evoluir é o momento em que outra pessoa ocupa o teu lugar.",
+    ],
+    ["Lifestyle", "Estilo de Vida"],
+    ["My Journey", "O Meu Percurso"],
+    // Journey timeline
+    [
+      "I co-founded a digital agency at 16, creating funnels and digital strategies for businesses across Portugal. Before turning 18, I had already crossed five figures in revenue. I eventually left to pursue a bigger vision, but watching that agency keep growing without me is something I'll always be proud of.",
+      "Co-fundei uma agência digital aos 16 anos, criando funis e estratégias digitais para negócios em Portugal. Antes de fazer 18 anos, já tinha ultrapassado os cinco dígitos em receita. Acabei por sair para perseguir uma visão maior, mas ver essa agência continuar a crescer sem mim é algo de que sempre me vou orgulhar.",
+    ],
+    [
+      "As Vice-President, I help run the podcast we produce together, coordinate Erasmus+ mobility opportunities, and push entrepreneurship programs that give young people from the interior of Portugal practical tools to build something of their own — not just motivational talk.",
+      "Como Vice-Presidente, ajudo a gerir o podcast que produzimos juntos, coordeno oportunidades de mobilidade Erasmus+, e impulsiono programas de empreendedorismo que dão a jovens do interior de Portugal ferramentas práticas para construírem algo próprio — não apenas conversa motivacional.",
+    ],
+    [
+      "I joined Aeternus Progressus as a Project Manager, working on marketing and business strategy while helping public and private organizations across Portugal and Europe secure European funding and navigate digitalization projects. Real clients, real projects, already running.",
+      "Entrei para a Aeternus Progressus como Gestor de Projeto, trabalhando em marketing e estratégia de negócio enquanto ajudo organizações públicas e privadas em Portugal e na Europa a garantir financiamento europeu e a navegar projetos de digitalização. Clientes reais, projetos reais, já em curso.",
+    ],
+    ["Co-Founder", "Co-Fundador"],
+    ["Contact now", "Contacta agora"],
+    // Education
+    [
+      "From 2022 to 2025 I completed a Computer Programming course at Escola Profissional do Fundão, where I served as class and course representative and graduated as a merited student with a final grade of 18 out of 20.",
+      "De 2022 a 2025 completei um curso de Programação de Computadores na Escola Profissional do Fundão, onde fui delegado de turma e de curso e me formei como aluno com mérito, com uma nota final de 18 em 20.",
+    ],
+    // Stats badges
+    ["3 Times Winner", "Vencedor 3 Vezes"],
+    ["Youth political initiatives", "Iniciativas Políticas Juvenis"],
+    ["4 Presidential Terms", "4 Mandatos Presidenciais"],
+    ["Erasmus Projects", "Projetos Erasmus"],
+    ["5 International Projects", "5 Projetos Internacionais"],
+    ["Events & Communities", "Eventos & Comunidades"],
+    ["6 Successfully Organized", "6 Organizados com Sucesso"],
+    // Stats & Facts
+    ["Stats & Facts", "Números & Factos"],
+    [
+      "I started with no budget, no team and no roadmap. Just a clear belief that hard work",
+      "Comecei sem orçamento, sem equipa e sem plano. Só uma crença clara de que trabalho árduo",
+    ],
+    [
+      "and the right systems could make a difference. Every number below was earned, not given.",
+      "e os sistemas certos podiam fazer a diferença. Cada número abaixo foi conquistado, não dado.",
+    ],
+    ["Revenue Generated", "Receita Gerada"],
+    ["Before turning 18 years old.", "Antes de fazer 18 anos."],
+    ["Projects Delivered", "Projetos Entregues"],
+    ["Across Portugal and worldwide.", "Por todo Portugal e pelo mundo."],
+    ["Satisfaction Rate", "Taxa de Satisfação"],
+    ["With every client, every project.", "Com cada cliente, cada projeto."],
+    // What I Do
+    ["What I Do", "O Que Eu Faço"],
+    [
+      "Marketing, AI, design and systems — how I help the companies inside Aeternus Progressus grow, and what I do for Selfmade Association.",
+      "Marketing, IA, design e sistemas — como ajudo as empresas dentro da Aeternus Progressus a crescer, e o que faço pela Selfmade Association.",
+    ],
+    ["Vice-President, Selfmade Association", "Vice-Presidente, Selfmade Association"],
+    ["Project Manager, Aeternus Progressus", "Gestor de Projeto, Aeternus Progressus"],
+    ["Marketing and Funnels", "Marketing e Funis"],
+    [
+      "Strategy, branding and marketing — how I help the companies inside Aeternus Progressus grow, alongside my own work at Layout Agency.",
+      "Estratégia, branding e marketing — como ajudo as empresas dentro da Aeternus Progressus a crescer, a par do meu próprio trabalho na Layout Agency.",
+    ],
+    ["Artificial Intelligence", "Inteligência Artificial"],
+    [
+      "Building AI agents and automations for the companies inside Aeternus Progressus.",
+      "A construir agentes de IA e automações para as empresas dentro da Aeternus Progressus.",
+    ],
+    ["Design & Development", "Design & Desenvolvimento"],
+    [
+      "Websites, software and visual identities for the companies inside Aeternus Progressus — the same systems-building work that took Layout Agency to five-figure revenue before I turned 18",
+      "Websites, software e identidades visuais para as empresas dentro da Aeternus Progressus — o mesmo trabalho de construção de sistemas que levou a Layout Agency a uma receita de cinco dígitos antes de eu fazer 18 anos",
+    ],
+    ["Systems & Operations", "Sistemas & Operações"],
+    [
+      "Coordinating teams and processes, from Erasmus+ mobility at Selfmade to project delivery at Aeternus Progressus.",
+      "A coordenar equipas e processos, desde a mobilidade Erasmus+ na Selfmade até à entrega de projetos na Aeternus Progressus.",
+    ],
+    ["What I", "O Que Eu"],
+    // Benefits
+    ["Benefits of Hiring Me", "Vantagens de Trabalhar Comigo"],
+    ["From idea to live. Fast", "Da ideia ao ar. Rápido"],
+    ["Lightning-fast delivery without compromising quality", "Entrega ultrarrápida sem comprometer a qualidade"],
+    ["FROM 0 TO LIVE IN ONE STEP", "DE 0 AO AR NUM SÓ PASSO"],
+    ["All in one person", "Tudo numa só pessoa"],
+    ["FULL TIME SUPPORT", "SUPORTE A TEMPO INTEIRO"],
+    [
+      "Direct access to me, always. You'll never wonder where things stand or what comes next. That's a promise.",
+      "Acesso direto a mim, sempre. Nunca vais ficar na dúvida sobre o estado das coisas ou o que vem a seguir. É uma promessa.",
+    ],
+    // Photography
+    ["Shots By Me", "Fotos Tiradas por Mim"],
+    ["Photography", "Fotografia"],
+    ["Every Pixel Clicked.", "Cada Pixel Clicado."],
+    [
+      "Capturing moments, creating memories. Through my lens, i capture stunning visuals that bring your brand to life with clarity, emotion, and impact.",
+      "A capturar momentos, a criar memórias. Através da minha lente, capturo imagens impressionantes que dão vida à tua marca com clareza, emoção e impacto.",
+    ],
+    ["Book an appointment", "Marcar uma sessão"],
+    // Five-figure story
+    ["How it Started ?", "Como Começou?"],
+    ["The Beginning of", "O Início da"],
+    ["Own Story.", "Própria História."],
+    ["Five-figure business before turning 18", "Negócio de cinco dígitos antes dos 18 anos"],
+    [
+      "I started in the business world at 16, and after trying several models, I joined forces with a friend and we founded an agency where we built digital funnels to help companies in the interior of Portugal grow online. At the time, I gave up on going to university, and even before I was 18, we had already made five figures in revenue with our own business.\nHowever, despite being a co-founder, I decided to leave to take advantage of a better opportunity, but I love continuing to see the agency I founded grow even though I'm no longer involved in operations.",
+      "Comecei no mundo dos negócios aos 16 anos, e depois de experimentar vários modelos, juntei forças com um amigo e fundámos uma agência onde construímos funis digitais para ajudar empresas do interior de Portugal a crescer online. Na altura, desisti de ir para a universidade, e mesmo antes de fazer 18 anos, já tínhamos feito cinco dígitos em receita com o nosso próprio negócio.\nNo entanto, apesar de ser co-fundador, decidi sair para aproveitar uma oportunidade melhor, mas adoro continuar a ver a agência que fundei crescer, mesmo já não estando envolvido nas operações.",
+    ],
+    ["Join the waitlist", "Junta-te à lista de espera"],
+    ["50+ People Rated", "Mais de 50 Pessoas Avaliaram"],
+    // Contact section
+    ["Let's Work Together", "Vamos Trabalhar Juntos"],
+    ["Contact Me!", "Contacta-me!"],
+    ["Contact Now", "Contacta Agora"],
+    [
+      "Let’s create something amazing together! Reach out I’d love to hear about your project and ideas.",
+      "Vamos criar algo incrível juntos! Contacta-me, adorava ouvir falar do teu projeto e das tuas ideias.",
+    ],
+    ["24/7 Full Time Support", "Suporte 24/7 a Tempo Inteiro"],
+    ["Available Worldwide", "Disponível em Todo o Mundo"],
+    ["Work with me", "Trabalha comigo"],
+    ["Partnerships & Media", "Parcerias & Media"],
+    ["Submit Now", "Enviar Agora"],
+    // Footer
+    ["Stay connected®", "Fica em contacto®"],
+    [
+      "Crafted with creativity and passion. Let’s stay connected reach out anytime!",
+      "Feito com criatividade e paixão. Fica em contacto, fala comigo quando quiseres!",
+    ],
+    ["This site is a work in progress and gets updated often.", "Este site ainda está em construção e é atualizado com frequência."],
+    ["©Back to top", "©Voltar ao Topo"],
+  ];
+
+  // Short, generic words/phrases translated above are risky with a plain
+  // substring replace: several of their own PT translations start with the
+  // same stem as the EN key (e.g. "Contact" -> "Contacto"/"Contacta..." —
+  // the translated word itself contains "Contact" as a leading substring),
+  // which would re-match and corrupt already-translated text on fixAll()'s
+  // later re-runs (confirmed by an automated check before shipping this —
+  // same class of self-collision bug as the Fase 1 hero-copy fix, but not
+  // fixable by reordering alone here since the collision is with the
+  // *translation's own wording*, not another dictionary entry). Matched
+  // with a word-boundary regex instead, so "Contact" only replaces the
+  // standalone EN word, never the "Contact" inside "Contacta"/"Contacto".
+  var TRANSLATIONS_PT_WORDS = [
+    ["Home", "Início"],
+    ["Work", "Trabalho"],
+    ["Get in touch", "Fala comigo"],
+    ["My", "Minha"],
+    ["Do", "Faço"],
+    ["Contact", "Contacto"],
+    // Standalone role-badge labels (Journey timeline cards) — same
+    // self-collision issue as "Contact": "Vice-President" is a literal
+    // prefix of its own translation "Vice-Presidente".
+    ["Vice-President", "Vice-Presidente"],
+    ["Project Manager", "Gestor de Projeto"],
+  ];
+
+  function applyTranslations() {
+    if (document.documentElement.lang !== "pt") return;
+    TRANSLATIONS_PT.forEach(function (pair) {
+      replaceWord(document.body, pair[0], pair[1]);
+    });
+    TRANSLATIONS_PT_WORDS.forEach(function (pair) {
+      replaceWordBoundary(document.body, pair[0], pair[1]);
+    });
+    fixFormPlaceholdersPt();
+  }
+
+  function replaceWordBoundary(a, oldWord, newWord) {
+    var escaped = oldWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    var re = new RegExp("\\b" + escaped + "\\b", "g");
+    var walker = document.createTreeWalker(a, NodeFilter.SHOW_TEXT);
+    var node;
+    while ((node = walker.nextNode())) {
+      if (re.test(node.nodeValue)) {
+        node.nodeValue = node.nodeValue.replace(re, newWord);
+      }
+      re.lastIndex = 0;
+    }
+  }
+
+  // Placeholders live on the <input>/<textarea> element itself, not a text
+  // node, so replaceWord()/TreeWalker can't reach them — set directly.
+  function fixFormPlaceholdersPt() {
+    if (document.documentElement.lang !== "pt") return;
+    var map = { "Name*": "Nome*", "Message*": "Mensagem*" };
+    Object.keys(map).forEach(function (ph) {
+      document.querySelectorAll('[placeholder="' + ph + '"]').forEach(function (el) {
+        if (el.placeholder !== map[ph]) el.placeholder = map[ph];
+      });
     });
   }
 
@@ -593,6 +849,8 @@
         setTimeout(fix, 600);
         setTimeout(addWorkNavLink, 250);
         setTimeout(addWorkNavLink, 600);
+        setTimeout(applyTranslations, 250);
+        setTimeout(applyTranslations, 600);
       });
     }
 
@@ -821,13 +1079,20 @@
   }
 
   // Subtle EN/PT switch in the header, next to the logo — plain text,
-  // no flags or dropdown. Only English copy exists on the site today, so
-  // this only marks EN as the active language for now and lets PT show a
-  // brief "coming soon" note instead of silently doing nothing.
+  // no flags or dropdown. Home and Contact now have real PT translations
+  // (pt/index.html, pt/contact/index.html, sharing this same script), so
+  // this is a real link pair rather than the earlier "coming soon" tooltip:
+  // it preserves whichever of Home/Contact the visitor is currently on
+  // (same pattern as the .wl-lang-toggle used on the simple waitlist pages).
   function addLanguageToggle() {
     var logo = document.querySelector('a[data-framer-name="Logo"]');
     if (!logo || logo.dataset.langToggleAdded) return;
     logo.dataset.langToggleAdded = "true";
+
+    var isPt = document.documentElement.lang === "pt";
+    var isContact = window.location.pathname.indexOf("/contact/") !== -1;
+    var enHref = isContact ? "/contact/" : "/";
+    var ptHref = isContact ? "/pt/contact/" : "/pt/";
 
     // Anchored right next to the logo (not the nav-links list) so it
     // never collides with the desktop link row or the mobile hamburger
@@ -836,41 +1101,28 @@
     wrap.id = "lang-toggle";
     wrap.style.cssText =
       "display:inline-flex;align-items:center;gap:6px;margin-left:14px;" +
-      "font-size:13px;font-weight:600;color:#090909;position:relative;" +
+      "font-size:13px;font-weight:600;color:#090909;" +
       "text-shadow:0 1px 2px rgba(255,255,255,.9),0 0 6px rgba(255,255,255,.7);";
 
-    var en = document.createElement("span");
+    var en = document.createElement("a");
     en.textContent = "EN";
-    en.style.cssText = "opacity:1;cursor:default;";
+    en.href = enHref;
+    en.style.cssText =
+      "text-decoration:none;color:inherit;opacity:" + (isPt ? "0.45" : "1") + ";cursor:pointer;";
 
     var sep = document.createElement("span");
     sep.textContent = "/";
     sep.style.cssText = "opacity:0.3;";
 
-    var pt = document.createElement("button");
+    var pt = document.createElement("a");
     pt.textContent = "PT";
-    pt.type = "button";
+    pt.href = ptHref;
     pt.style.cssText =
-      "background:none;border:none;padding:0;font:inherit;color:inherit;opacity:0.45;cursor:pointer;";
-
-    var note = document.createElement("span");
-    note.textContent = "Tradução chega em breve";
-    note.style.cssText =
-      "position:absolute;top:100%;left:0;margin-top:6px;background:#fff;border-radius:6px;padding:4px 8px;" +
-      "box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:11px;font-weight:400;opacity:0;pointer-events:none;" +
-      "transition:opacity .2s ease;white-space:nowrap;";
-
-    pt.addEventListener("click", function () {
-      note.style.opacity = "1";
-      setTimeout(function () {
-        note.style.opacity = "0";
-      }, 2200);
-    });
+      "text-decoration:none;color:inherit;opacity:" + (isPt ? "1" : "0.45") + ";cursor:pointer;";
 
     wrap.appendChild(en);
     wrap.appendChild(sep);
     wrap.appendChild(pt);
-    wrap.appendChild(note);
 
     logo.insertAdjacentElement("afterend", wrap);
   }
@@ -893,6 +1145,7 @@
     addConstructionNote();
     addLanguageToggle();
     addWorkNavLink();
+    applyTranslations();
   }
 
   fixAll();
