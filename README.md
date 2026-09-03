@@ -27,6 +27,7 @@ runs `/api/waitlist.js` as a Node function.
 ├── api/
 │   ├── waitlist.js                  — POST endpoint: validate → Resend → Supabase
 │   └── _lib/                        — validation, rate limiting, email, db helpers
+├── supabase/migrations/             — tracked schema, see "Supabase" below
 ├── framerusercontent.com/,          — mirrored asset hosts the original site
 │   framer.com*, fonts.gstatic.com/,   references (kept as-is so paths still work)
 │   events.framer.com/
@@ -504,3 +505,57 @@ page source against what the target commit should have).
   the compiled Framer output has many inline `<script>` tags and
   `style="..."` attributes with no build step available to add nonces —
   a real static site with build tooling could tighten this further.
+
+## Supabase
+
+Schema is tracked in `supabase/migrations/` (Supabase CLI naming:
+`<timestamp>_<name>.sql`, applied in order). This project's Supabase
+project is `alexffb` (`eu-west-1`) — a separate, older project on the same
+account (`Alexffb32's Project`) is unrelated leftover from something else
+and is not what `NEXT_PUBLIC_SUPABASE_URL` points to.
+
+**Tables:**
+- `waitlist_submissions` — best-effort backup log for every Comunidade/
+  Merch/Newsletter signup (see "Waitlist pages" above). `20260901154150`
+  is the baseline (already applied before this repo tracked migrations,
+  recorded here for history — not meant to be re-run).
+  `20260903005325` is a real bug fix: the original `list` CHECK only
+  allowed `'comunidade'`/`'merch'`, so every Newsletter signup's backup
+  log silently failed the insert from the day the Newsletter page shipped
+  (best-effort logging swallows the error — nobody-facing, but Alex had
+  zero Supabase record of Newsletter signups until this migration).
+- `content_blocks` (`20260903005337`) — schema-only scaffold for the
+  long-term blog/newsletter-archive content pillar. No page reads or
+  writes it yet; adding the table now (RLS: public read of `published =
+  true` rows only, no insert/update policy at all) means a future
+  authoring flow only needs a client, not another migration.
+
+**Row Level Security posture** (confirmed by inspecting the live
+project, not just assumed): every table has RLS enabled.
+`waitlist_submissions` has exactly one policy — public `INSERT`, no
+`SELECT` — so the anon key used by `api/_lib/supabase.js` can log a
+signup but can never read the list back; that only happens from the
+Supabase dashboard or a service-role key, and no service-role key exists
+anywhere in this repo's client-facing code (`NEXT_PUBLIC_SUPABASE_ANON_KEY`
+is the anon/publishable key, safe to ship to a browser or a
+non-secret-holding serverless function — despite the `NEXT_PUBLIC_`
+prefix left over from an earlier Next.js attempt, it's read server-side
+in a plain Vercel function here, never bundled into client JS).
+`content_blocks` only has a public `SELECT` policy scoped to published
+rows — no anon/authenticated write path exists, so populating it will
+always require the dashboard or a service-role key until a real
+authoring flow is built.
+
+**Auth scaffolding note (not built — for whenever community accounts
+happen):** if/when Comunidade grows into real member accounts, Supabase
+Auth is the natural fit — `auth.users` is already there for free on any
+Supabase project, and RLS policies can reference `auth.uid()` directly
+(the pattern the *other*, unrelated Supabase project on this account
+already uses for its own `public.users`/`documents` tables, e.g. `create
+policy ... using (auth.uid() = user_id)`). Nothing here creates that yet
+— no `public.users` table, no `auth.uid()`-scoped policies — since there's
+no UI to log in with. When that's built, the pattern is: a `public.users`
+row per `auth.users.id` (foreign key, same as the other project), RLS
+policies scoped to `auth.uid()` for anything user-owned, and the anon key
+stays the only key the client ever sees — auth changes who's talking, not
+which key they use.
