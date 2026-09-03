@@ -111,6 +111,40 @@ a {
   color: var(--stone);
 }
 
+/* EN/PT language toggle, next to the logo — real links (unlike the
+   "coming soon" tooltip on the Framer-compiled Home/Contact pages),
+   since these are plain static pages with a real translated PT/ URL
+   to link to. */
+.wl-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.wl-lang-toggle a {
+  text-decoration: none;
+  color: var(--stone);
+  opacity: 0.5;
+}
+
+.wl-lang-toggle a.is-current {
+  color: var(--ink);
+  opacity: 1;
+  cursor: default;
+}
+
+.wl-lang-toggle a:not(.is-current):hover {
+  opacity: 1;
+}
+
+.wl-lang-toggle span {
+  opacity: 0.3;
+  color: var(--stone);
+}
+
 .wl-back:hover {
   color: var(--ink);
 }
