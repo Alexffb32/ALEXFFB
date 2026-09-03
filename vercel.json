@@ -2,7 +2,6 @@
   "redirects": [
     { "source": "/about", "destination": "/", "permanent": true },
     { "source": "/about/", "destination": "/", "permanent": true },
-    { "source": "/work", "destination": "/comunidade/", "permanent": true },
     { "source": "/blog", "destination": "/newsletter/", "permanent": true }
   ],
   "headers": [

@@ -451,7 +451,13 @@
           replaceWord(a, "About", "Comunidade");
           finalize(a, "/comunidade/");
         }
-      } else if (norm === "/work") {
+      } else if (norm === "/work" && !a.hasAttribute("data-work-nav-link")) {
+        // Repurposes the template's original "Work" nav slot into Merch —
+        // NOT the same node as the new "Work" link addWorkNavLink() adds
+        // below (that one carries data-work-nav-link so this branch skips
+        // it; without the guard both nodes look identical to this check
+        // once cloned, since the clone starts out as a copy of a link
+        // this same fix() also processes).
         if (text.indexOf("View portfolio") !== -1) {
           replaceWord(a, "View portfolio", "Join the waitlist");
           finalize(a, "/comunidade/");
@@ -585,6 +591,8 @@
       menuToggle.addEventListener("click", function () {
         setTimeout(fix, 250);
         setTimeout(fix, 600);
+        setTimeout(addWorkNavLink, 250);
+        setTimeout(addWorkNavLink, 600);
       });
     }
 
@@ -723,6 +731,95 @@
     anchor.appendChild(p);
   }
 
+  // Reintroduces a "Work" nav link (client work + own products, see
+  // /work/) — the original Framer template only had 3 spare nav slots
+  // (About/Work/Blog), already all used by Comunidade/Merch/Newsletter,
+  // so this is a genuinely new 4th slot rather than a repurpose. Clones
+  // the real "Comunidade" link (keeps its exact styling/hover behavior)
+  // instead of building a new node from scratch, then relabels it and
+  // renumbers the three links after it.
+  // Desktop nav ("Not Active" variant) and the mobile hamburger overlay
+  // ("Mobile" variant, confirmed via testing to share the exact same
+  // Text1/Text2/Indicator internal structure as desktop — an earlier,
+  // wrong guess at a "Single Line Not Active" variant turned out to be a
+  // different, not-actually-rendered component) both need this same
+  // clone+renumber treatment, just scoped to their own variant name.
+  function addWorkNavLinkForVariant(variant) {
+    var comunidadeLink = document.querySelector('a[data-framer-name="' + variant + '"][href="/comunidade/"]');
+    if (!comunidadeLink) return;
+    var comunidadeContainer = comunidadeLink.parentElement;
+    var navRow = comunidadeContainer && comunidadeContainer.parentElement;
+    if (!navRow) return;
+
+    var flagKey = "workLinkAdded" + variant.replace(/\s+/g, "");
+    if (!navRow.dataset[flagKey]) {
+      navRow.dataset[flagKey] = "true";
+      var clone = comunidadeContainer.cloneNode(true);
+      var cloneLink = clone.querySelector("a");
+      cloneLink.setAttribute("href", "/work/");
+      cloneLink.setAttribute("data-work-nav-link", "true");
+      var t1 = clone.querySelector(".framer-1xn2lzr p");
+      var t2 = clone.querySelector(".framer-17j7mkn p");
+      var indicator = clone.querySelector(".framer-bmdrp8 p");
+      if (t1) t1.textContent = "Work";
+      if (t2) t2.textContent = "Work";
+      if (indicator) indicator.textContent = "02";
+      // Same reasoning as finalize() below: a cloned Page Link still
+      // carries React's fiber reference until re-cloned, so a real click
+      // would route to wherever this node's original href pointed.
+      var freshLink = cloneLink.cloneNode(true);
+      cloneLink.parentNode.replaceChild(freshLink, cloneLink);
+      comunidadeContainer.insertAdjacentElement("beforebegin", clone);
+    }
+
+    // Re-set every pass (idempotent — always the same absolute target,
+    // never incremented) since hydration can restore the original
+    // "02/03/04" indicator numbers on these three existing links.
+    var renumber = { "/comunidade/": "03", "/merch/": "04", "/newsletter/": "05" };
+    Object.keys(renumber).forEach(function (href) {
+      var link = document.querySelector('a[data-framer-name="' + variant + '"][href="' + href + '"]');
+      var indicator = link && link.querySelector(".framer-bmdrp8 p");
+      if (indicator && indicator.textContent !== renumber[href]) {
+        indicator.textContent = renumber[href];
+      }
+    });
+  }
+
+  // The mobile overlay's row dividers turned out to be separate 1px
+  // elements Framer positions to match its own original 4-item layout
+  // (confirmed by inspection — not proper CSS borders), so inserting a
+  // 5th item leaves one gap without a divider and misaligns the rest.
+  // Simplest reliable fix: hide Framer's own divider elements for this
+  // nav row and draw a real border-bottom on each item container
+  // instead, which stays correct regardless of how many items there are.
+  function fixMobileNavDividers() {
+    var workLink = document.querySelector('a[data-work-nav-link][data-framer-name="Mobile"]');
+    if (!workLink) return;
+    var navRow = workLink.parentElement.parentElement;
+    if (!navRow || navRow.dataset.dividersFixed) return;
+    navRow.dataset.dividersFixed = "true";
+
+    var itemContainers = [];
+    Array.from(navRow.children).forEach(function (child) {
+      if (child.querySelector("a")) {
+        itemContainers.push(child);
+      } else {
+        child.style.display = "none";
+      }
+    });
+    itemContainers.forEach(function (container, i) {
+      if (i < itemContainers.length - 1) {
+        container.style.borderBottom = "1px solid rgb(234, 234, 234)";
+      }
+    });
+  }
+
+  function addWorkNavLink() {
+    addWorkNavLinkForVariant("Not Active");
+    addWorkNavLinkForVariant("Mobile");
+    fixMobileNavDividers();
+  }
+
   // Subtle EN/PT switch in the header, next to the logo — plain text,
   // no flags or dropdown. Only English copy exists on the site today, so
   // this only marks EN as the active language for now and lets PT show a
@@ -795,6 +892,7 @@
     fixMobileMedia();
     addConstructionNote();
     addLanguageToggle();
+    addWorkNavLink();
   }
 
   fixAll();
