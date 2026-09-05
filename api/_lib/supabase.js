@@ -10,11 +10,14 @@ function getSupabaseClient() {
 /**
  * Logs a waitlist signup into `waitlist_submissions` as a backup registry
  * alongside Resend. Best-effort: a failure here is logged but never blocks
- * the response — Resend (or the lack of credentials) is the source of
- * truth for whether the signup "succeeded" from the visitor's point of view.
+ * the response. Always called regardless of whether the Resend call
+ * succeeded — resendOk/resendError record that outcome so a Resend-side
+ * failure (bad API key, unverified domain, etc.) leaves a durable,
+ * queryable trace here instead of only a Vercel function log line (1 hour
+ * retention on Hobby — effectively gone by the time anyone checks).
  * The table's RLS policy only allows INSERT, never SELECT.
  */
-async function logWaitlistSubmission({ name, email, list }) {
+async function logWaitlistSubmission({ name, email, list, resendOk, resendError }) {
   const supabase = getSupabaseClient();
   if (!supabase) {
     console.warn(
@@ -23,10 +26,34 @@ async function logWaitlistSubmission({ name, email, list }) {
     return;
   }
 
-  const { error } = await supabase.from("waitlist_submissions").insert({ name, email, list });
+  const { error } = await supabase
+    .from("waitlist_submissions")
+    .insert({ name, email, list, resend_ok: resendOk, resend_error: resendError });
   if (error) {
     console.error("[waitlist] failed to log submission to Supabase", error);
   }
 }
 
-module.exports = { logWaitlistSubmission };
+/**
+ * Same idea as logWaitlistSubmission, for the contact form — previously
+ * this flow logged nothing at all anywhere, so a Resend failure was
+ * completely invisible after the fact.
+ */
+async function logContactSubmission({ name, email, message, resendOk, resendError }) {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    console.warn(
+      "[contact] NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set — skipping Supabase log.",
+    );
+    return;
+  }
+
+  const { error } = await supabase
+    .from("contact_submissions")
+    .insert({ name, email, message, resend_ok: resendOk, resend_error: resendError });
+  if (error) {
+    console.error("[contact] failed to log submission to Supabase", error);
+  }
+}
+
+module.exports = { logWaitlistSubmission, logContactSubmission };
