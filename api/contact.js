@@ -1,6 +1,7 @@
 const { z } = require("zod");
 const { Resend } = require("resend");
 const { rateLimit } = require("./_lib/rateLimit");
+const { logContactSubmission } = require("./_lib/supabase");
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Name is too short").max(100, "Name is too long"),
@@ -79,11 +80,23 @@ module.exports = async (req, res) => {
     console.warn(
       "[contact] RESEND_API_KEY or CONTACT_NOTIFY_EMAIL is not set — skipping email notification.",
     );
+    // Log even the unconfigured case — previously this branch left zero
+    // trace anywhere, so a missing env var was indistinguishable from
+    // nobody submitting the form at all.
+    await logContactSubmission({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      message: parsed.data.message,
+      resendOk: null,
+      resendError: "RESEND_API_KEY or CONTACT_NOTIFY_EMAIL not set",
+    });
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true }));
     return;
   }
 
+  let resendOk = true;
+  let resendError = null;
   try {
     const resend = new Resend(apiKey);
     await resend.emails.send({
@@ -99,9 +112,20 @@ module.exports = async (req, res) => {
   } catch (error) {
     // This runs silently alongside the native form's own submission, so a
     // delivery failure here shouldn't surface a second error UI to the
-    // visitor — just log it for whoever checks the Vercel function logs.
+    // visitor — logged to Supabase (below) instead of only a Vercel
+    // function log line, which is gone within the hour on the Hobby plan.
     console.error("[api/contact] failed to send notification email", error);
+    resendOk = false;
+    resendError = error && error.message ? error.message : String(error);
   }
+
+  await logContactSubmission({
+    name: parsed.data.name,
+    email: parsed.data.email,
+    message: parsed.data.message,
+    resendOk,
+    resendError,
+  });
 
   res.statusCode = 200;
   res.end(JSON.stringify({ ok: true }));
