@@ -50,10 +50,10 @@
       })
       .then(function (result) {
         if (result.ok) {
-          showMessage("Feito! Já estás na lista — avisamos-te assim que houver novidades.", false);
+          showMessage("Feito! Já estás na lista, avisamos-te assim que houver novidades.", false);
           form.reset();
         } else if (result.status === 429) {
-          showMessage("Demasiadas tentativas — tenta novamente daqui a um minuto.", true);
+          showMessage("Demasiadas tentativas, tenta novamente daqui a um minuto.", true);
         } else {
           showMessage("Algo correu mal. Tenta novamente daqui a instantes.", true);
         }

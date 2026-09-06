@@ -62,7 +62,7 @@
           setStatus("Mensagem enviada. Respondo em 24 horas.");
           form.reset();
         } else if (result.status === 429) {
-          setStatus("Demasiadas tentativas — tenta novamente daqui a um minuto.");
+          setStatus("Demasiadas tentativas, tenta novamente daqui a um minuto.");
         } else {
           setStatus("Algo correu mal. Tenta novamente daqui a instantes.");
         }
