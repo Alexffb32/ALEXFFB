@@ -132,6 +132,62 @@ body.wl-body {
   color: var(--ink);
 }
 
+.wl-countdown {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin: 0 0 32px;
+}
+
+.wl-countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+  padding: 14px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(190, 190, 190, 0.05);
+}
+
+.wl-countdown-num {
+  font-family: "Thunder Extra Bold LC Italic", sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  color: var(--ink);
+  font-size: 28px;
+  line-height: 1em;
+}
+
+.wl-countdown-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-top: 6px;
+}
+
+.wl-countdown-live {
+  color: var(--accent);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0 0 32px;
+}
+
+@media (max-width: 480px) {
+  .wl-countdown {
+    gap: 8px;
+  }
+  .wl-countdown-unit {
+    min-width: 50px;
+    padding: 10px 6px;
+  }
+  .wl-countdown-num {
+    font-size: 22px;
+  }
+}
+
 .wl-form {
   display: flex;
   flex-direction: column;
