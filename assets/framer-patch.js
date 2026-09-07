@@ -135,6 +135,21 @@
     }
   }
 
+  // Botão extra "Merch" na barra fixa do hero, ao lado do "Waitlist" já
+  // existente — a loja está ao vivo em /loja, por isso este link aponta
+  // lá diretamente, não para uma waitlist.
+  function addMerchButton() {
+    var waitlistBtn = document.querySelector(".framer-1mfibht");
+    if (!waitlistBtn || waitlistBtn.getAttribute("data-abwl-merch-added") === "1") return;
+    var merchBtn = waitlistBtn.cloneNode(true);
+    merchBtn.removeAttribute("data-abwl-detached");
+    merchBtn.setAttribute("data-abwl-merch-btn", "1");
+    merchBtn.textContent = "Merch";
+    merchBtn.setAttribute("href", "/loja");
+    waitlistBtn.insertAdjacentElement("afterend", merchBtn);
+    waitlistBtn.setAttribute("data-abwl-merch-added", "1");
+  }
+
   function fixTextNodes() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     var node;
@@ -348,6 +363,7 @@
     fixHeadings();
     fixByClass();
     fixShortText();
+    addMerchButton();
     fixCardLinks();
     fixCalLinks();
     fixHeaderSocialLinks();
