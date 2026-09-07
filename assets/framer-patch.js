@@ -255,6 +255,60 @@
     }
   }
 
+  // Vídeo da secção About: tira o HUD nativo do browser (controls) e
+  // substitui por um botão de play central com efeito "liquid glass".
+  // Marcado com data-abwl-fixed para só se montar uma vez.
+  function fixAboutVideo() {
+    var video = document.querySelector("video[controls]");
+    if (!video || video.getAttribute("data-abwl-fixed") === "1") return;
+    video.setAttribute("data-abwl-fixed", "1");
+    video.removeAttribute("controls");
+
+    var wrap = video.parentElement;
+    if (wrap && getComputedStyle(wrap).position === "static") {
+      wrap.style.position = "relative";
+    }
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Reproduzir vídeo");
+    btn.style.cssText =
+      "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);" +
+      "width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;" +
+      "cursor:pointer;border:1px solid rgba(255,255,255,0.35);" +
+      "background:rgba(255,255,255,0.14);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);" +
+      "box-shadow:0 8px 32px rgba(0,0,0,0.35),inset 0 1px 1px rgba(255,255,255,0.45),inset 0 -1px 1px rgba(0,0,0,0.15);" +
+      "transition:transform 0.2s ease,background 0.2s ease;z-index:2;";
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" style="width:26px;height:26px;margin-left:3px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.35))"><path d="M6 4.5 L19 12 L6 19.5 Z" fill="#fff"/></svg>';
+
+    btn.addEventListener("mouseenter", function () {
+      btn.style.transform = "translate(-50%,-50%) scale(1.08)";
+      btn.style.background = "rgba(255,255,255,0.2)";
+    });
+    btn.addEventListener("mouseleave", function () {
+      btn.style.transform = "translate(-50%,-50%) scale(1)";
+      btn.style.background = "rgba(255,255,255,0.14)";
+    });
+    btn.addEventListener("click", function () {
+      video.play();
+    });
+    video.addEventListener("click", function () {
+      if (!video.paused) video.pause();
+    });
+    video.addEventListener("play", function () {
+      btn.style.display = "none";
+    });
+    video.addEventListener("pause", function () {
+      btn.style.display = "flex";
+    });
+    video.addEventListener("ended", function () {
+      btn.style.display = "flex";
+    });
+
+    (wrap || video.parentNode).appendChild(btn);
+  }
+
   function patch() {
     fixTextNodes();
     fixHeadings();
@@ -263,6 +317,7 @@
     fixCardLinks();
     fixCalLinks();
     fixHeaderSocialLinks();
+    fixAboutVideo();
     if (document.title !== "Alexandre Bento, Empreendedor Self-Made") {
       document.title = "Alexandre Bento, Empreendedor Self-Made";
     }
