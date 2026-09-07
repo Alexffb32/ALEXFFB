@@ -92,7 +92,10 @@
   // Botões "Entra na waitlist" que a Framer redesenha como texto simples
   // dentro de um círculo pequeno (o texto todo não cabe): usam-se as
   // classes exatas destes dois círculos, já confirmadas por inspeção
-  // direta, para mostrar uma etiqueta mais curta que cabe no espaço.
+  // direta, para mostrar uma etiqueta mais curta que cabe no espaço. Não
+  // são de nenhum projeto específico, por isso apontam para a newsletter
+  // geral, não para /merch ou /comunidade (o que a hidratação lhes dava
+  // por acaso).
   var SHORT_TEXT_FIXES = [
     [".framer-18lm3z0", "Waitlist"],
     [".framer-1mfibht", "Waitlist"],
@@ -101,8 +104,12 @@
   function fixShortText() {
     for (var i = 0; i < SHORT_TEXT_FIXES.length; i++) {
       var el = document.querySelector(SHORT_TEXT_FIXES[i][0]);
-      if (el && norm(el.textContent) !== SHORT_TEXT_FIXES[i][1]) {
+      if (!el) continue;
+      if (norm(el.textContent) !== SHORT_TEXT_FIXES[i][1]) {
         el.textContent = SHORT_TEXT_FIXES[i][1];
+      }
+      if (el.getAttribute("href") !== "/newsletter") {
+        el.setAttribute("href", "/newsletter");
       }
     }
   }

@@ -1,6 +1,7 @@
 const { Resend } = require("resend");
 
 const AUDIENCE_IDS = {
+  newsletter: process.env.RESEND_AUDIENCE_ID_NEWSLETTER,
   merch: process.env.RESEND_AUDIENCE_ID_MERCH,
   comunidade: process.env.RESEND_AUDIENCE_ID_COMUNIDADE,
   "produtos-digitais": process.env.RESEND_AUDIENCE_ID_PRODUTOS_DIGITAIS,
@@ -8,6 +9,11 @@ const AUDIENCE_IDS = {
 };
 
 const CONFIRMATION_COPY = {
+  newsletter: {
+    subject: "Estás na newsletter!",
+    html: (firstName) =>
+      `<p>Olá ${escapeHtml(firstName)},</p><p>Obrigado por entrares na newsletter. Aviso-te por aqui sempre que houver novidades — Merch, Comunidade, Produtos Digitais, Apps & Software, ou o que vier a seguir.</p><p>Alexandre Bento</p>`,
+  },
   merch: {
     subject: "Estás na waitlist da Merch!",
     html: (firstName) =>
