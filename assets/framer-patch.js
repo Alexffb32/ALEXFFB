@@ -179,6 +179,29 @@
     bottom.parentNode.insertBefore(row, bottom);
   }
 
+  // Contacto direto (email + telefone) na secção "Vamos Conectar-nos",
+  // logo abaixo do parágrafo da coluna esquerda — o export da Framer não
+  // trazia nenhum contacto direto ali, só o CTA para o formulário.
+  function addContactInfo() {
+    var content = document.querySelector(".framer-byv80m");
+    if (!content) return;
+    if (content.querySelector(".abwl-contact-info")) return;
+    var para = content.querySelector(".framer-1abtxxb");
+    if (!para) return;
+    var row = document.createElement("div");
+    row.className = "abwl-contact-info";
+    row.innerHTML =
+      '<a href="mailto:contact@alexffb.com">contact@alexffb.com</a>' +
+      '<a href="tel:+351968398460">+351 968 398 460</a>';
+    var links = row.querySelectorAll("a");
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
+    para.insertAdjacentElement("afterend", row);
+  }
+
   function fixTextNodes() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     var node;
@@ -401,6 +424,7 @@
     fixShortText();
     addMerchButton();
     addFooterLegalLinks();
+    addContactInfo();
     fixCardLinks();
     fixCalLinks();
     fixHeaderSocialLinks();
