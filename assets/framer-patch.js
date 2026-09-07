@@ -227,22 +227,29 @@
     }
   }
 
-  // 4 pilares: todos apontam para a waitlist geral única (já não há uma
-  // por pilar). O clique real ainda ia parar às páginas de case-study
+  // 4 pilares, na ordem em que aparecem na página: Merch já está ao vivo
+  // (loja em /loja), os outros 3 continuam a apontar para a waitlist
+  // geral única. O clique real ainda ia parar às páginas de case-study
   // originais (Meetco/Sastik/Innomax/Brickox) — confirmado com um clique
   // a sério, não só a olhar para o atributo — porque a Framer liga aqui o
   // seu próprio onClick de navegação entre páginas do projeto, que ignora
   // por completo o href do DOM. detachFiber() larga esse onClick.
-  var CARD_LINKS = ["/newsletter", "/newsletter", "/newsletter", "/newsletter"];
+  var CARD_LINKS = [
+    { href: "/loja", label: "Entrar na Loja" },
+    { href: "/newsletter", label: "Entra na waitlist" },
+    { href: "/newsletter", label: "Entra na waitlist" },
+    { href: "/newsletter", label: "Entra na waitlist" },
+  ];
   function fixCardLinks() {
     var links = document.querySelectorAll(".framer-Ik1cm");
     for (var i = 0; i < links.length && i < CARD_LINKS.length; i++) {
       var a = links[i];
-      if (a.getAttribute("href") !== CARD_LINKS[i]) {
-        a.setAttribute("href", CARD_LINKS[i]);
+      var target = CARD_LINKS[i];
+      if (a.getAttribute("href") !== target.href) {
+        a.setAttribute("href", target.href);
       }
-      if (norm(a.textContent) !== "Entra na waitlist") {
-        a.textContent = "Entra na waitlist";
+      if (norm(a.textContent) !== target.label) {
+        a.textContent = target.label;
       }
       if (a.getAttribute("data-abwl-detached") !== "1") {
         a = detachFiber(a);
