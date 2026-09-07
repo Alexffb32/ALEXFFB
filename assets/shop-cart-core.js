@@ -111,7 +111,7 @@
   function buildWhatsAppMessage(items) {
     var catalog = global.ShopCatalog;
     var lines = [];
-    lines.push("🐺 *ALEXFFB.COM*");
+    lines.push("🫏 *ALEXFFB.COM*");
     lines.push("*ANTI UNIVERSITY SOCIAL CLUB*");
     lines.push(items.length > 1 ? "*NOVA ENCOMENDA DO CARRINHO*" : "*NOVA ENCOMENDA*");
     lines.push("");
