@@ -6,9 +6,7 @@
   "use strict";
 
   var STORAGE_KEY = "abwl_shop_cart_v1";
-  var WHATSAPP_NUMBER = "351968398460";
-  var PAYMENT_IBAN = "PT50 0036 0011 99100034823 58";
-  var PAYMENT_MBWAY = "968 398 460";
+  var WHATSAPP_NUMBER = "447441488100";
 
   function readCart() {
     try {
@@ -145,11 +143,6 @@
     if (totalsInfo.comboSavings > 0) {
       lines.push("🎉 *POUPANÇA COM COMBOS: " + catalog.money(totalsInfo.comboSavings) + "*");
     }
-    lines.push("");
-    lines.push("*Dados para pagamento:*");
-    lines.push("");
-    lines.push("Transferência bancária: " + PAYMENT_IBAN);
-    lines.push("MB WAY: " + PAYMENT_MBWAY);
 
     return lines.join("\n");
   }
