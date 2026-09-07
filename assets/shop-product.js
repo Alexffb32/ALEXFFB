@@ -18,7 +18,7 @@
   var initialFormat = params.get("f");
   if (!catalog.FORMATS[initialFormat]) initialFormat = "tshirt";
 
-  var state = { format: initialFormat, color: "preto", size: null };
+  var state = { format: initialFormat, color: "branco", size: null };
 
   function escapeHtml(s) {
     return String(s)
