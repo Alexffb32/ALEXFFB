@@ -210,6 +210,16 @@
   }
 
   // Botões/links que ainda apontam para o Cal.com pessoal do template.
+  // Rola até ao <form> em si (não só até ao topo da secção "Contact"),
+  // localizando-o pelo campo de email em vez de por id — o id do form
+  // é removido pela própria hidratação da Framer, confirmado por teste
+  // direto, por isso nunca se pode confiar nele para o alvo do scroll.
+  function scrollToContactForm() {
+    var email = document.querySelector('input[name="Email"]');
+    var form = email && email.closest("form");
+    (form || document.getElementById("contact")).scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   function fixCalLinks() {
     var anchors = document.querySelectorAll('a[href*="cal.com"]');
     for (var i = 0; i < anchors.length; i++) {
@@ -224,6 +234,13 @@
           if (/book\s*a\s*call/i.test(textNode.nodeValue)) {
             textNode.nodeValue = "Enviar Mensagem";
           }
+        }
+        if (a.getAttribute("data-abwl-scroll") !== "1") {
+          a.setAttribute("data-abwl-scroll", "1");
+          a.addEventListener("click", function (event) {
+            event.preventDefault();
+            scrollToContactForm();
+          });
         }
       } else {
         a.style.display = "none";

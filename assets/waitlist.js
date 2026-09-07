@@ -25,6 +25,7 @@
     var name = form.elements["name"] ? form.elements["name"].value.trim() : "";
     var email = form.elements["email"].value.trim();
     var company = form.elements["company"] ? form.elements["company"].value : "";
+    var consent = form.elements["consent"] ? form.elements["consent"].checked : false;
 
     if (!name || name.length < 2) {
       showMessage("Por favor insere o teu nome.", true);
@@ -34,6 +35,10 @@
       showMessage("Por favor insere um email válido.", true);
       return;
     }
+    if (!consent) {
+      showMessage("Tens de aceitar a Política de Privacidade e os Termos e Condições.", true);
+      return;
+    }
 
     submitBtn.disabled = true;
     submitBtn.textContent = "A juntar…";
@@ -41,7 +46,7 @@
     fetch("/api/waitlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name, email: email, list: list, company: company }),
+      body: JSON.stringify({ name: name, email: email, list: list, company: company, consent: consent }),
     })
       .then(function (response) {
         return response.json().then(function (data) {

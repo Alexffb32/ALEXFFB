@@ -25,13 +25,24 @@
         <input type="text" name="company" class="wl-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="text" name="name" class="wl-input" placeholder="O teu nome" required>
         <input type="email" name="email" class="wl-input" placeholder="O teu melhor email" required>
+        <label class="wl-consent">
+          <input type="checkbox" name="consent" required>
+          <span>Li e aceito a <a href="/privacidade/" target="_blank" rel="noopener noreferrer">Política de Privacidade</a> e os <a href="/termos/" target="_blank" rel="noopener noreferrer">Termos e Condições</a>.</span>
+        </label>
         <button type="submit" class="wl-submit">Entra na waitlist</button>
       </form>
       <p id="waitlist-message" class="wl-message" role="status"></p>
     </div>
   </main>
 
-  <footer class="wl-footer">Alexandre Bento © 2026. Todos os direitos reservados.</footer>
+  <footer class="wl-footer">
+    <div class="wl-footer-legal">
+      <a href="/privacidade/">Política de Privacidade</a>
+      <a href="/cookies/">Política de Cookies</a>
+      <a href="/termos/">Termos e Condições</a>
+    </div>
+    Alexandre Bento © 2026. Todos os direitos reservados.
+  </footer>
 
   <script src="/assets/waitlist.js"></script>
 </body>

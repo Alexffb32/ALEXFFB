@@ -77,6 +77,7 @@ module.exports = async (req, res) => {
     name: parsed.data.name,
     email: parsed.data.email,
     list: parsed.data.list,
+    consent: parsed.data.consent,
     resendOk,
     resendError,
   });

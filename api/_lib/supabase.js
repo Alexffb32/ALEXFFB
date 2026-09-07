@@ -16,7 +16,7 @@ function getSupabaseClient() {
  * queryable trace here instead of only a Vercel function log line.
  * The table's RLS policy only allows INSERT, never SELECT.
  */
-async function logWaitlistSubmission({ name, email, list, resendOk, resendError }) {
+async function logWaitlistSubmission({ name, email, list, consent, resendOk, resendError }) {
   const supabase = getSupabaseClient();
   if (!supabase) {
     console.warn(
@@ -27,7 +27,7 @@ async function logWaitlistSubmission({ name, email, list, resendOk, resendError 
 
   const { error } = await supabase
     .from("waitlist_submissions")
-    .insert({ name, email, list, resend_ok: resendOk, resend_error: resendError });
+    .insert({ name, email, list, consent, resend_ok: resendOk, resend_error: resendError });
   if (error) {
     console.error("[waitlist] failed to log submission to Supabase", error);
   }
@@ -36,7 +36,7 @@ async function logWaitlistSubmission({ name, email, list, resendOk, resendError 
 /**
  * Same idea as logWaitlistSubmission, for the contact form.
  */
-async function logContactSubmission({ name, email, message, resendOk, resendError }) {
+async function logContactSubmission({ name, email, message, consent, resendOk, resendError }) {
   const supabase = getSupabaseClient();
   if (!supabase) {
     console.warn(
@@ -47,7 +47,7 @@ async function logContactSubmission({ name, email, message, resendOk, resendErro
 
   const { error } = await supabase
     .from("contact_submissions")
-    .insert({ name, email, message, resend_ok: resendOk, resend_error: resendError });
+    .insert({ name, email, message, consent, resend_ok: resendOk, resend_error: resendError });
   if (error) {
     console.error("[contact] failed to log submission to Supabase", error);
   }

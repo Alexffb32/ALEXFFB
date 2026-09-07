@@ -7,6 +7,12 @@ const contactSchema = z.object({
   name: z.string().trim().min(2, "Name is too short").max(100, "Name is too long"),
   email: z.string().trim().toLowerCase().min(5).max(254).email("Invalid email address"),
   message: z.string().trim().min(1, "Message is empty").max(5000, "Message is too long"),
+  // Must be explicitly true — enforced server-side too, not just via the
+  // required checkbox in the UI, since consent is the form's legal basis
+  // for processing this data (see /privacidade/).
+  consent: z.literal(true, {
+    errorMap: () => ({ message: "Tens de aceitar a Política de Privacidade e os Termos e Condições." }),
+  }),
   // Honeypots mirroring the native form's hidden anti-bot fields — accepted
   // by the schema so a filled one doesn't surface as a validation error;
   // the handler checks them and silently no-ops.
@@ -79,6 +85,7 @@ module.exports = async (req, res) => {
       name: parsed.data.name,
       email: parsed.data.email,
       message: parsed.data.message,
+      consent: parsed.data.consent,
       resendOk: null,
       resendError: "RESEND_API_KEY or CONTACT_NOTIFY_EMAIL not set",
     });
@@ -111,6 +118,7 @@ module.exports = async (req, res) => {
     name: parsed.data.name,
     email: parsed.data.email,
     message: parsed.data.message,
+    consent: parsed.data.consent,
     resendOk,
     resendError,
   });
