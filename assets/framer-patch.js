@@ -306,8 +306,13 @@
     a.appendChild(inner);
   }
 
-  function fixHeaderSocialLinks() {
-    var row = document.querySelector('[data-framer-name="Header Links"]');
+  // O export da Framer duplica esta fila de ícones: "Header Links" é a
+  // versão usada num breakpoint, "Social Links" é a mesma fila (Email +
+  // LinkedIn + Behance genéricos) repetida para outro breakpoint, num nó
+  // completamente separado — confirmado por inspeção direta do HTML de
+  // produção. As duas têm de ser corrigidas, senão só uma largura de
+  // ecrã fica com os ícones certos e a outra continua a mostrar "in"/"Bē".
+  function fixHeaderSocialLinksRow(row) {
     if (!row || row.getAttribute("data-abwl-fixed") === "1") return;
     var containers = row.children;
     if (containers.length < 3) return;
@@ -321,6 +326,11 @@
       label: "YouTube",
     });
     row.setAttribute("data-abwl-fixed", "1");
+  }
+
+  function fixHeaderSocialLinks() {
+    fixHeaderSocialLinksRow(document.querySelector('[data-framer-name="Header Links"]'));
+    fixHeaderSocialLinksRow(document.querySelector('[data-framer-name="Social Links"]'));
   }
 
   // Botões/links que ainda apontam para o Cal.com pessoal do template.
