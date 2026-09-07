@@ -150,6 +150,35 @@
     waitlistBtn.setAttribute("data-abwl-merch-added", "1");
   }
 
+  // Linha de links legais no footer principal — o export da Framer não
+  // trazia nenhum link para /privacidade, /cookies ou /termos (as
+  // páginas já existem e cumprem RGPD/legislação de consumo, só
+  // faltava ligá-las aqui).
+  function addFooterLegalLinks() {
+    var bottom = document.querySelector(".framer-ob91zf");
+    if (!bottom || !bottom.parentNode) return;
+    if (bottom.parentNode.querySelector(".abwl-footer-legal")) return;
+    var row = document.createElement("div");
+    row.className = "abwl-footer-legal";
+    row.innerHTML =
+      '<a href="/privacidade/">Política de Privacidade</a>' +
+      '<a href="/cookies/">Política de Cookies</a>' +
+      '<a href="/termos/">Termos e Condições</a>';
+    // Um clique aqui borbulha até um antepassado que a Framer ainda
+    // controla (o próprio <footer> faz parte da árvore React da
+    // hidratação), e o listener delegado da Framer intercepta-o antes
+    // de chegar à navegação nativa do link. stopPropagation() no
+    // próprio nó novo (sem fiber nenhuma) trava o borbulhar já na
+    // origem, antes de sair daqui.
+    var links = row.querySelectorAll("a");
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    }
+    bottom.parentNode.insertBefore(row, bottom);
+  }
+
   function fixTextNodes() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     var node;
@@ -364,6 +393,7 @@
     fixByClass();
     fixShortText();
     addMerchButton();
+    addFooterLegalLinks();
     fixCardLinks();
     fixCalLinks();
     fixHeaderSocialLinks();
