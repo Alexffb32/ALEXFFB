@@ -20,6 +20,23 @@
     return (s || "").replace(/\s+/g, " ").trim();
   }
 
+  // Confirmado por teste direto (clique real, não só o atributo href): a
+  // Framer liga o próprio onClick de React a estes links de página em
+  // página, guardado nas props internas do componente, não no DOM — por
+  // isso mudar o atributo href por JS não muda para onde o clique
+  // realmente navega, e um clique real acaba na página de case-study
+  // original em vez do href que aqui se define. Clonar o nó e substituí-lo
+  // no DOM larga essa fiber/handler do React (o clone não tem as
+  // propriedades internas __reactFiber/__reactProps que o React usa para
+  // encontrar o handler), ficando só com um <a> normal que navega pelo
+  // href. Mesma técnica já usada no site antigo para o mesmo problema.
+  function detachFiber(el) {
+    if (!el || !el.parentNode) return el;
+    var clone = el.cloneNode(true);
+    el.parentNode.replaceChild(clone, el);
+    return clone;
+  }
+
   // Substituições simples: texto inteiro dentro de UM só nó de texto.
   var NODE_FIXES = [
     ["Xavien Miller © Copyright 2026. All Rights Reserved.", "Alexandre Bento © 2026. Todos os direitos reservados."],
@@ -111,6 +128,10 @@
       if (el.getAttribute("href") !== "/newsletter") {
         el.setAttribute("href", "/newsletter");
       }
+      if (el.getAttribute("data-abwl-detached") !== "1") {
+        el = detachFiber(el);
+        el.setAttribute("data-abwl-detached", "1");
+      }
     }
   }
 
@@ -163,13 +184,26 @@
   }
 
   // 4 pilares: link + texto do botão, na ordem em que aparecem na página.
+  // O href já está certo no HTML estático, mas o clique real ainda ia
+  // parar às páginas de case-study originais (Meetco/Sastik/Innomax/
+  // Brickox) — confirmado com um clique a sério, não só a olhar para o
+  // atributo — porque a Framer liga aqui o seu próprio onClick de
+  // navegação entre páginas do projeto, que ignora por completo o href
+  // do DOM. detachFiber() larga esse onClick.
   var CARD_LINKS = ["/merch", "/comunidade", "/produtos-digitais", "/apps"];
   function fixCardLinks() {
-    var links = document.querySelectorAll('a[href*="case-study"]');
+    var links = document.querySelectorAll(".framer-Ik1cm");
     for (var i = 0; i < links.length && i < CARD_LINKS.length; i++) {
-      links[i].setAttribute("href", CARD_LINKS[i]);
-      if (norm(links[i].textContent) !== "Entra na waitlist") {
-        links[i].textContent = "Entra na waitlist";
+      var a = links[i];
+      if (a.getAttribute("href") !== CARD_LINKS[i]) {
+        a.setAttribute("href", CARD_LINKS[i]);
+      }
+      if (norm(a.textContent) !== "Entra na waitlist") {
+        a.textContent = "Entra na waitlist";
+      }
+      if (a.getAttribute("data-abwl-detached") !== "1") {
+        a = detachFiber(a);
+        a.setAttribute("data-abwl-detached", "1");
       }
     }
   }
@@ -243,6 +277,7 @@
           }
         }
         if (a.getAttribute("data-abwl-scroll") !== "1") {
+          a = detachFiber(a);
           a.setAttribute("data-abwl-scroll", "1");
           a.addEventListener("click", function (event) {
             event.preventDefault();
