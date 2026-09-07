@@ -53,4 +53,31 @@ async function logContactSubmission({ name, email, message, consent, resendOk, r
   }
 }
 
-module.exports = { logWaitlistSubmission, logContactSubmission };
+/**
+ * Logs a "Comprar pelo WhatsApp" order from the loja. No personal data is
+ * collected here — name/morada são trocados diretamente no WhatsApp entre
+ * o cliente e o Alexandre — só o conteúdo do carrinho, para haver um
+ * registo de encomendas mesmo que a conversa de WhatsApp se perca.
+ */
+async function logShopOrder({ items, total, comboSavings, resendOk, resendError }) {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    console.warn(
+      "[shop-order] NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set — skipping Supabase log.",
+    );
+    return;
+  }
+
+  const { error } = await supabase.from("shop_orders").insert({
+    items,
+    total,
+    combo_savings: comboSavings,
+    resend_ok: resendOk,
+    resend_error: resendError,
+  });
+  if (error) {
+    console.error("[shop-order] failed to log order to Supabase", error);
+  }
+}
+
+module.exports = { logWaitlistSubmission, logContactSubmission, logShopOrder };
