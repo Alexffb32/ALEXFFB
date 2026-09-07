@@ -9,10 +9,9 @@ const waitlistSchema = z.object({
     .regex(/^[\p{L}\p{M}\s'.-]+$/u, "Name contains invalid characters")
     .optional(),
   email: z.string().trim().toLowerCase().min(5).max(254).email("Invalid email address"),
-  // The 4 pillars from alexffb.com, plus the general "newsletter" list —
-  // each gets its own page and its own Resend audience, so signups are
-  // tracked as separate lists.
-  list: z.enum(["newsletter", "merch", "comunidade", "produtos-digitais", "apps"]),
+  // Single general waitlist — all site CTAs point at /newsletter now,
+  // rather than one page per pillar with its own Resend audience.
+  list: z.enum(["newsletter"]),
   // Must be explicitly true — enforced server-side too, not just via the
   // required checkbox in the UI, since consent is the form's legal basis
   // for processing this data (see /privacidade/).

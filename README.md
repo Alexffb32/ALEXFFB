@@ -11,11 +11,14 @@ estrutura foram construídos por cima desse export, sem tocar no design.
 - `framerusercontent.com/`, `fonts.gstatic.com/`, `events.framer.com/` —
   espelho local dos recursos do export (fontes, imagens, vídeos, script de
   analytics), servidos a partir do próprio domínio.
-- `merch/`, `comunidade/`, `produtos-digitais/`, `apps/` — as 4 páginas de
-  waitlist dos "pilares", cada uma com formulário nome+email a submeter
-  para uma lista separada no Resend.
-- `assets/waitlist.css` / `assets/waitlist.js` — estilo e comportamento
-  partilhado pelas 4 páginas de waitlist.
+- `newsletter/` — waitlist geral única (formulário nome+email), para onde
+  apontam todos os CTAs de "Entra na waitlist" do site. `/merch`,
+  `/comunidade`, `/produtos-digitais` e `/apps` foram descontinuadas e
+  redirecionam para aqui (ver `vercel.json`).
+- `loja/` — loja "Anti University Social Club", checkout fechado sempre
+  por WhatsApp (sem gateway de pagamento no site).
+- `assets/waitlist.css` / `assets/waitlist.js` — estilo e comportamento da
+  página de waitlist.
 - `assets/contact-form.js` — liga o formulário de contacto nativo da
   página principal a `/api/contact`.
 - `api/waitlist.js`, `api/contact.js`, `api/_lib/*` — funções serverless
@@ -28,8 +31,7 @@ estrutura foram construídos por cima desse export, sem tocar no design.
 Copia `.env.example` para `.env` e preenche os valores reais — ou define-os
 como Environment Variables no projeto Vercel. Precisas de:
 
-- Uma conta Resend com uma Audience criada por cada uma das 4 listas
-  (Merch, Comunidade, Produtos Digitais, Apps).
+- Uma conta Resend com uma Audience criada para a newsletter geral.
 - Um domínio verificado no Resend para o `RESEND_FROM_EMAIL` funcionar.
 - O projeto Supabase já existente (`alexffb`) — as tabelas já têm o schema
   certo, só falta a anon key/URL nas env vars.

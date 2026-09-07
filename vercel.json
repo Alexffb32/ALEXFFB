@@ -1,4 +1,14 @@
 {
+  "redirects": [
+    { "source": "/merch", "destination": "/loja", "permanent": false },
+    { "source": "/merch/", "destination": "/loja", "permanent": false },
+    { "source": "/comunidade", "destination": "/newsletter", "permanent": false },
+    { "source": "/comunidade/", "destination": "/newsletter", "permanent": false },
+    { "source": "/produtos-digitais", "destination": "/newsletter", "permanent": false },
+    { "source": "/produtos-digitais/", "destination": "/newsletter", "permanent": false },
+    { "source": "/apps", "destination": "/newsletter", "permanent": false },
+    { "source": "/apps/", "destination": "/newsletter", "permanent": false }
+  ],
   "headers": [
     {
       "source": "/(.*)",

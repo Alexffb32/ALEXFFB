@@ -2,10 +2,6 @@ const { Resend } = require("resend");
 
 const AUDIENCE_IDS = {
   newsletter: process.env.RESEND_AUDIENCE_ID_NEWSLETTER,
-  merch: process.env.RESEND_AUDIENCE_ID_MERCH,
-  comunidade: process.env.RESEND_AUDIENCE_ID_COMUNIDADE,
-  "produtos-digitais": process.env.RESEND_AUDIENCE_ID_PRODUTOS_DIGITAIS,
-  apps: process.env.RESEND_AUDIENCE_ID_APPS,
 };
 
 const CONFIRMATION_COPY = {
@@ -13,26 +9,6 @@ const CONFIRMATION_COPY = {
     subject: "Estás na newsletter!",
     html: (firstName) =>
       `<p>Olá ${escapeHtml(firstName)},</p><p>Obrigado por entrares na newsletter. Aviso-te por aqui sempre que houver novidades — Merch, Comunidade, Produtos Digitais, Apps & Software, ou o que vier a seguir.</p><p>Alexandre Bento</p>`,
-  },
-  merch: {
-    subject: "Estás na waitlist da Merch!",
-    html: (firstName) =>
-      `<p>Olá ${escapeHtml(firstName)},</p><p>Obrigado por entrares na waitlist da Anti University Social Club. Vais ser dos primeiros a saber quando a coleção abrir, dia 7 de setembro.</p><p>Alexandre Bento</p>`,
-  },
-  comunidade: {
-    subject: "Estás na waitlist da Comunidade!",
-    html: (firstName) =>
-      `<p>Olá ${escapeHtml(firstName)},</p><p>Obrigado por entrares na waitlist da Comunidade. Aviso-te assim que abrir.</p><p>Alexandre Bento</p>`,
-  },
-  "produtos-digitais": {
-    subject: "Estás na waitlist dos Produtos Digitais!",
-    html: (firstName) =>
-      `<p>Olá ${escapeHtml(firstName)},</p><p>Obrigado por entrares na waitlist dos cursos, ebooks e templates. Aviso-te assim que houver novidades.</p><p>Alexandre Bento</p>`,
-  },
-  apps: {
-    subject: "Estás na waitlist das Apps & Software!",
-    html: (firstName) =>
-      `<p>Olá ${escapeHtml(firstName)},</p><p>Obrigado por entrares na waitlist das apps e ferramentas. Aviso-te assim que houver novidades.</p><p>Alexandre Bento</p>`,
   },
 };
 
