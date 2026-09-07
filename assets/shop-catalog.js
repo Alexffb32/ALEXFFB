@@ -2,10 +2,9 @@
    para preços/produtos, partilhada pela grid, pela página de produto e
    pelo carrinho — para nunca haver dois sítios a inventar o mesmo preço.
 
-   Imagens: ainda não há mockups reais das 4 estampas, por isso cada
-   produto usa um placeholder de cor sólida com o nome do design (ver
-   shop-render.js). Substitui DESIGNS[i].images assim que houver fotos
-   reais (mesma estrutura: { front, back }, um par por cor).
+   Imagens: 1 foto de costas por design (assets/products/), a mesma é
+   usada seja qual for o formato escolhido (T-shirt/Hoodie/Combo) até
+   haver fotos separadas por peça.
 
    Preços: sem "preço riscado" nenhum — nenhuma destas peças foi vendida
    antes, por isso mostrar um preço "anterior" ao lado seria uma prática
@@ -25,6 +24,7 @@
       short: "O símbolo da coleção.",
       description:
         "O logo principal da drop: um burro de arreios dentro de um símbolo de proibido. Para quem decidiu não esperar por autorização de ninguém.",
+      image: "/assets/products/anti-university-social-club-back.webp",
     },
     {
       slug: "o-mundo-real",
@@ -32,6 +32,7 @@
       short: "O mundo real não quer saber do teu 1º diploma.",
       description:
         "Um burro formado, touca e diploma na boca. O mundo real não vem com boletim de notas — vem com resultados.",
+      image: "/assets/products/o-mundo-real-back.webp",
     },
     {
       slug: "gente-qualificada",
@@ -39,6 +40,7 @@
       short: "Vou precisar de gente qualificada.",
       description:
         "Uma mão com anel de coroa segura um peão de xadrez em forma de burro acorrentado. “Continuem a estudar... vou precisar de gente qualificada a trabalhar para mim.”",
+      image: "/assets/products/gente-qualificada-back.webp",
     },
     {
       slug: "no-degree-required",
@@ -46,6 +48,7 @@
       short: "Nenhum diploma é necessário.",
       description:
         "Três homens de fato, montados em burros. Um deles aponta à câmara. No degree required.",
+      image: "/assets/products/no-degree-required-back.jpg",
     },
   ];
 

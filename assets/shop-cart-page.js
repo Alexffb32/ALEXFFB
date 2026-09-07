@@ -41,11 +41,11 @@
       var row = document.createElement("div");
       row.className = "shop-cart-item";
       row.innerHTML =
-        '<div class="shop-cart-item-media"><div class="shop-card-placeholder" style="font-size:10px;padding:8px;' +
-        (it.color === "branco" ? "color:#111;" : "") +
-        '">' +
+        '<div class="shop-cart-item-media"><img src="' +
+        (design ? design.image : "") +
+        '" alt="' +
         escapeHtml(design ? design.name : it.designSlug) +
-        "</div></div>" +
+        '"></div>' +
         "<div>" +
         '<p class="shop-cart-item-title">' +
         escapeHtml(design ? design.name : it.designSlug) +

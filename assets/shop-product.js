@@ -7,17 +7,18 @@
 
   var params = new URLSearchParams(window.location.search);
   var designSlug = params.get("d") || catalog.DESIGNS[0].slug;
-  var formatKey = params.get("f") || "tshirt";
   var design = catalog.findDesign(designSlug);
-  var format = catalog.FORMATS[formatKey];
 
-  if (!design || !format) {
+  if (!design) {
     document.getElementById("shop-product-root").innerHTML =
       '<p>Produto não encontrado. <a href="/loja/">Voltar à loja</a>.</p>';
     return;
   }
 
-  var state = { color: "preto", size: null };
+  var initialFormat = params.get("f");
+  if (!catalog.FORMATS[initialFormat]) initialFormat = "tshirt";
+
+  var state = { format: initialFormat, color: "preto", size: null };
 
   function escapeHtml(s) {
     return String(s)
@@ -27,16 +28,27 @@
   }
 
   function renderMedia() {
-    var label = state.color === "branco" ? "Branco" : "Preto";
     document.getElementById("shop-main-media").innerHTML =
-      '<div class="shop-card-placeholder" style="' +
-      (state.color === "branco" ? "color:#111;" : "") +
-      '">' +
-      escapeHtml(design.name) +
-      "<br><span style=\"opacity:.6;font-weight:600\">(mockup a caminho)</span></div>" +
-      '<span class="shop-media-label">Vista frontal — ' +
-      label +
-      "</span>";
+      '<img src="' + design.image + '" alt="' + escapeHtml(design.name) + " — vista de costas\">" +
+      '<span class="shop-media-label">Vista de costas</span>';
+  }
+
+  function renderFormats() {
+    var wrap = document.getElementById("shop-formats");
+    wrap.innerHTML = "";
+    Object.keys(catalog.FORMATS).forEach(function (key) {
+      var f = catalog.FORMATS[key];
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "shop-format" + (state.format === key ? " is-selected" : "");
+      btn.textContent = f.label + " — " + catalog.money(f.price);
+      btn.addEventListener("click", function () {
+        state.format = key;
+        renderFormats();
+        updatePrice();
+      });
+      wrap.appendChild(btn);
+    });
   }
 
   function renderSwatches() {
@@ -51,7 +63,6 @@
       btn.addEventListener("click", function () {
         state.color = c.id;
         renderSwatches();
-        renderMedia();
       });
       wrap.appendChild(btn);
     });
@@ -81,8 +92,26 @@
     document.getElementById("shop-size-hint").hidden = ready;
   }
 
+  function updatePrice() {
+    var format = catalog.FORMATS[state.format];
+    document.title = catalog.productTitle(designSlug, state.format) + ", Anti University Social Club";
+    document.getElementById("shop-product-category").textContent = "Anti University Social Club — " + format.label;
+    document.getElementById("shop-price").textContent = catalog.money(format.price);
+
+    var comboNote = document.getElementById("shop-combo-savings");
+    if (state.format === "combo") {
+      comboNote.hidden = false;
+      comboNote.innerHTML =
+        "Poupas <strong>" +
+        catalog.money(catalog.comboSavings()) +
+        "</strong> face a comprar a t-shirt e o hoodie em separado.";
+    } else {
+      comboNote.hidden = true;
+    }
+  }
+
   function currentItem() {
-    return { designSlug: designSlug, format: formatKey, color: state.color, size: state.size, qty: 1 };
+    return { designSlug: designSlug, format: state.format, color: state.color, size: state.size, qty: 1 };
   }
 
   function showToast(text) {
@@ -95,31 +124,19 @@
     }, 2600);
   }
 
-  document.title = catalog.productTitle(designSlug, formatKey) + ", Anti University Social Club";
-  document.getElementById("shop-product-category").textContent = "Anti University Social Club — " + format.label;
   document.getElementById("shop-product-title").textContent = design.name;
-  document.getElementById("shop-price").textContent = catalog.money(format.price);
   document.getElementById("shop-product-desc").innerHTML = "<p>" + escapeHtml(design.description) + "</p>";
 
-  var comboNote = document.getElementById("shop-combo-savings");
-  if (formatKey === "combo") {
-    comboNote.hidden = false;
-    comboNote.innerHTML =
-      "Poupas <strong>" +
-      catalog.money(catalog.comboSavings()) +
-      "</strong> face a comprar a t-shirt e o hoodie em separado.";
-  } else {
-    comboNote.hidden = true;
-  }
-
   renderMedia();
+  renderFormats();
   renderSwatches();
   renderSizes();
   updateButtons();
+  updatePrice();
 
   document.getElementById("shop-add-cart").addEventListener("click", function () {
     if (!state.size) return;
-    cart.add(designSlug, formatKey, state.color, state.size, 1);
+    cart.add(designSlug, state.format, state.color, state.size, 1);
     showToast("Adicionado ao carrinho.");
   });
 
