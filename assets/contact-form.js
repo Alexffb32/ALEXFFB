@@ -66,6 +66,46 @@
     el.textContent = text;
   }
 
+  function injectThankYouStyles() {
+    if (document.getElementById("contact-thankyou-style")) return;
+    var style = document.createElement("style");
+    style.id = "contact-thankyou-style";
+    style.textContent =
+      ".abwl-contact-hide{opacity:0;transform:translateY(-8px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;}" +
+      ".abwl-thankyou{opacity:0;transform:translateY(14px) scale(.98);transition:opacity .45s ease,transform .45s ease;text-align:center;padding:20px 0;}" +
+      ".abwl-thankyou.is-visible{opacity:1;transform:translateY(0) scale(1);}" +
+      ".abwl-thankyou-check{width:56px;height:56px;border-radius:50%;border:2px solid #bebebe;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}" +
+      ".abwl-thankyou h3{color:#f5f5f5;font-size:22px;font-weight:600;margin:0 0 10px;}" +
+      ".abwl-thankyou p{color:#bebebe;font-size:14px;line-height:1.5em;margin:0;}";
+    document.head.appendChild(style);
+  }
+
+  // Substitui o "quadrado" do form (título + campos) por um painel animado
+  // de agradecimento. Não promete nenhum prazo de resposta.
+  function showThankYou(form) {
+    injectThankYouStyles();
+    var card = form.closest(".framer-dt3j3n") || form.parentElement;
+    if (card.querySelector(".abwl-thankyou")) return;
+    var title = card.querySelector(".framer-crdogh");
+
+    if (title) title.classList.add("abwl-contact-hide");
+    form.classList.add("abwl-contact-hide");
+
+    var panel = document.createElement("div");
+    panel.className = "abwl-thankyou";
+    panel.innerHTML =
+      '<div class="abwl-thankyou-check"><svg viewBox="0 0 24 24" fill="none" stroke="#bebebe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' +
+      "<h3>Obrigado!</h3>" +
+      "<p>A tua mensagem foi enviada. Vou lê-la pessoalmente.</p>";
+    card.appendChild(panel);
+
+    setTimeout(function () {
+      if (title) title.style.display = "none";
+      form.style.display = "none";
+      panel.classList.add("is-visible");
+    }, 350);
+  }
+
   document.addEventListener("submit", function (event) {
     var form = event.target;
     if (!form || !(form instanceof HTMLFormElement) || !form.querySelector('input[name="Email"]')) return;
@@ -122,9 +162,11 @@
       })
       .then(function (result) {
         if (result.ok) {
-          setStatus(form, "Mensagem enviada. Respondo em 24 horas.");
           form.reset();
-        } else if (result.status === 429) {
+          showThankYou(form);
+          return;
+        }
+        if (result.status === 429) {
           setStatus(form, "Demasiadas tentativas, tenta novamente daqui a um minuto.");
         } else {
           setStatus(form, "Algo correu mal. Tenta novamente daqui a instantes.");
