@@ -202,6 +202,27 @@
     para.insertAdjacentElement("afterend", row);
   }
 
+  // As 4 fotos decorativas junto a "Ao que podes ter acesso" eram
+  // screenshots de UI genéricos do template Framer (sites SaaS quaisquer,
+  // nada a ver com o conteúdo real) — trocados por um ícone simples por
+  // tópico. A hidratação repõe o src/alt originais do template tal como
+  // repõe texto, por isso tem de se corrigir aqui, não só no HTML.
+  var TOPIC_IMAGES = [
+    { name: "Image1", src: "/assets/topics/criacao-de-conteudo.svg", alt: "Criação de Conteúdo" },
+    { name: "Image2", src: "/assets/topics/eventos-e-projetos.svg", alt: "Eventos & Projetos" },
+    { name: "Image3", src: "/assets/topics/viagens-e-lifestyle.svg", alt: "Viagens & Lifestyle" },
+    { name: "Image4", src: "/assets/topics/giveaways-e-sorteios.svg", alt: "Giveaways & Sorteios" },
+  ];
+  function fixTopicImages() {
+    for (var i = 0; i < TOPIC_IMAGES.length; i++) {
+      var t = TOPIC_IMAGES[i];
+      var img = document.querySelector('[data-framer-name="' + t.name + '"] img');
+      if (!img) continue;
+      if (img.getAttribute("src") !== t.src) img.setAttribute("src", t.src);
+      if (img.getAttribute("alt") !== t.alt) img.setAttribute("alt", t.alt);
+    }
+  }
+
   function fixTextNodes() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     var node;
@@ -435,6 +456,7 @@
     addMerchButton();
     addFooterLegalLinks();
     addContactInfo();
+    fixTopicImages();
     fixCardLinks();
     fixCalLinks();
     fixHeaderSocialLinks();
