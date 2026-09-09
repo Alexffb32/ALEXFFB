@@ -213,6 +213,19 @@
     { name: "Image3", src: "/assets/topics/viagens-e-lifestyle.svg", alt: "Viagens & Lifestyle" },
     { name: "Image4", src: "/assets/topics/giveaways-e-sorteios.svg", alt: "Giveaways & Sorteios" },
   ];
+  // Esta secção está ligada a uma CMS Collection da Framer
+  // (id UcWbpW2oX) que nunca foi preenchida com conteúdo real — o
+  // próprio export mostra o aviso "Failed to resolve slug: Couldn't
+  // find collection utils" na consola. Sem a collection real, a Framer
+  // vai buscar (por fetch, já depois da hidratação, timing
+  // imprevisível) imagens de demonstração diferentes a cada carregamento
+  // à sua própria CDN — por isso o `patch()` correr só nos primeiros
+  // segundos não chega: confirmado que o fetch pode resolver bem depois
+  // da última tentativa agendada, ou re-escrever só o atributo `src` de
+  // um <img> já existente (sem inserir/remover nós), o que nem sequer
+  // aciona o MutationObserver de `childList`. Por isso cada <img> destes
+  // fica com o SEU PRÓPRIO observer de atributos, que repõe o ícone
+  // certo no instante em que a Framer tentar trocá-lo, para sempre.
   function fixTopicImages() {
     for (var i = 0; i < TOPIC_IMAGES.length; i++) {
       var t = TOPIC_IMAGES[i];
@@ -220,6 +233,15 @@
       if (!img) continue;
       if (img.getAttribute("src") !== t.src) img.setAttribute("src", t.src);
       if (img.getAttribute("alt") !== t.alt) img.setAttribute("alt", t.alt);
+      if (img.getAttribute("data-abwl-guarded") === "1") continue;
+      img.setAttribute("data-abwl-guarded", "1");
+      var guard = (function (target, wanted) {
+        return new MutationObserver(function () {
+          if (target.getAttribute("src") !== wanted.src) target.setAttribute("src", wanted.src);
+          if (target.getAttribute("alt") !== wanted.alt) target.setAttribute("alt", wanted.alt);
+        });
+      })(img, t);
+      guard.observe(img, { attributes: true, attributeFilter: ["src", "alt"] });
     }
   }
 
