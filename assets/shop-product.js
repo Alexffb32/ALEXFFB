@@ -29,6 +29,7 @@
 
   function renderMedia() {
     document.getElementById("shop-main-media").innerHTML =
+      '<span class="shop-product-badge">Edição Limitada</span>' +
       '<img src="' + design.image + '" alt="' + escapeHtml(design.name) + " — vista de costas\">" +
       '<span class="shop-media-label">Vista de costas</span>';
   }
@@ -90,13 +91,21 @@
     document.getElementById("shop-add-cart").disabled = !ready;
     document.getElementById("shop-buy-whatsapp").disabled = !ready;
     document.getElementById("shop-size-hint").hidden = ready;
+    var stickyBuy = document.getElementById("shop-sticky-cta-buy");
+    if (stickyBuy) stickyBuy.disabled = !ready;
   }
 
   function updatePrice() {
     var format = catalog.FORMATS[state.format];
     document.title = catalog.productTitle(designSlug, state.format) + ", Anti University Social Club";
     document.getElementById("shop-product-category").textContent = "Anti University Social Club — " + format.label;
-    document.getElementById("shop-price").textContent = catalog.money(format.price);
+
+    var priceEl = document.getElementById("shop-price");
+    priceEl.classList.add("is-updating");
+    setTimeout(function () {
+      priceEl.textContent = catalog.money(format.price);
+      priceEl.classList.remove("is-updating");
+    }, 140);
 
     var comboNote = document.getElementById("shop-combo-savings");
     if (state.format === "combo") {
@@ -108,6 +117,17 @@
     } else {
       comboNote.hidden = true;
     }
+
+    updateStickyCta();
+  }
+
+  function updateStickyCta() {
+    var format = catalog.FORMATS[state.format];
+    var titleEl = document.getElementById("shop-sticky-cta-title");
+    var priceEl = document.getElementById("shop-sticky-cta-price");
+    if (!titleEl || !priceEl) return;
+    titleEl.textContent = design.name + " — " + format.label;
+    priceEl.textContent = catalog.money(format.price);
   }
 
   function currentItem() {
@@ -144,4 +164,30 @@
     if (!state.size) return;
     cart.checkoutViaWhatsApp([currentItem()]);
   });
+
+  var stickyBuyBtn = document.getElementById("shop-sticky-cta-buy");
+  if (stickyBuyBtn) {
+    stickyBuyBtn.addEventListener("click", function () {
+      if (!state.size) return;
+      cart.checkoutViaWhatsApp([currentItem()]);
+    });
+  }
+
+  // Mostra a barra fixa de compra (mobile) só depois de os botões
+  // principais terem sido vistos e saírem do ecrã para cima — nunca antes
+  // disso, senão apareceria logo à entrada na página só por os botões
+  // ainda não terem sido alcançados por scroll (estarem abaixo da dobra
+  // não é o mesmo que teres passado por eles).
+  var stickyBar = document.getElementById("shop-sticky-cta");
+  var actionsEl = document.querySelector(".shop-actions");
+  if (stickyBar && actionsEl && "IntersectionObserver" in window) {
+    var hasBeenSeen = false;
+    new IntersectionObserver(
+      function (entries) {
+        if (entries[0].isIntersecting) hasBeenSeen = true;
+        stickyBar.classList.toggle("is-visible", hasBeenSeen && !entries[0].isIntersecting);
+      },
+      { threshold: 0 },
+    ).observe(actionsEl);
+  }
 })();
