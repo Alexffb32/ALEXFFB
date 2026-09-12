@@ -1,0 +1,114 @@
+/* Sistema tipográfico único do alexffb.com (site + loja + páginas legais).
+   Carregado antes de qualquer outra folha de estilo, para que tudo use as
+   mesmas três fontes:
+
+   - Corpo:     Inter Display
+   - Títulos:   Thunder
+   - Destaques: Instrument Serif Italic (o "Bento" do hero)
+
+   Notas de implementação:
+
+   1) "Inter Display" é o Inter variável (eixo opsz 14→32) com o eixo
+      ótico fixo em 32 — é exactamente assim que o Inter 4 entrega o corte
+      Display, não existe um ficheiro "Inter Display" separado. Daí o
+      `font-variation-settings: "opsz" 32` aplicado ao :root mais abaixo:
+      herda para toda a página e as fontes estáticas (Thunder, Instrument
+      Serif) simplesmente ignoram um eixo que não têm.
+
+   2) O Thunder que existe no projeto só tem cortes itálicos (Extra Bold
+      800 e Black 900, ambos a -14°) — não há nenhum ficheiro upright. Por
+      isso cada ficheiro é declarado duas vezes, como `normal` e como
+      `italic`: assim os títulos usam os glifos reais em qualquer um dos
+      casos e o browser nunca lhes acrescenta uma inclinação sintética por
+      cima (que daria letras duplamente tortas).
+
+   3) Tudo é servido do próprio domínio — o CSP do site
+      (`style-src/font-src 'self'`) bloquearia um <link> para o Google
+      Fonts ou para a Fontshare.
+*/
+
+/* --- Corpo: Inter Display ------------------------------------------- */
+
+@font-face {
+  font-family: "Inter Display";
+  src: url("/assets/fonts/inter-display-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter Display";
+  src: url("/assets/fonts/inter-display-latin-ext.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --- Títulos: Thunder ----------------------------------------------- */
+
+@font-face {
+  font-family: "Thunder";
+  src: url("/framerusercontent.com/assets/skMcTQFxHJBWhGrOAKtqLE3ho.woff2") format("woff2");
+  font-weight: 500 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thunder";
+  src: url("/framerusercontent.com/assets/skMcTQFxHJBWhGrOAKtqLE3ho.woff2") format("woff2");
+  font-weight: 500 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thunder";
+  src: url("/framerusercontent.com/assets/fdaGCFI8qisD9SNd8JTZ9s4xXJE.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thunder";
+  src: url("/framerusercontent.com/assets/fdaGCFI8qisD9SNd8JTZ9s4xXJE.woff2") format("woff2");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* --- Destaques: Instrument Serif Italic ----------------------------- */
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zATjnTNgNq55w.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zATjnTNgNq55w.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --font-body: "Inter Display", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-title: "Thunder", "Inter Display", "Inter", sans-serif;
+  --font-accent: "Instrument Serif", Georgia, "Times New Roman", serif;
+
+  /* Fixa o eixo ótico no corte Display. */
+  font-variation-settings: "opsz" 32;
+}
