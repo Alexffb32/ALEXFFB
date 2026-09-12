@@ -70,7 +70,143 @@
     
     <!-- End of headStart -->
 	
-	<style id="patch-hide-css">[data-framer-name="Brand"]{display:none!important}a.__framer-badge{display:none!important}a.framer-lux5qc,a.framer-Ik1cm{color:#fff!important;font-family:"Boldonse",sans-serif!important;text-transform:uppercase!important;letter-spacing:-0.02em!important}[data-framer-name="Lists wrap"]{display:none!important}[data-framer-name="Sticky Image"]{display:none!important}div:has(>a.framer-xQaIk){display:none!important}[data-framer-name="Case Study Inner"]{justify-content:center!important}[data-framer-name="Right Content"]{max-width:640px!important}.abwl-footer-legal{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;width:100%;font-family:Inter,"Inter Placeholder",sans-serif;font-size:14px}.abwl-footer-legal a{color:rgba(190,190,190,0.6);text-decoration:none}.abwl-footer-legal a:hover{color:#bebebe;text-decoration:underline}.abwl-contact-info{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:16px;font-family:Inter,"Inter Placeholder",sans-serif;font-size:16px}.abwl-contact-info a{color:#bebebe;text-decoration:none}.abwl-contact-info a:hover{text-decoration:underline}@media (max-width:809px){.framer-gj122q{flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important}.framer-8ojz7q{max-width:100%!important}.framer-1nujzqg h1.framer-text{font-size:130px!important;white-space:normal!important}.framer-crdogh p.framer-text{font-size:44px!important;white-space:normal!important;word-break:break-word!important;line-height:1.15!important}.framer-17e7xce,.framer-vluooz,.framer-16xsoba,.framer-zgdnf6{height:auto!important;margin-bottom:8px!important}.framer-zx9l5o{height:auto!important;overflow:visible!important}.framer-hfocrw,.framer-ykocn9,.framer-fvia4j,.framer-1f0zm2g{height:auto!important}.framer-hfocrw h2.framer-text,.framer-ykocn9 h2.framer-text,.framer-fvia4j h2.framer-text,.framer-1f0zm2g h2.framer-text{font-size:32px!important;line-height:1.3!important}body{padding-bottom:96px!important}.framer-dahptt{flex-wrap:wrap!important;row-gap:16px!important;column-gap:8px!important}.framer-1hd84zc{flex-wrap:wrap!important;justify-content:center!important;row-gap:8px!important}}@media (max-width:360px){.framer-1nujzqg h1.framer-text{font-size:100px!important}}/* Sistema tipografico: corpo Inter Display, titulos Thunder, destaques Instrument Serif Italic (o Bento do hero). A Framer escreve a familia em style inline em cada no e nas suas proprias regras, por isso a troca tem de ser !important. Regra do meio: qualquer no que NAO peca familia propria herda a do pai -- e assim um <span> dentro de um titulo nao volta ao corpo (era o que partia o B de Bento). Os titulos/destaques identificam-se pela familia que a Framer pediu. O opsz fixo em 32 e o que faz o Inter render no corte Display; a Framer punha-o a normal. */body{font-family:var(--font-body)!important;font-variation-settings:"opsz" 32!important}body *:not([style*="font-family" i]){font-family:inherit!important;font-variation-settings:"opsz" 32!important}body [style*="oldonse" i],body [style*="thunder" i]{font-family:var(--font-title)!important;--framer-font-family:var(--font-title)!important}body [style*="instrument serif" i]{font-family:var(--font-accent)!important;--framer-font-family:var(--font-accent)!important;font-style:italic!important}/* Thunder e uma display condensada: funciona nos titulos grandes (o hero a 230px, as secoes a 50-91px, os 4 topicos a 65px) mas fica ilegivel em rotulos pequenos. Estes sao os wrappers dos rotulos pequenos que a Framer tambem pedia em Boldonse -- titulos dos 4 pilares (20px), labels dos botoes (16px e 12px) e a lista de projetos (14px): voltam ao Inter Display bold. */body .framer-15xneeu,body .framer-15xneeu *,body .framer-1wkb0o,body .framer-1wkb0o *,body .framer-860otr,body .framer-860otr *,body .framer-9pya6w,body .framer-9pya6w *{font-family:var(--font-body)!important;--framer-font-family:var(--font-body)!important;font-weight:800!important;font-style:normal!important}</style><style data-framer-font-css="">@font-face { font-family: "Instrument Serif"; src: url('fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zATjnTNgNq55w.woff2'); font-display: swap; font-style: italic; font-weight: 400 }
+	<style id="patch-hide-css">[data-framer-name="Brand"]{display:none!important}a.__framer-badge{display:none!important}a.framer-lux5qc,a.framer-Ik1cm{color:#fff!important;font-family:"Boldonse",sans-serif!important;text-transform:uppercase!important;letter-spacing:-0.02em!important}[data-framer-name="Lists wrap"]{display:none!important}[data-framer-name="Sticky Image"]{display:none!important}div:has(>a.framer-xQaIk){display:none!important}[data-framer-name="Case Study Inner"]{justify-content:center!important}[data-framer-name="Right Content"]{max-width:640px!important}.abwl-footer-legal{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;width:100%;font-family:Inter,"Inter Placeholder",sans-serif;font-size:14px}.abwl-footer-legal a{color:rgba(190,190,190,0.6);text-decoration:none}.abwl-footer-legal a:hover{color:#bebebe;text-decoration:underline}.abwl-contact-info{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:16px;font-family:Inter,"Inter Placeholder",sans-serif;font-size:16px}.abwl-contact-info a{color:#bebebe;text-decoration:none}.abwl-contact-info a:hover{text-decoration:underline}@media (max-width:809px){.framer-gj122q{flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important}.framer-8ojz7q{max-width:100%!important}.framer-1nujzqg h1.framer-text{font-size:130px!important;white-space:normal!important}.framer-crdogh p.framer-text{font-size:44px!important;white-space:normal!important;word-break:break-word!important;line-height:1.15!important}.framer-17e7xce,.framer-vluooz,.framer-16xsoba,.framer-zgdnf6{height:auto!important;margin-bottom:8px!important}.framer-zx9l5o{height:auto!important;overflow:visible!important}.framer-hfocrw,.framer-ykocn9,.framer-fvia4j,.framer-1f0zm2g{height:auto!important}.framer-hfocrw h2.framer-text,.framer-ykocn9 h2.framer-text,.framer-fvia4j h2.framer-text,.framer-1f0zm2g h2.framer-text{font-size:32px!important;line-height:1.3!important}body{padding-bottom:96px!important}.framer-dahptt{flex-wrap:wrap!important;row-gap:16px!important;column-gap:8px!important}.framer-1hd84zc{flex-wrap:wrap!important;justify-content:center!important;row-gap:8px!important}}@media (max-width:360px){.framer-1nujzqg h1.framer-text{font-size:100px!important}}/* Sistema tipografico: corpo Inter Display, titulos Thunder, destaques Instrument Serif Italic (o Bento do hero). A Framer escreve a familia em style inline em cada no e nas suas proprias regras, por isso a troca tem de ser !important. Regra do meio: qualquer no que NAO peca familia propria herda a do pai -- e assim um <span> dentro de um titulo nao volta ao corpo (era o que partia o B de Bento). Os titulos/destaques identificam-se pela familia que a Framer pediu. O opsz fixo em 32 e o que faz o Inter render no corte Display; a Framer punha-o a normal. */body{font-family:var(--font-body)!important;font-variation-settings:"opsz" 32!important}body *:not([style*="font-family" i]){font-family:inherit!important;font-variation-settings:"opsz" 32!important}body [style*="oldonse" i],body [style*="thunder" i]{font-family:var(--font-title)!important;--framer-font-family:var(--font-title)!important}body [style*="instrument serif" i]{font-family:var(--font-accent)!important;--framer-font-family:var(--font-accent)!important;font-style:italic!important}/* Thunder e uma display condensada: funciona nos titulos grandes (o hero a 230px, as secoes a 50-91px, os 4 topicos a 65px) mas fica ilegivel em rotulos pequenos. Estes sao os wrappers dos rotulos pequenos que a Framer tambem pedia em Boldonse -- titulos dos 4 pilares (20px), labels dos botoes (16px e 12px) e a lista de projetos (14px): voltam ao Inter Display bold. *//* Barras de botoes (a do hero, .framer-pzwm8n, e a fixa, .framer-1hd84zc): fora o botao do asterisco, que so apontava para a propria pagina, e a ordem passa a ser Waitlist | Enviar Mensagem | Merch -- waitlist a esquerda, merch a direita. Os dois containers sao flex, por isso a ordem faz-se com `order` e nao depende da ordem no DOM (que a hidratacao da Framer reescreve). */.framer-13o9b0m,.framer-1553kil{display:none!important}.framer-pzwm8n>a[href="/newsletter"],.framer-1hd84zc>a[href="/newsletter"]{order:1!important}.framer-pzwm8n>div,.framer-1hd84zc>div{order:2!important}.framer-pzwm8n>a[href="/loja"],.framer-1hd84zc>a[href="/loja"]{order:3!important}/* A animacao de entrada da Framer para os botoes da barra do hero fica presa: o SSR escreve opacity:0.001 em style inline e o "animator" nunca a conclui (no telemovel nunca; no desktop so depois de se fazer scroll). Resultado: o Waitlist -- e o Merch, que e um clone dele -- nunca chegavam a ver-se. Reproduzimos a mesma entrada (delay 0.7s, 0.6s, a mesma curva) em CSS: as declaracoes de animacao estao acima do style inline na cascata, por isso ganham sem precisar de !important e sem partir nada se a Framer voltar a animar. */@keyframes abwl-btn-appear{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}.framer-pzwm8n>a[href="/newsletter"],.framer-pzwm8n>a[href="/loja"]{animation:abwl-btn-appear .6s cubic-bezier(.44,0,0,.99) .7s both}@media (prefers-reduced-motion:reduce){.framer-pzwm8n>a[href="/newsletter"],.framer-pzwm8n>a[href="/loja"]{animation-duration:.01ms;animation-delay:0s}}body .framer-15xneeu,body .framer-15xneeu *,body .framer-1wkb0o,body .framer-1wkb0o *,body .framer-860otr,body .framer-860otr *,body .framer-9pya6w,body .framer-9pya6w *{font-family:var(--font-body)!important;--framer-font-family:var(--font-body)!important;font-weight:800!important;font-style:normal!important}
+/* ====== Revisao mobile (<=809px) ======================================
+   Corrige, por ordem de gravidade, o que estava cortado ou desproporcionado
+   no telemovel. Vem depois do bloco antigo de propositio: em empate de
+   especificidade ganha a ultima regra. */
+@media (max-width:809px){
+
+/* 1. Barras de botoes (hero .framer-pzwm8n e fixa .framer-1hd84zc).
+      Estavam em nowrap com ~450px de conteudo em 390px de ecra, o que
+      empurrava o "Waitlist" para fora (x=-19) e deixava o "Merch" sozinho
+      numa segunda linha desalinhada. Passa a: CTA principal em toda a
+      largura, Waitlist | Merch a meias por baixo. */
+.framer-pzwm8n,.framer-1hd84zc{
+  flex-wrap:wrap!important;row-gap:10px!important;column-gap:10px!important;
+  width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+  padding-left:16px!important;padding-right:16px!important;justify-content:center!important}
+.framer-pzwm8n>div,.framer-1hd84zc>div{
+  order:1!important;flex:1 1 100%!important;width:100%!important;min-width:0!important}
+.framer-pzwm8n>div>*,.framer-1hd84zc>div>*{width:100%!important}
+.framer-pzwm8n>a[href="/newsletter"],.framer-1hd84zc>a[href="/newsletter"]{order:2!important}
+.framer-pzwm8n>a[href="/loja"],.framer-1hd84zc>a[href="/loja"]{order:3!important}
+.framer-pzwm8n>a[href="/newsletter"],.framer-1hd84zc>a[href="/newsletter"],
+.framer-pzwm8n>a[href="/loja"],.framer-1hd84zc>a[href="/loja"]{
+  flex:1 1 calc(50% - 5px)!important;width:auto!important;min-width:0!important}
+
+/* 2. A barra fixa deixa de tapar o fim do conteudo (media 109px de altura
+      + 30px de afastamento do fundo). */
+body{padding-bottom:172px!important}
+
+/* 3. Hero: as duas palavras estavam desproporcionais entre si -- Thunder e
+      condensada, por isso "Alexandre" ficava a 36-69px ao lado de um
+      "Bento" a 130px. Agora ficam com peso visual equivalente. */
+.framer-1bol87l h1.framer-text,.framer-yljb4s h1.framer-text{
+  font-size:72px!important;line-height:0.92!important}
+.framer-1nujzqg h1.framer-text{font-size:76px!important;line-height:1!important}
+
+/* 3b. O bloco das palavras do hero comecava a y=36, exatamente onde comeca
+      o cabecalho (36->78), por isso o nome colidia com o logo e os icones.
+      O hero passa a ter altura livre com espaco no topo para o cabecalho;
+      o cabecalho e absoluto, logo nao se mexe com este padding. */
+.framer-292rnr{height:auto!important;padding-top:104px!important;
+  padding-bottom:24px!important;box-sizing:border-box!important}
+
+/* 4. "Ninguem vai construir o teu caminho por ti": 28px em condensada lia-se
+      como texto corrido, nao como titulo. */
+.framer-pczo89-container p{font-size:44px!important;line-height:1.05!important}
+
+/* 4b. Titulo-manifesto ("Com 16 anos fundei a Layout Agency...") estava a
+      77px e sem margem lateral nenhuma: as letras encostavam aos dois lados
+      do ecra e a frase ocupava dois ecras inteiros. Ganha as mesmas
+      margens do resto da pagina e um corpo proporcional. */
+.framer-rg7nzm h1.framer-text{font-size:52px!important;line-height:1.02!important;
+  padding-left:16px!important;padding-right:16px!important;box-sizing:border-box!important}
+
+/* 5. Kicker "Ao que podes ter acesso": tinha 290px de texto numa caixa de
+      280px e o pai cortava (overflow:clip), partindo a frase a meio. */
+.framer-1rel7uh{overflow:visible!important}
+.framer-nzdzj8,.framer-nzdzj8 p.framer-text,.framer-nzdzj8 strong{
+  letter-spacing:1.5px!important;white-space:normal!important}
+
+/* 5b. Assinatura do rodape ("Alexandre Bento"): as duas palavras estao numa
+      linha so, a 72px + 66px, o que da 363px dentro de um contentor de
+      345px -- o "Bento" saia do ecra e o B em italico ainda montava por
+      cima do E do "Alexandre". Reduz-se o par, separa-se com um espaco
+      real, e deixa-se mudar de linha como rede de seguranca. */
+.framer-1wgpaun{flex-wrap:wrap!important;justify-content:center!important;
+  column-gap:12px!important;row-gap:0!important}
+.framer-1wgpaun .framer-yljb4s h1.framer-text{font-size:60px!important}
+.framer-1wgpaun .framer-29p7eg h1.framer-text{font-size:56px!important}
+
+/* 6. As 4 fotos decorativas dos topicos sao absolutas e, num ecra estreito,
+      caiam por cima dos titulos. Sao decoracao: no telemovel saem. */
+.framer-rzpift,.framer-1kymvs4,.framer-1mm8194,.framer-1xlwkrn{display:none!important}
+
+/* 7. Lista de projetos: 3 caixas de 123px nao cabem em 375px e o texto tinha
+      white-space:pre, por isso "Aeternus Progressus" era cortado em vez de
+      mudar de linha. Passa a lista: uma entrada por linha, icone a esquerda
+      e nome/funcao a direita. Nao basta esticar o container -- o cartao la
+      dentro fica em min-content (87px) e o texto parte-se em "Vice- /
+      Presidente" encostado a margem -- por isso o cartao estica tambem e a
+      lista ganha a mesma margem lateral do resto da pagina. */
+.framer-dahptt{flex-direction:column!important;row-gap:18px!important;
+  padding-left:16px!important;padding-right:16px!important;box-sizing:border-box!important}
+.framer-dahptt>*{flex:1 1 auto!important;width:100%!important;max-width:100%!important}
+.framer-dahptt .framer-1k8tmye{width:100%!important;flex-direction:row!important;
+  align-items:center!important;justify-content:flex-start!important;gap:14px!important;
+  padding-bottom:0!important}
+.framer-dahptt .framer-1q19ovl{flex:none!important;margin:0!important}
+.framer-dahptt .framer-1q6fugb{width:auto!important;flex:1 1 auto!important;
+  align-items:flex-start!important;text-align:left!important}
+.framer-860otr p.framer-text,.framer-1q6fugb p.framer-text,.framer-5GveW p.framer-text{
+  white-space:normal!important;font-size:13px!important}
+
+/* 8. Botao principal "Enviar Mensagem": ficava com larguras diferentes nas
+      duas barras (a Framer esticava-o na barra fixa, 343px, e deixava-o a
+      182px na do hero). Pior, ao esticar com o conteudo centrado a camada
+      relativa do icone afastava-se da camada absoluta -- que fica presa a
+      left:4px -- e viam-se dois icones sobrepostos a meio do botao. Agora
+      ocupa a linha toda nas duas barras e o conteudo alinha a esquerda, o
+      que volta a por as duas camadas do icone exatamente uma sobre a
+      outra; o rotulo centra-se no espaco que sobra a direita do icone. */
+.framer-pzwm8n .framer-DMSGP,.framer-1hd84zc .framer-DMSGP{
+  width:100%!important;justify-content:flex-start!important}
+.framer-pzwm8n .framer-DMSGP .framer-9pya6w,.framer-1hd84zc .framer-DMSGP .framer-9pya6w,
+.framer-pzwm8n .framer-DMSGP .framer-9pya6w p,.framer-1hd84zc .framer-DMSGP .framer-9pya6w p{
+  flex:1 1 auto!important;justify-content:center!important;text-align:center!important}
+
+/* 8b. Logotipo do cabecalho: a caixa e 75x28 mas a imagem e 75x42 e o
+      object-fit e "cover", por isso o wordmark saia cortado em cima e em
+      baixo (lia-se "ALEX" colado a "ffb"). Fixamos a altura e deixamos a
+      largura seguir a proporcao real. */
+.framer-1qhkuyt{height:32px!important;width:auto!important}
+.framer-1qhkuyt a,.framer-1qhkuyt a>div{height:100%!important;width:auto!important}
+.framer-1qhkuyt img{height:100%!important;width:auto!important;object-fit:contain!important}
+
+/* 9. Fundo por tras da barra fixa: era transparente, por isso o conteudo da
+      pagina passava por entre as pilulas enquanto se fazia scroll. Degrade
+      ate ao fundo da pagina (#030303), num pseudo-elemento absoluto para
+      nao entrar no flex da barra. */
+.framer-1hd84zc::before{
+  content:"";position:absolute;left:0;right:0;top:-30px;bottom:-44px;z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(3,3,3,0) 0%,rgba(3,3,3,.88) 40%,#030303 72%)}
+
+}
+
+/* Ecras estreitos (<=380px): so o que precisa de menos corpo. */
+@media (max-width:380px){
+.framer-1bol87l h1.framer-text,.framer-yljb4s h1.framer-text{font-size:62px!important}
+.framer-1nujzqg h1.framer-text{font-size:64px!important}
+.framer-pczo89-container p{font-size:38px!important}
+.framer-rg7nzm h1.framer-text{font-size:44px!important}
+.framer-1wgpaun .framer-yljb4s h1.framer-text{font-size:50px!important}
+.framer-1wgpaun .framer-29p7eg h1.framer-text{font-size:46px!important}
+.framer-hfocrw h2.framer-text,.framer-ykocn9 h2.framer-text,.framer-fvia4j h2.framer-text,.framer-1f0zm2g h2.framer-text{font-size:27px!important}
+}
+</style><style data-framer-font-css="">@font-face { font-family: "Instrument Serif"; src: url('fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zATjnTNgNq55w.woff2'); font-display: swap; font-style: italic; font-weight: 400 }
 @font-face { font-family: "Boldonse"; src: url('fonts.gstatic.com/s/boldonse/v1/ZgNQjPxGPbbJUZemjC35hmHmNpCO.woff2'); font-style: normal; font-weight: 400 }
 @font-face { font-family: "Thunder Extra Bold LC Italic"; src: url('framerusercontent.com/assets/skMcTQFxHJBWhGrOAKtqLE3ho.woff2'); font-display: swap; font-style: italic; font-weight: 800 }
 @font-face { font-family: "Thunder Black LC Italic"; src: url('framerusercontent.com/assets/fdaGCFI8qisD9SNd8JTZ9s4xXJE.woff2'); font-style: italic; font-weight: 900 }

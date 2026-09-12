@@ -135,19 +135,36 @@
     }
   }
 
-  // Botão extra "Merch" na barra fixa do hero, ao lado do "Waitlist" já
-  // existente — a loja está ao vivo em /loja, por isso este link aponta
-  // lá diretamente, não para uma waitlist.
+  // Botão extra "Merch" ao lado do "Waitlist" já existente, nas duas
+  // barras de botões: a do hero (.framer-18lm3z0) e a fixa que segue a
+  // página (.framer-1mfibht). A loja está ao vivo em /loja, por isso este
+  // link aponta lá diretamente, não para uma waitlist.
+  //
+  // A ordem visual (Waitlist | Enviar Mensagem | Merch) e o botão do
+  // asterisco escondido são tratados em CSS (ver index.html), que
+  // sobrevive à hidratação sem precisar de correr outra vez.
+  var MERCH_BUTTON_SOURCES = [".framer-1mfibht", ".framer-18lm3z0"];
   function addMerchButton() {
-    var waitlistBtn = document.querySelector(".framer-1mfibht");
-    if (!waitlistBtn || waitlistBtn.getAttribute("data-abwl-merch-added") === "1") return;
-    var merchBtn = waitlistBtn.cloneNode(true);
-    merchBtn.removeAttribute("data-abwl-detached");
-    merchBtn.setAttribute("data-abwl-merch-btn", "1");
-    merchBtn.textContent = "Merch";
-    merchBtn.setAttribute("href", "/loja");
-    waitlistBtn.insertAdjacentElement("afterend", merchBtn);
-    waitlistBtn.setAttribute("data-abwl-merch-added", "1");
+    for (var i = 0; i < MERCH_BUTTON_SOURCES.length; i++) {
+      // querySelector devolve sempre o primeiro em ordem de DOM, ou seja o
+      // "Waitlist" original — nunca o clone, que vem depois dele.
+      var waitlistBtn = document.querySelector(MERCH_BUTTON_SOURCES[i]);
+      if (!waitlistBtn || waitlistBtn.getAttribute("data-abwl-merch-added") === "1") continue;
+      var merchBtn = waitlistBtn.cloneNode(true);
+      merchBtn.removeAttribute("data-abwl-detached");
+      // O original traz a animação de entrada da Framer (um id de "appear"
+      // e um style inline com opacity:0.001). Dois nós com o mesmo id
+      // confundiriam o animator, e o clone ficaria invisível se a animação
+      // não corresse — por isso o clone entra já no estado final.
+      merchBtn.removeAttribute("data-framer-appear-id");
+      merchBtn.style.removeProperty("opacity");
+      merchBtn.style.removeProperty("transform");
+      merchBtn.setAttribute("data-abwl-merch-btn", "1");
+      merchBtn.textContent = "Merch";
+      merchBtn.setAttribute("href", "/loja");
+      waitlistBtn.insertAdjacentElement("afterend", merchBtn);
+      waitlistBtn.setAttribute("data-abwl-merch-added", "1");
+    }
   }
 
   // Linha de links legais no footer principal — o export da Framer não
