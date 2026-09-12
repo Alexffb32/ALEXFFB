@@ -30,6 +30,7 @@
   function renderMedia() {
     document.getElementById("shop-main-media").innerHTML =
       '<span class="shop-product-badge">Edição Limitada</span>' +
+      '<span class="shop-product-badge-discount">' + catalog.DISCOUNT_LABEL + "</span>" +
       '<img src="' + design.image + '" alt="' + escapeHtml(design.name) + " — vista de costas\">" +
       '<span class="shop-media-label">Vista de costas</span>';
   }
@@ -101,10 +102,18 @@
     document.getElementById("shop-product-category").textContent = "Anti University Social Club — " + format.label;
 
     var priceEl = document.getElementById("shop-price");
+    var wasEl = document.getElementById("shop-price-was");
+    var offEl = document.getElementById("shop-price-off");
     priceEl.classList.add("is-updating");
+    if (wasEl) wasEl.classList.add("is-updating");
     setTimeout(function () {
       priceEl.textContent = catalog.money(format.price);
       priceEl.classList.remove("is-updating");
+      if (wasEl) {
+        wasEl.textContent = catalog.money(format.fullPrice);
+        wasEl.classList.remove("is-updating");
+      }
+      if (offEl) offEl.textContent = catalog.DISCOUNT_LABEL;
     }, 140);
 
     var comboNote = document.getElementById("shop-combo-savings");

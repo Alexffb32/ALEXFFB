@@ -97,29 +97,32 @@
     };
   }
 
-  function colorEmoji(colorId) {
-    return colorId === "branco" ? "⚪" : "⚫";
-  }
-
   /**
    * Monta a mensagem de WhatsApp pronta a enviar, no mesmo formato para
    * um artigo só (comprar direto na página de produto) ou vários (o
    * carrinho todo).
+   *
+   * Sem emojis: alguns (o burro, por exemplo) são de versões recentes do
+   * Unicode e aparecem como quadrado vazio em muitos telemóveis — o que
+   * dava mensagens com símbolos partidos. Aqui só se usa texto simples e
+   * o *negrito* do próprio WhatsApp.
+   *
+   * As fotos vão como LINK e não como anexo: um link wa.me só transporta
+   * texto, é uma limitação do próprio WhatsApp. O link abre a foto do
+   * produto e o WhatsApp mostra pré-visualização do primeiro.
    */
   function buildWhatsAppMessage(items) {
     var catalog = global.ShopCatalog;
     var lines = [];
-    lines.push("🫏 *ALEXFFB.COM*");
     lines.push("*ANTI UNIVERSITY SOCIAL CLUB*");
-    lines.push(items.length > 1 ? "*NOVA ENCOMENDA DO CARRINHO*" : "*NOVA ENCOMENDA*");
+    lines.push(items.length > 1 ? "*Nova encomenda (carrinho)*" : "*Nova encomenda*");
+    lines.push("alexffb.com/loja");
     lines.push("");
     lines.push(
       items.length > 1
-        ? "Olá! Gostaria de encomendar todos os artigos disponíveis no meu carrinho."
+        ? "Olá! Gostaria de encomendar os artigos do meu carrinho."
         : "Olá! Gostaria de encomendar este artigo.",
     );
-    lines.push("");
-    lines.push("📦 *ARTIGOS*");
     lines.push("");
 
     var totalsInfo = totals(items);
@@ -129,20 +132,24 @@
       var format = catalog.FORMATS[it.format];
       var unit = format ? format.price : 0;
       var subtotal = Math.round(unit * it.qty * 100) / 100;
-      lines.push("*ARTIGO " + (idx + 1) + "*");
-      lines.push((design ? design.name : it.designSlug) + " — " + (format ? format.label : it.format));
-      lines.push("Cor: " + colorEmoji(it.color) + " " + (it.color === "branco" ? "Branco" : "Preto"));
+      lines.push("*" + (idx + 1) + ". " + (design ? design.name : it.designSlug) + "*");
+      lines.push("Formato: " + (format ? format.label : it.format));
+      lines.push("Cor: " + (it.color === "branco" ? "Branco" : "Preto"));
       lines.push("Tamanho: " + it.size);
-      lines.push("Quantidade: " + it.qty + " | Preço unitário: " + catalog.money(unit));
-      lines.push("*Subtotal: " + catalog.money(subtotal) + "*");
-      if (idx < items.length - 1) lines.push("--------------------");
+      lines.push("Quantidade: " + it.qty);
+      lines.push("Preço unitário: " + catalog.money(unit));
+      lines.push("Subtotal: *" + catalog.money(subtotal) + "*");
+      var photo = catalog.photoUrl(it.designSlug);
+      if (photo) lines.push("Foto: " + photo);
+      lines.push("");
     });
 
-    lines.push("");
-    lines.push("💰 *TOTAL: " + catalog.money(totalsInfo.total) + "*");
+    lines.push("*TOTAL: " + catalog.money(totalsInfo.total) + "*");
     if (totalsInfo.comboSavings > 0) {
-      lines.push("🎉 *POUPANÇA COM COMBOS: " + catalog.money(totalsInfo.comboSavings) + "*");
+      lines.push("Poupança com combos: " + catalog.money(totalsInfo.comboSavings));
     }
+    lines.push("");
+    lines.push("Envio para Portugal Continental, a combinar aqui.");
 
     return lines.join("\n");
   }

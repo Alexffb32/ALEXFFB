@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="/assets/shop.css">
 </head>
 <body class="shop">
-  <div class="shop-countdown-bar" id="shop-countdown" data-deadline="2026-10-07T23:59:00+01:00">
-    🔥 EDIÇÃO LIMITADA — vendas encerram a 7 de outubro. Termina em: <strong id="shop-countdown-num">a calcular…</strong>
+  <div class="shop-countdown-bar" id="shop-countdown" data-deadline="2026-10-06T00:00:00+01:00">
+    🔥 EDIÇÃO LIMITADA — vendas encerram a 5 de outubro à meia-noite. Termina em: <strong id="shop-countdown-num" data-countdown-out>a calcular…</strong>
   </div>
   <header class="shop-header">
     <a href="/loja/" class="shop-logo">Anti University Social Club</a>
@@ -48,7 +48,83 @@
     <hr class="shop-divider">
 
     <div class="shop-grid" id="shop-grid"></div>
+
+    <section class="shop-soon" id="shop-soon" data-deadline="2026-10-06T00:00:00+01:00" data-ended-text="Já saiu">
+      <div class="shop-soon-head">
+        <p class="shop-eyebrow">Próxima coleção</p>
+        <h2 class="shop-soon-title">Coming<br>Soon</h2>
+        <p class="shop-soon-lede">
+          Mais cores, mais opções de roupa e mais artigos: merch, roupa, acessórios e objetos.
+          O que vem a seguir ainda não se mostra.
+        </p>
+      </div>
+
+      <div class="shop-soon-grid">
+        <div class="shop-soon-card">
+          <span class="shop-soon-mark">?</span>
+          <span class="shop-soon-censored">Censurado</span>
+        </div>
+        <div class="shop-soon-card">
+          <span class="shop-soon-mark">?</span>
+          <span class="shop-soon-censored">Censurado</span>
+        </div>
+        <div class="shop-soon-card">
+          <span class="shop-soon-mark">?</span>
+          <span class="shop-soon-censored">Censurado</span>
+        </div>
+      </div>
+
+      <div class="shop-soon-panel">
+        <p class="shop-soon-panel-label">Revelação a 6 de outubro</p>
+        <div class="shop-countdown-grid">
+          <div class="shop-countdown-unit"><strong data-countdown-days>--</strong><span>dias</span></div>
+          <div class="shop-countdown-unit"><strong data-countdown-hours>--</strong><span>horas</span></div>
+          <div class="shop-countdown-unit"><strong data-countdown-minutes>--</strong><span>min</span></div>
+          <div class="shop-countdown-unit"><strong data-countdown-seconds>--</strong><span>seg</span></div>
+        </div>
+
+        <form class="shop-news-form" data-shop-news-form>
+          <p class="shop-news-form-title">Quero ser avisado primeiro</p>
+          <div class="shop-news-row">
+            <input type="email" name="email" required placeholder="o teu melhor email" autocomplete="email" aria-label="Email">
+            <button type="submit" class="shop-btn shop-btn-primary">Avisem-me</button>
+          </div>
+          <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="shop-news-honeypot">
+          <label class="shop-news-consent">
+            <input type="checkbox" name="consent" required>
+            <span>Li e aceito a <a href="/privacidade/" target="_blank" rel="noopener noreferrer">Política de Privacidade</a> e os <a href="/termos/" target="_blank" rel="noopener noreferrer">Termos e Condições</a>.</span>
+          </label>
+          <p class="shop-news-status" data-shop-news-status role="status"></p>
+        </form>
+      </div>
+    </section>
   </main>
+
+  <aside class="shop-news-panel" id="shop-news-panel" aria-hidden="true">
+    <button type="button" class="shop-news-panel-close" data-shop-news-close aria-label="Fechar">×</button>
+    <div class="shop-news-panel-media">
+      <img src="/assets/products/colecao-lifestyle.jpg" alt="Três pessoas de costas com as t-shirts da coleção Anti University Social Club, à noite, em frente à Faculdade de Ciências" loading="lazy">
+    </div>
+    <div class="shop-news-panel-body">
+      <p class="shop-eyebrow">Anti University Social Club</p>
+      <h2 class="shop-news-panel-title">A próxima<br>é maior</h2>
+      <p class="shop-news-panel-text">
+        Mais cores, mais peças, mais acessórios. Entra na lista e sabes da próxima coleção antes de ir a público.
+      </p>
+      <form class="shop-news-form" data-shop-news-form>
+        <div class="shop-news-row">
+          <input type="email" name="email" required placeholder="o teu melhor email" autocomplete="email" aria-label="Email">
+          <button type="submit" class="shop-btn shop-btn-primary">Entrar</button>
+        </div>
+        <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="shop-news-honeypot">
+        <label class="shop-news-consent">
+          <input type="checkbox" name="consent" required>
+          <span>Li e aceito a <a href="/privacidade/" target="_blank" rel="noopener noreferrer">Política de Privacidade</a> e os <a href="/termos/" target="_blank" rel="noopener noreferrer">Termos e Condições</a>.</span>
+        </label>
+        <p class="shop-news-status" data-shop-news-status role="status"></p>
+      </form>
+    </div>
+  </aside>
 
   <footer class="shop-footer">
     <div class="shop-footer-legal">
@@ -66,5 +142,6 @@
   <script src="/assets/shop-countdown.js"></script>
   <script src="/assets/shop-header.js"></script>
   <script src="/assets/shop-grid.js"></script>
+  <script src="/assets/shop-newsletter.js"></script>
 </body>
 </html>

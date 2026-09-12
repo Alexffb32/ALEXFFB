@@ -6,14 +6,17 @@
    usada seja qual for o formato escolhido (T-shirt/Hoodie/Combo) até
    haver fotos separadas por peça.
 
-   Preços: sem "preço riscado" nenhum — nenhuma destas peças foi vendida
-   antes, por isso mostrar um preço "anterior" ao lado seria uma prática
-   de preços proibida em Portugal (Decreto-Lei 109-G/2021, que exige que
-   o preço riscado tenha sido mesmo praticado nos últimos 30 dias). Em
-   vez disso, cada preço tem só a etiqueta "Preço de lançamento". A única
-   poupança real e legítima mostrada é a do Combo, que compara o preço
-   do combo com a soma real de comprar as duas peças em separado — uma
-   comparação genuína entre dois preços atuais, não um desconto fictício. */
+   Preços: cada formato tem `price` (o preço da campanha de lançamento) e
+   `fullPrice` (o preço de tabela, exatamente o dobro — daí o -50%).
+   ATENÇÃO LEGAL, a confirmar do lado do negócio: o Decreto-Lei
+   109-G/2021 só permite anunciar uma redução de preço sobre um preço que
+   tenha sido realmente praticado, e obriga a indicar o preço mais baixo
+   dos 30 dias anteriores. Como esta coleção é nova, o `fullPrice` só é
+   defensável se for mesmo o preço a que as peças passam a ser vendidas
+   quando a campanha de lançamento terminar — não pode ser um valor de
+   referência inventado só para mostrar o desconto.
+   A poupança do Combo continua a ser uma comparação genuína entre dois
+   preços atuais (combo vs. as duas peças em separado). */
 (function (global) {
   "use strict";
 
@@ -52,11 +55,18 @@
     },
   ];
 
+  /* fullPrice é o preço de tabela da peça (o valor a que passa a ser
+     vendida depois do lançamento) — a promoção de lançamento é sempre
+     exatamente -50% sobre ele. Para o desconto poder ser anunciado assim,
+     esse preço de tabela tem de ser mesmo o praticado depois desta
+     campanha (ver nota legal no topo). */
   var FORMATS = {
-    tshirt: { label: "T-shirt Oversized", price: 17.99, category: "t-shirts" },
-    hoodie: { label: "Hoodie Oversized", price: 27.99, category: "sweatshirts" },
-    combo: { label: "Combo — Hoodie + T-shirt", price: 39.99, category: "combos" },
+    tshirt: { label: "T-shirt Oversized", price: 17.99, fullPrice: 35.98, category: "t-shirts" },
+    hoodie: { label: "Hoodie Oversized", price: 27.99, fullPrice: 55.98, category: "sweatshirts" },
+    combo: { label: "Combo — Hoodie + T-shirt", price: 39.99, fullPrice: 79.98, category: "combos" },
   };
+
+  var DISCOUNT_LABEL = "-50%";
 
   var COLORS = [
     { id: "preto", label: "Preto", swatch: "#0a0a0a" },
@@ -89,14 +99,33 @@
     return d.name + " — " + f.label;
   }
 
+  /* URL absoluto da foto, para poder ir na mensagem de WhatsApp (uma
+     mensagem de wa.me é só texto — não leva anexos — por isso o que se
+     envia é o link da foto, que o WhatsApp mostra em pré-visualização). */
+  function photoUrl(designSlug) {
+    var d = findDesign(designSlug);
+    if (!d) return "";
+    var origin = "https://alexffb.com";
+    try {
+      if (global.location && /^https?:$/.test(global.location.protocol)) {
+        origin = global.location.origin;
+      }
+    } catch (e) {
+      /* mantém o domínio de produção como fallback */
+    }
+    return origin + d.image;
+  }
+
   global.ShopCatalog = {
     DESIGNS: DESIGNS,
     FORMATS: FORMATS,
     COLORS: COLORS,
     SIZES: SIZES,
+    DISCOUNT_LABEL: DISCOUNT_LABEL,
     comboSavings: comboSavings,
     findDesign: findDesign,
     money: money,
+    photoUrl: photoUrl,
     productTitle: productTitle,
   };
 })(window);
