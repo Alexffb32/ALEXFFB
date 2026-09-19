@@ -38,13 +38,24 @@
       var unit = format ? format.price : 0;
       var subtotal = Math.round(unit * it.qty * 100) / 100;
 
+      // Peça assinada: mostra o mockup real em vez da foto do catálogo,
+      // para o cliente confirmar a colocação antes de fechar a compra.
+      var sig = catalog.normalizeSignature(it.signature);
+      var mediaSrc = sig ? catalog.mockupUrl(it.designSlug, sig) : design ? design.image : "";
+      var sigLine = sig
+        ? '<p class="shop-item-sig">Assinada à mão <strong>' +
+          escapeHtml(catalog.signaturePlace(sig)) +
+          "</strong></p>"
+        : "";
+
       var row = document.createElement("div");
       row.className = "shop-cart-item";
       row.innerHTML =
         '<div class="shop-cart-item-media"><img src="' +
-        (design ? design.image : "") +
+        escapeHtml(mediaSrc) +
         '" alt="' +
         escapeHtml(design ? design.name : it.designSlug) +
+        (sig ? " — mockup com a assinatura" : "") +
         '"></div>' +
         "<div>" +
         '<p class="shop-cart-item-title">' +
@@ -57,6 +68,7 @@
         " · Tamanho: " +
         escapeHtml(it.size) +
         "</p>" +
+        sigLine +
         '<div class="shop-qty">' +
         '<button type="button" data-action="dec">−</button>' +
         '<span>' + it.qty + '</span>' +

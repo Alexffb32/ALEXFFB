@@ -28,14 +28,19 @@
     document.dispatchEvent(new CustomEvent("abwl:cart-changed"));
   }
 
-  function itemId(designSlug, format, color, size) {
-    return [designSlug, format, color, size].join("__");
+  /* A colocação da assinatura faz parte da identidade da linha: duas
+     t-shirts iguais assinadas em sítios diferentes são dois artigos
+     diferentes e não podem somar quantidades. */
+  function itemId(designSlug, format, color, size, signature) {
+    var sig = global.ShopCatalog.signatureKey(signature) || "-";
+    return [designSlug, format, color, size, sig].join("__");
   }
 
-  function addItem(designSlug, format, color, size, qty) {
+  function addItem(designSlug, format, color, size, qty, signature) {
     qty = qty || 1;
+    signature = global.ShopCatalog.normalizeSignature(signature);
     var items = readCart();
-    var id = itemId(designSlug, format, color, size);
+    var id = itemId(designSlug, format, color, size, signature);
     var existing = null;
     for (var i = 0; i < items.length; i++) {
       if (items[i].id === id) {
@@ -46,7 +51,15 @@
     if (existing) {
       existing.qty += qty;
     } else {
-      items.push({ id: id, designSlug: designSlug, format: format, color: color, size: size, qty: qty });
+      items.push({
+        id: id,
+        designSlug: designSlug,
+        format: format,
+        color: color,
+        size: size,
+        qty: qty,
+        signature: signature,
+      });
     }
     writeCart(items);
   }
@@ -139,6 +152,13 @@
       lines.push("Quantidade: " + it.qty);
       lines.push("Preço unitário: " + catalog.money(unit));
       lines.push("Subtotal: *" + catalog.money(subtotal) + "*");
+      var sig = catalog.normalizeSignature(it.signature);
+      if (sig) {
+        lines.push("Assinatura à mão: " + catalog.signaturePlace(sig));
+        // O mockup é um URL de imagem normal, gerado a pedido a partir
+        // destes números — o WhatsApp mostra-o como pré-visualização.
+        lines.push("Mockup: " + catalog.mockupUrl(it.designSlug, sig));
+      }
       var photo = catalog.photoUrl(it.designSlug);
       if (photo) lines.push("Foto: " + photo);
       lines.push("");
@@ -171,7 +191,10 @@
       items: items.map(function (it) {
         var design = global.ShopCatalog.findDesign(it.designSlug);
         var format = global.ShopCatalog.FORMATS[it.format];
+        var sig = global.ShopCatalog.normalizeSignature(it.signature);
         return {
+          signature: sig,
+          mockupUrl: sig ? global.ShopCatalog.mockupUrl(it.designSlug, sig) : null,
           designSlug: it.designSlug,
           designName: design ? design.name : it.designSlug,
           format: it.format,

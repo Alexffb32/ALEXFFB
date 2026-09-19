@@ -28,6 +28,7 @@
       description:
         "O logo principal da drop: um burro de arreios dentro de um símbolo de proibido. Para quem decidiu não esperar por autorização de ninguém.",
       image: "/assets/products/anti-university-social-club-back.webp",
+      mockup: "/assets/mockups/anti-university-social-club.png",
     },
     {
       slug: "o-mundo-real",
@@ -36,6 +37,7 @@
       description:
         "Um burro formado, touca e diploma na boca. O mundo real não vem com boletim de notas — vem com resultados.",
       image: "/assets/products/o-mundo-real-back.webp",
+      mockup: "/assets/mockups/o-mundo-real.png",
     },
     {
       slug: "gente-qualificada",
@@ -44,6 +46,7 @@
       description:
         "Uma mão com anel de coroa segura um peão de xadrez em forma de burro acorrentado. “Continuem a estudar... vou precisar de gente qualificada a trabalhar para mim.”",
       image: "/assets/products/gente-qualificada-back.webp",
+      mockup: "/assets/mockups/gente-qualificada.png",
     },
     {
       slug: "no-degree-required",
@@ -52,6 +55,7 @@
       description:
         "Três homens de fato, montados em burros. Um deles aponta à câmara. No degree required.",
       image: "/assets/products/no-degree-required-back.jpg",
+      mockup: "/assets/mockups/no-degree-required.png",
     },
   ];
 
@@ -74,6 +78,123 @@
   ];
 
   var SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+
+
+  /* ---------------------------------------------------------------- *
+   * Assinatura à mão (extra opcional)                                 *
+   * ---------------------------------------------------------------- *
+   * O cliente escolhe a face (frente ou costas) e arrasta/roda/escala
+   * a assinatura sobre a peça, como quem aplica um sticker numa skin
+   * de CS. O que fica guardado no carrinho não é uma imagem — são
+   * cinco números. A imagem do mockup é depois reconstruída a partir
+   * deles, tanto no ecrã (canvas) como no servidor (/api/mockup), o
+   * que evita ter de alojar ficheiros em lado nenhum e mantém o
+   * carrinho pequeno o suficiente para o localStorage.
+   *
+   * Sistema de coordenadas (o mesmo nos dois lados):
+   *   x, y  centro da assinatura, 0..1 da largura/altura do mockup
+   *   z     largura da assinatura, 0..1 da largura do mockup
+   *   r     rotação em graus, -180..180
+   *   side  "front" | "back"
+   *
+   * A imagem base é sempre a t-shirt branca: são os únicos mockups
+   * que existem por agora. A cor escolhida vai à parte, em texto, na
+   * encomenda. */
+  var SIGNATURE = {
+    image: "/assets/mockups/assinatura.png",
+    frontMockup: "/assets/mockups/front.png",
+    /* Tamanho da tela dos mockups — todos foram normalizados para isto,
+       para a frente e as costas ficarem alinhadas entre si. */
+    canvas: { width: 480, height: 512 },
+    price: 0,
+    defaults: { side: "back", x: 0.5, y: 0.76, z: 0.34, r: -4 },
+    limits: { minZ: 0.12, maxZ: 0.52 },
+    /* Zona imprimível: o tecido utilizável entre as mangas e abaixo da
+       gola. O editor mantém aqui dentro a assinatura inteira, não só o
+       centro — mesma ideia do sticker que não sai da arma. Este
+       `normalizeSignature` só garante o centro, que é o guarda-costas
+       barato; o enquadramento fino, que precisa de saber a proporção da
+       imagem, é feito no editor. */
+    area: { x0: 0.2, y0: 0.2, x1: 0.8, y1: 0.92 },
+  };
+
+  var SIGNATURE_SIDES = [
+    { id: "front", label: "Frente" },
+    { id: "back", label: "Costas" },
+  ];
+
+  function clamp(n, lo, hi) {
+    return n < lo ? lo : n > hi ? hi : n;
+  }
+
+  /* Põe uma assinatura dentro dos limites válidos e arredonda-a. Passa
+     por aqui tudo o que venha do utilizador, do localStorage ou de um
+     link partilhado — é o único sítio que decide o que é válido. */
+  function normalizeSignature(sig) {
+    if (!sig) return null;
+    var side = sig.side === "front" ? "front" : "back";
+    var a = SIGNATURE.area;
+    function round(n, d) {
+      var f = Math.pow(10, d);
+      return Math.round(n * f) / f;
+    }
+    var x = Number(sig.x);
+    var y = Number(sig.y);
+    var z = Number(sig.z);
+    var r = Number(sig.r);
+    return {
+      side: side,
+      x: round(clamp(isFinite(x) ? x : SIGNATURE.defaults.x, a.x0, a.x1), 4),
+      y: round(clamp(isFinite(y) ? y : SIGNATURE.defaults.y, a.y0, a.y1), 4),
+      z: round(clamp(isFinite(z) ? z : SIGNATURE.defaults.z, SIGNATURE.limits.minZ, SIGNATURE.limits.maxZ), 4),
+      r: round(clamp(isFinite(r) ? r : SIGNATURE.defaults.r, -180, 180), 1),
+    };
+  }
+
+  /* A imagem base sobre a qual a assinatura é desenhada: a frente é a
+     mesma peça lisa para todos os designs; as costas trazem o desenho. */
+  function mockupBase(designSlug, side) {
+    if (side === "front") return SIGNATURE.frontMockup;
+    var d = findDesign(designSlug);
+    return d && d.mockup ? d.mockup : SIGNATURE.frontMockup;
+  }
+
+  /* Duas etiquetas: a seca, para botões e tabelas, e a que já traz a
+     preposição certa ("nas costas", não "na costas") para entrar a meio
+     de uma frase. */
+  function signatureLabel(sig) {
+    if (!sig) return "";
+    return sig.side === "front" ? "Frente" : "Costas";
+  }
+
+  function signaturePlace(sig) {
+    if (!sig) return "";
+    return sig.side === "front" ? "na frente" : "nas costas";
+  }
+
+  /* Identidade da colocação, para o carrinho conseguir distinguir duas
+     peças iguais assinadas em sítios diferentes. */
+  function signatureKey(sig) {
+    if (!sig) return "";
+    return [sig.side, sig.x, sig.y, sig.z, sig.r].join(",");
+  }
+
+  /* URL do mockup gerado no servidor. É determinístico: os mesmos
+     números dão sempre a mesma imagem, por isso não é preciso guardar
+     nada — o link pode ir direto para o WhatsApp, que o pré-visualiza
+     como imagem. */
+  function mockupUrl(designSlug, sig) {
+    sig = normalizeSignature(sig);
+    if (!sig) return "";
+    var q =
+      "d=" + encodeURIComponent(designSlug) +
+      "&s=" + sig.side +
+      "&x=" + sig.x +
+      "&y=" + sig.y +
+      "&z=" + sig.z +
+      "&r=" + sig.r;
+    return originUrl("/api/mockup") + "?" + q;
+  }
 
   function comboSavings() {
     var separate = FORMATS.tshirt.price + FORMATS.hoodie.price;
@@ -102,9 +223,7 @@
   /* URL absoluto da foto, para poder ir na mensagem de WhatsApp (uma
      mensagem de wa.me é só texto — não leva anexos — por isso o que se
      envia é o link da foto, que o WhatsApp mostra em pré-visualização). */
-  function photoUrl(designSlug) {
-    var d = findDesign(designSlug);
-    if (!d) return "";
+  function originUrl(path) {
     var origin = "https://alexffb.com";
     try {
       if (global.location && /^https?:$/.test(global.location.protocol)) {
@@ -113,7 +232,13 @@
     } catch (e) {
       /* mantém o domínio de produção como fallback */
     }
-    return origin + d.image;
+    return origin + path;
+  }
+
+  function photoUrl(designSlug) {
+    var d = findDesign(designSlug);
+    if (!d) return "";
+    return originUrl(d.image);
   }
 
   global.ShopCatalog = {
@@ -122,8 +247,16 @@
     COLORS: COLORS,
     SIZES: SIZES,
     DISCOUNT_LABEL: DISCOUNT_LABEL,
+    SIGNATURE: SIGNATURE,
+    SIGNATURE_SIDES: SIGNATURE_SIDES,
     comboSavings: comboSavings,
     findDesign: findDesign,
+    mockupBase: mockupBase,
+    mockupUrl: mockupUrl,
+    normalizeSignature: normalizeSignature,
+    signatureKey: signatureKey,
+    signatureLabel: signatureLabel,
+    signaturePlace: signaturePlace,
     money: money,
     photoUrl: photoUrl,
     productTitle: productTitle,

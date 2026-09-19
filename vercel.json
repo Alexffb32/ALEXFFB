@@ -1,4 +1,11 @@
 {
+  "functions": {
+    "api/mockup.js": {
+      "includeFiles": "assets/mockups/**",
+      "memory": 1024,
+      "maxDuration": 15
+    }
+  },
   "redirects": [
     { "source": "/merch", "destination": "/loja", "permanent": false },
     { "source": "/merch/", "destination": "/loja", "permanent": false },

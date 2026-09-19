@@ -3,6 +3,20 @@ const { Resend } = require("resend");
 const { rateLimit } = require("./_lib/rateLimit");
 const { logShopOrder } = require("./_lib/supabase");
 
+/* A colocação da assinatura, tal como o editor a guardou. Os limites
+   são os mesmos de /api/mockup — se algo vier fora deles, o mockup é
+   desenhado na mesma, já lá dentro se volta a apertar. */
+const signatureSchema = z
+  .object({
+    side: z.enum(["front", "back"]),
+    x: z.number().min(0).max(1),
+    y: z.number().min(0).max(1),
+    z: z.number().min(0).max(1),
+    r: z.number().min(-180).max(180),
+  })
+  .nullable()
+  .optional();
+
 const itemSchema = z.object({
   designSlug: z.string().trim().min(1).max(80),
   designName: z.string().trim().min(1).max(120),
@@ -12,6 +26,8 @@ const itemSchema = z.object({
   size: z.enum(["XS", "S", "M", "L", "XL", "XXL"]),
   qty: z.number().int().min(1).max(20),
   unitPrice: z.number().nonnegative().max(1000),
+  signature: signatureSchema,
+  mockupUrl: z.string().url().max(500).nullable().optional(),
 });
 
 const orderSchema = z.object({
@@ -34,6 +50,29 @@ function money(n) {
 }
 
 function orderEmailHtml(data) {
+  /* Os mockups vão como imagem no corpo do email: o URL é o mesmo que o
+     cliente vê e que segue no WhatsApp, e é gerado a pedido a partir dos
+     números da colocação — não há nenhum ficheiro guardado. */
+  const signed = data.items.filter((it) => it.signature && it.mockupUrl);
+  const mockups = signed.length
+    ? `<h3 style="font-family:sans-serif;font-size:15px;margin:22px 0 10px;">Peças assinadas</h3>` +
+      signed
+        .map(
+          (it) =>
+            `<div style="margin:0 0 18px;font-family:sans-serif;font-size:13px;">` +
+            `<div style="margin-bottom:6px;">${escapeHtml(it.designName)} — ${escapeHtml(
+              it.formatLabel,
+            )} · ${escapeHtml(it.size)} · assinatura na ${
+              it.signature.side === "front" ? "frente" : "parte de trás"
+            }</div>` +
+            `<img src="${escapeHtml(it.mockupUrl)}" alt="Mockup com a assinatura" ` +
+            `width="260" style="display:block;border:1px solid #eee;border-radius:8px;">` +
+            `<div style="margin-top:4px;"><a href="${escapeHtml(it.mockupUrl)}">abrir mockup em tamanho real</a></div>` +
+            `</div>`,
+        )
+        .join("")
+    : "";
+
   const rows = data.items
     .map(
       (it) =>
@@ -43,6 +82,9 @@ function orderEmailHtml(data) {
         `<td style="padding:6px 10px;border-bottom:1px solid #eee;">${escapeHtml(it.size)}</td>` +
         `<td style="padding:6px 10px;border-bottom:1px solid #eee;">${it.qty}</td>` +
         `<td style="padding:6px 10px;border-bottom:1px solid #eee;">${money(it.unitPrice)}</td>` +
+        `<td style="padding:6px 10px;border-bottom:1px solid #eee;">${
+          it.signature ? (it.signature.side === "front" ? "Frente" : "Costas") : "—"
+        }</td>` +
         `</tr>`,
     )
     .join("");
@@ -56,7 +98,9 @@ function orderEmailHtml(data) {
     `<th style="text-align:left;padding:6px 10px;border-bottom:2px solid #333;">Tamanho</th>` +
     `<th style="text-align:left;padding:6px 10px;border-bottom:2px solid #333;">Qtd</th>` +
     `<th style="text-align:left;padding:6px 10px;border-bottom:2px solid #333;">Preço unit.</th>` +
+    `<th style="text-align:left;padding:6px 10px;border-bottom:2px solid #333;">Assinatura</th>` +
     `</tr></thead><tbody>${rows}</tbody></table>` +
+    mockups +
     `<p style="margin-top:14px;"><strong>Total: ${money(data.total)}</strong>` +
     (data.comboSavings > 0 ? `<br>Poupança com combos: ${money(data.comboSavings)}` : "") +
     `</p>`

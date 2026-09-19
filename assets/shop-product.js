@@ -18,7 +18,7 @@
   var initialFormat = params.get("f");
   if (!catalog.FORMATS[initialFormat]) initialFormat = "tshirt";
 
-  var state = { format: initialFormat, color: "branco", size: null };
+  var state = { format: initialFormat, color: "branco", size: null, signature: null };
 
   function escapeHtml(s) {
     return String(s)
@@ -140,7 +140,14 @@
   }
 
   function currentItem() {
-    return { designSlug: designSlug, format: state.format, color: state.color, size: state.size, qty: 1 };
+    return {
+      designSlug: designSlug,
+      format: state.format,
+      color: state.color,
+      size: state.size,
+      qty: 1,
+      signature: state.signature,
+    };
   }
 
   function showToast(text) {
@@ -156,6 +163,18 @@
   document.getElementById("shop-product-title").textContent = design.name;
   document.getElementById("shop-product-desc").innerHTML = "<p>" + escapeHtml(design.description) + "</p>";
 
+  // Editor de assinatura: opcional, e só entra se o script tiver
+  // carregado — a página continua a vender sem ele.
+  var signatureRoot = document.getElementById("shop-signature");
+  if (signatureRoot && window.ShopSignature) {
+    var editor = window.ShopSignature.create(signatureRoot, { designSlug: designSlug });
+    if (editor) {
+      editor.onChange(function (value) {
+        state.signature = value;
+      });
+    }
+  }
+
   renderMedia();
   renderFormats();
   renderSwatches();
@@ -165,8 +184,8 @@
 
   document.getElementById("shop-add-cart").addEventListener("click", function () {
     if (!state.size) return;
-    cart.add(designSlug, state.format, state.color, state.size, 1);
-    showToast("Adicionado ao carrinho.");
+    cart.add(designSlug, state.format, state.color, state.size, 1, state.signature);
+    showToast(state.signature ? "Adicionado ao carrinho, já assinado." : "Adicionado ao carrinho.");
   });
 
   document.getElementById("shop-buy-whatsapp").addEventListener("click", function () {
