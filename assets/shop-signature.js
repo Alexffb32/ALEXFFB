@@ -148,7 +148,7 @@
     function halfExtentPx(rect) {
       var aspect = els.ink.naturalWidth && els.ink.naturalHeight
         ? els.ink.naturalWidth / els.ink.naturalHeight
-        : 900 / 185;
+        : 900 / 479;
       var w = state.z * rect.width;
       var h = w / aspect;
       var rad = (state.r * Math.PI) / 180;
