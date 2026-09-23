@@ -124,36 +124,103 @@
 
   if (dismissedRecently()) return;
 
-  // O bloco "Próxima coleção" tem o mesmo formulário. Enquanto esse bloco
-  // estiver à vista, o painel não abre (e fecha-se se estiver aberto) —
-  // senão tapava precisamente o formulário que o utilizador ia usar,
-  // bloqueando-lhe o clique.
-  var inlineFormVisible = false;
-  var soon = document.getElementById("shop-soon");
-  if (soon && "IntersectionObserver" in window) {
-    new IntersectionObserver(
-      function (entries) {
-        inlineFormVisible = entries[0].isIntersecting;
-        if (inlineFormVisible && panel.classList.contains("is-open")) closePanel(panel);
-      },
-      { threshold: 0.15 },
-    ).observe(soon);
+  /* ------------------------------------------------------------------ *
+   * Quando é que o painel pode aparecer                                  *
+   * ------------------------------------------------------------------ *
+   * O painel muda de forma conforme o ecrã (ver shop.css): em ecrã largo
+   * é uma coluna fixa à direita, em ecrã estreito é uma gaveta que sobe
+   * do fundo. Isso muda o que ele tapa, e portanto quando pode abrir.
+   *
+   * "#shop-soon" bloqueia sempre: tem o mesmo formulário de newsletter, e
+   * o painel por cima roubava-lhe o clique — foi um bug real.
+   *
+   * A história e a lista de quem saiu só bloqueiam a coluna lateral: é
+   * texto para ler, e a lista tem uma coluna encostada à direita que
+   * desaparecia por baixo do painel. A gaveta de fundo não tem esse
+   * problema — tapa uma faixa em baixo, que se fecha. */
+  var FORM_ZONE = ["shop-soon"];
+  var READING_ZONES = ["shop-story", "shop-dropouts"];
+
+  function isSidePanel() {
+    return !window.matchMedia || !window.matchMedia("(max-width: 640px)").matches;
   }
 
-  // Aparece depois de haver algum sinal de interesse — 35% da página
-  // percorrida ou 25 segundos — em vez de interromper logo à entrada.
+  function zoneVisible(id) {
+    var el = document.getElementById(id);
+    return !!el && el.getAttribute("data-shop-news-quiet") === "1";
+  }
+
+  function anyVisible(ids) {
+    for (var i = 0; i < ids.length; i++) if (zoneVisible(ids[i])) return true;
+    return false;
+  }
+
+  /* `strict` distingue as duas chamadas: durante a navegação normal
+     respeita-se tudo; à saída da página só o formulário interessa, porque
+     tapar texto a quem já está de saída não custa nada. */
+  function blocked(strict) {
+    if (anyVisible(FORM_ZONE)) return true;
+    return strict && isSidePanel() && anyVisible(READING_ZONES);
+  }
+
+  if ("IntersectionObserver" in window) {
+    var zoneObserver = new IntersectionObserver(
+      function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          entries[i].target.setAttribute("data-shop-news-quiet", entries[i].isIntersecting ? "1" : "0");
+        }
+        if (blocked(true) && panel.classList.contains("is-open")) closePanel(panel);
+      },
+      { threshold: 0.15 },
+    );
+    FORM_ZONE.concat(READING_ZONES).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) zoneObserver.observe(el);
+    });
+  }
+
   var shown = false;
-  function maybeShow() {
-    if (shown || inlineFormVisible) return;
+
+  function maybeShow(strict) {
+    // Estando bloqueado não marca como mostrado: fica à espera de uma
+    // janela livre em vez de gastar a única oportunidade que tem.
+    if (shown || blocked(strict)) return;
     shown = true;
     open();
     window.removeEventListener("scroll", onScroll);
   }
-  function onScroll() {
+
+  /* Limiar medido contra o início da zona de leitura, não contra a altura
+     do documento. Uma percentagem da página inteira deixou de servir
+     quando a loja ganhou a história e a lista: 35% passou a cair já lá
+     dentro, e o painel nunca mais chegava a abrir. */
+  function triggerPoint() {
+    var first = document.getElementById(READING_ZONES[0]) || document.getElementById(FORM_ZONE[0]);
+    if (first) {
+      var top = first.getBoundingClientRect().top + window.scrollY;
+      if (top > 0) return top * 0.55;
+    }
     var max = document.body.scrollHeight - window.innerHeight;
-    if (max <= 0) return;
-    if (window.scrollY / max > 0.35) maybeShow();
+    return max > 0 ? max * 0.35 : Infinity;
   }
+
+  function onScroll() {
+    if (window.scrollY > triggerPoint()) maybeShow(true);
+  }
+
   window.addEventListener("scroll", onScroll, { passive: true });
-  setTimeout(maybeShow, 25000);
+
+  /* Em ecrã largo a página é densa e o scroll quase nunca deixa uma janela
+     livre, por isso há um segundo gatilho: o rato a sair pelo topo da
+     janela, o sinal clássico de quem vai fechar o separador. Não precisa
+     de guarda para toque — um dedo nunca gera um mouseout com o cursor
+     acima do topo da página. */
+  document.addEventListener("mouseout", function (e) {
+    if (e.relatedTarget || e.clientY > 0) return;
+    maybeShow(false);
+  });
+
+  setTimeout(function () {
+    maybeShow(true);
+  }, 25000);
 })();

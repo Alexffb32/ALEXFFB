@@ -38,7 +38,11 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.shop a {
+/* Os links herdam a cor do texto à volta — exceto os que são botões, que
+   trazem a sua própria. Sem o :not(), esta regra (0,2,0) ganhava à de
+   .shop-btn-primary (0,1,0) e punha qualquer <a> com classe de botão a
+   preto sobre preto. */
+.shop a:not(.shop-btn) {
   color: inherit;
 }
 
@@ -1990,5 +1994,272 @@
   .shop-sig-controls {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+}
+
+/* ==================================================================== *
+ * História e lista de quem saiu                                        *
+ * ==================================================================== *
+ * Duas secções de contexto, entre a grelha de produtos e o "coming
+ * soon": primeiro o porquê (banda escura, é o centro emocional da
+ * página), depois a companhia histórica (clara, tipográfica). O escuro
+ * e o claro alternam para a página não ler como um bloco só. */
+
+/* Alvos de âncora dentro da loja: o cabeçalho é sticky, por isso sem
+   esta folga um salto para uma secção deixava-lhe o topo escondido por
+   baixo dele. (.shop-story, .shop-dropouts e .shop-soon trazem a sua.) */
+.shop-grid {
+  scroll-margin-top: 110px;
+}
+
+.shop-hero-link {
+  margin: -18px 0 32px;
+  font-size: 14px;
+  animation: shop-fade-up 0.7s 0.15s var(--shop-ease) both;
+}
+
+.shop-hero-link a {
+  color: var(--shop-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--shop-line);
+  padding-bottom: 2px;
+  transition: border-color 0.2s var(--shop-ease);
+}
+
+.shop-hero-link a:hover {
+  border-color: var(--shop-accent);
+}
+
+/* ---- A história -------------------------------------------------- */
+
+.shop-story {
+  margin-top: 84px;
+  /* O cabeçalho é sticky: sem isto a âncora deixava o título por baixo. */
+  scroll-margin-top: 110px;
+  background: var(--shop-showcase);
+  color: var(--shop-bg);
+  border-radius: var(--shop-radius);
+  padding: 56px 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 20px 56px;
+}
+
+.shop-story .shop-eyebrow {
+  color: rgba(250, 249, 245, 0.55);
+}
+
+.shop-story-title {
+  font-family: var(--font-title);
+  font-size: clamp(42px, 6vw, 82px);
+  font-weight: 800;
+  line-height: 1.02;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.shop-story-body {
+  max-width: 62ch;
+}
+
+.shop-story-body p {
+  margin: 0 0 18px;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: rgba(250, 249, 245, 0.78);
+}
+
+.shop-story-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* O fecho é a frase que segura a secção toda: sai do cinzento do resto
+   e ganha a serifa itálica que a marca usa nos destaques. */
+.shop-story-close {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 22px !important;
+  line-height: 1.45 !important;
+  color: var(--shop-bg) !important;
+  border-left: 2px solid var(--shop-accent);
+  padding-left: 18px;
+  margin-top: 26px !important;
+}
+
+.shop-story-stats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 40px 0 0;
+  padding-top: 32px;
+  border-top: 1px solid rgba(250, 249, 245, 0.16);
+}
+
+.shop-story-stat dt {
+  font-family: var(--font-title);
+  font-size: clamp(44px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--shop-bg);
+}
+
+.shop-story-stat dd {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: rgba(250, 249, 245, 0.55);
+}
+
+/* ---- Quem saiu ---------------------------------------------------- */
+
+.shop-dropouts {
+  margin-top: 84px;
+  scroll-margin-top: 110px;
+}
+
+.shop-dropouts-title {
+  font-family: var(--font-title);
+  font-size: clamp(40px, 6vw, 78px);
+  font-weight: 800;
+  line-height: 1.04;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+}
+
+.shop-dropout-list {
+  list-style: none;
+  margin: 36px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--shop-line);
+  counter-reset: dropout;
+}
+
+/* Uma linha por pessoa, lida como um registo: número, nome, de onde
+   saiu, o que construiu. A grelha mantém as colunas alinhadas entre
+   linhas, que é o que faz isto parecer uma lista oficial e não cards. */
+.shop-dropout {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1.1fr) minmax(0, 1.6fr) minmax(0, 0.8fr);
+  align-items: baseline;
+  gap: 16px;
+  /* Folga à direita para a itálica serifada não encostar ao limite: a
+     inclinação faz o último glifo sair para lá da caixa de texto. */
+  padding: 20px 18px 20px 0;
+  border-bottom: 1px solid var(--shop-line);
+  transition: background 0.22s var(--shop-ease), padding-left 0.22s var(--shop-ease);
+}
+
+.shop-dropout:hover {
+  background: var(--shop-paper);
+  padding-left: 12px;
+}
+
+.shop-dropout-i {
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--shop-accent);
+  letter-spacing: 0.04em;
+}
+
+.shop-dropout-name {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.shop-dropout-left {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--shop-muted);
+}
+
+.shop-dropout-built {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.shop-dropouts-note {
+  max-width: 68ch;
+  margin: 32px 0 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--shop-muted);
+}
+
+.shop-dropouts-note strong {
+  color: var(--shop-ink);
+  font-weight: 700;
+}
+
+.shop-dropouts-cta {
+  display: inline-flex;
+  margin-top: 28px;
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .shop-story {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 44px 28px;
+  }
+
+  .shop-story-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 20px;
+  }
+
+  /* A linha deixa de ser uma grelha de colunas e passa a um bloco: o
+     número fica na margem, o resto empilha. Com quatro colunas em 400px
+     o "de onde saiu" ficava com duas palavras por linha. */
+  .shop-dropout {
+    grid-template-columns: 40px minmax(0, 1fr);
+    align-items: start;
+    gap: 4px 12px;
+    padding: 18px 0;
+  }
+
+  .shop-dropout-i {
+    grid-row: 1 / 4;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .shop-dropout-built {
+    text-align: left;
+    font-size: 20px;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .shop-story {
+    margin-top: 56px;
+    padding: 36px 22px;
+    border-radius: 12px;
+  }
+
+  .shop-story-body p {
+    font-size: 15.5px;
+  }
+
+  .shop-story-close {
+    font-size: 19px !important;
+    padding-left: 14px;
+  }
+
+  .shop-dropouts {
+    margin-top: 56px;
+  }
+
+  .shop-dropouts-cta {
+    width: 100%;
+    justify-content: center;
   }
 }
