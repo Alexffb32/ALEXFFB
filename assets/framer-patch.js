@@ -14,7 +14,9 @@
   // elemento (não um pai genérico) já tem o estilo de fonte inline antes
   // de lhe tocar — para nunca apagar sem querer um wrapper com o estilo.
 
-  document.title = "Alexandre Bento, Empreendedor Self-Made";
+  // O <title> vem do <head> e fica como está. Era definido aqui por JS, o
+  // que apagava a versão do HTML assim que o script corria — e o Google
+  // executa JavaScript, por isso era o título antigo que ele via.
 
   function norm(s) {
     return (s || "").replace(/\s+/g, " ").trim();
@@ -125,8 +127,8 @@
       if (norm(el.textContent) !== SHORT_TEXT_FIXES[i][1]) {
         el.textContent = SHORT_TEXT_FIXES[i][1];
       }
-      if (el.getAttribute("href") !== "/newsletter") {
-        el.setAttribute("href", "/newsletter");
+      if (el.getAttribute("href") !== "/newsletter/") {
+        el.setAttribute("href", "/newsletter/");
       }
       if (el.getAttribute("data-abwl-detached") !== "1") {
         el = detachFiber(el);
@@ -161,7 +163,7 @@
       merchBtn.style.removeProperty("transform");
       merchBtn.setAttribute("data-abwl-merch-btn", "1");
       merchBtn.textContent = "Merch";
-      merchBtn.setAttribute("href", "/loja");
+      merchBtn.setAttribute("href", "/loja/");
       waitlistBtn.insertAdjacentElement("afterend", merchBtn);
       waitlistBtn.setAttribute("data-abwl-merch-added", "1");
     }
@@ -318,10 +320,10 @@
   // seu próprio onClick de navegação entre páginas do projeto, que ignora
   // por completo o href do DOM. detachFiber() larga esse onClick.
   var CARD_LINKS = [
-    { href: "/loja", label: "Entrar na Loja" },
-    { href: "/newsletter", label: "Entra na waitlist" },
-    { href: "/newsletter", label: "Entra na waitlist" },
-    { href: "/newsletter", label: "Entra na waitlist" },
+    { href: "/loja/", label: "Entrar na Loja" },
+    { href: "/newsletter/", label: "Entra na waitlist" },
+    { href: "/newsletter/", label: "Entra na waitlist" },
+    { href: "/newsletter/", label: "Entra na waitlist" },
   ];
   function fixCardLinks() {
     var links = document.querySelectorAll(".framer-Ik1cm");
@@ -487,22 +489,160 @@
     (wrap || video.parentNode).appendChild(btn);
   }
 
+  /* Níveis de cabeçalho.
+   *
+   * O export da Framer traz seis <h1> na home: as duas palavras do hero,
+   * duas repetições delas na assinatura do rodapé, e mais dois títulos de
+   * secção. Os quatro pilares são <h4> logo a seguir a um <h2>, saltando
+   * o <h3>.
+   *
+   * O Google diz que vários <h1> não prejudicam o posicionamento, por
+   * isso isto não é o que trava a indexação — mas para quem navega com
+   * leitor de ecrã a página fica com seis títulos de primeiro nível, dois
+   * deles repetidos, o que torna a estrutura inútil.
+   *
+   * A troca de tag é feita com um nó novo (o clone larga a fiber do
+   * React, como em detachFiber) e o CSS da Framer trata p/h1/h2/h3 por
+   * igual, por isso nada muda visualmente. */
+  var HEADING_LEVELS = [
+    // O hero é o título da página: fica o único <h1>.
+    { sel: ".framer-1nujzqg h1", tag: "p" },   // "Bento", 2.ª metade do hero
+    { sel: ".framer-1nn2aro h1", tag: "h2" },  // "...novidades"
+    { sel: ".framer-rg7nzm h1", tag: "h2" },   // manifesto "Com 16 anos..."
+    { sel: ".framer-yljb4s h1", tag: "p" },    // assinatura do rodapé
+    { sel: ".framer-29p7eg h1", tag: "p" },    // assinatura do rodapé
+    // Os 4 pilares vinham a <h4> logo abaixo de um <h2>.
+    { sel: ".framer-15xneeu h4", tag: "h3" },
+  ];
+
+  function retag(el, tag) {
+    if (!el || !el.parentNode) return null;
+    if (el.tagName.toLowerCase() === tag) return el;
+    var next = document.createElement(tag);
+    for (var i = 0; i < el.attributes.length; i++) {
+      next.setAttribute(el.attributes[i].name, el.attributes[i].value);
+    }
+    while (el.firstChild) next.appendChild(el.firstChild);
+    el.parentNode.replaceChild(next, el);
+    return next;
+  }
+
+  function fixHeadingLevels() {
+    for (var i = 0; i < HEADING_LEVELS.length; i++) {
+      var rule = HEADING_LEVELS[i];
+      var nodes = document.querySelectorAll(rule.sel);
+      for (var j = 0; j < nodes.length; j++) retag(nodes[j], rule.tag);
+    }
+
+    // O hero está partido em duas palavras, em dois elementos. O <h1>
+    // ficaria a dizer só "Alexandre", por isso leva a segunda metade num
+    // span invisível — é exatamente o que está escrito ao lado, não é
+    // texto escondido a mais.
+    var hero = document.querySelector(".framer-1bol87l h1");
+    if (hero && !hero.querySelector(".abwl-sr-only")) {
+      var span = document.createElement("span");
+      span.className = "abwl-sr-only";
+      span.textContent = " Bento";
+      hero.appendChild(span);
+    }
+  }
+
+  /* Texto alternativo das imagens da home.
+   *
+   * O export da Framer traz alt="" em tudo. Em ícones e fundos isso está
+   * certo — um alt vazio diz ao leitor de ecrã "isto é decoração, salta"
+   * e é melhor do que descrever um separador. Errado é nas imagens que
+   * têm conteúdo: os logótipos das três organizações e as fotografias.
+   *
+   * A chave é o nome do ficheiro sem o sufixo de variante (_1, _3, _4),
+   * porque o srcset serve tamanhos diferentes do mesmo original. */
+  var IMAGE_ALT = {
+    ErNgK84BhHKokmrzPKcUKmYLgr0: "Alexandre Bento",
+    WjaAFec3PATGcV5KzKZq381iKk: "Logótipo da Associação Selfmade",
+    FNVpPkhR5uBMvUKGdNUfzltvqX0: "Logótipo da Aeternus Progressus",
+    bTpVhDhbSlC3IPyXKDUgm1rsnDY: "Logótipo da Layout Agency",
+    "6VMMoPiYzYZbs0OEWoMbMsWsjrU": "Alexandre Bento de perfil, à frente da Torre Eiffel iluminada, à noite",
+    ANc668CeddOzBUZsl7Lvn6QTQDA: "Alexandre Bento a fazer festas a um cavalo, num campo",
+    OWvGPNnymLZcpsfwjmNcDYzXnWE: "Alexandre Bento de camisola de gola alta e óculos escuros, a bordo de um barco num lago",
+    RGis8TSGSyHnrbCTWnKWhHCJU0: "Alexandre Bento a sair da água, numa praia",
+    cPTQSImR2ymPA9OqRlQFxoyN8: "Alexandre Bento sentado, de camisa e gravata, com o telemóvel na mão",
+    hpoqyWNUy1DGMusTBbxALq1Amg: "Alexandre Bento de fato e óculos escuros, ao ar livre ao fim da tarde",
+    ulJ6DqAJLiqrQEuO0auYrrgLBM: "Alexandre Bento sentado numa cadeira, de camisa preta, num evento",
+  };
+
+  function imageKey(img) {
+    var src = img.getAttribute("src") || img.currentSrc || "";
+    var file = src.split("/").pop().split("?")[0];
+    return file.replace(/\.[a-z0-9]+$/i, "").replace(/_\d+$/, "");
+  }
+
+  function fixImageAlt() {
+    var imgs = document.querySelectorAll("img");
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      var wanted = IMAGE_ALT[imageKey(img)];
+      if (!wanted) continue;
+      if (img.getAttribute("alt") !== wanted) img.setAttribute("alt", wanted);
+      // A hidratação repõe alt="" depois de já termos passado por aqui,
+      // por isso cada imagem fica com o seu próprio guarda (o mesmo
+      // padrão já usado nas imagens dos tópicos).
+      if (img.getAttribute("data-abwl-alt-guard") === "1") continue;
+      img.setAttribute("data-abwl-alt-guard", "1");
+      (function (target) {
+        var guard = new MutationObserver(function () {
+          var want = IMAGE_ALT[imageKey(target)];
+          if (want && target.getAttribute("alt") !== want) target.setAttribute("alt", want);
+        });
+        guard.observe(target, { attributes: true, attributeFilter: ["alt", "src"] });
+      })(img);
+    }
+  }
+
+  /* O <title> da página.
+   *
+   * O runtime da Framer escreve o nome da página do projeto ("Alexffb")
+   * por cima do <title> do HTML quando o router monta. O Google executa
+   * JavaScript, por isso era esse o título que ele via — não o que está
+   * no HTML. O valor certo é guardado por um script inline no <head>,
+   * antes de qualquer bundle poder correr.
+   *
+   * Além de o repor no patch(), fica um observador no próprio <title>:
+   * se a Framer o reescrever depois da última passagem agendada, é
+   * corrigido no mesmo instante. */
+  function intendedTitle() {
+    return window.__ABWL_TITLE__ || null;
+  }
+
+  function keepTitle() {
+    var want = intendedTitle();
+    if (want && document.title !== want) document.title = want;
+  }
+
+  (function watchTitle() {
+    var el = document.querySelector("title");
+    if (!el || !window.MutationObserver) return;
+    new MutationObserver(keepTitle).observe(el, { childList: true, characterData: true, subtree: true });
+  })();
+
   function patch() {
+    keepTitle();
     fixTextNodes();
     fixHeadings();
+    fixHeadingLevels();
     fixByClass();
     fixShortText();
     addMerchButton();
     addFooterLegalLinks();
     addContactInfo();
     fixTopicImages();
+    fixImageAlt();
     fixCardLinks();
     fixCalLinks();
     fixHeaderSocialLinks();
     fixAboutVideo();
-    if (document.title !== "Alexandre Bento, Empreendedor Self-Made") {
-      document.title = "Alexandre Bento, Empreendedor Self-Made";
-    }
+    // O <title> é definido no <head> e não se mexe: reescrevê-lo aqui
+    // apagava a versão do HTML em qualquer motor de busca que execute
+    // JavaScript (o Google executa), que foi o que aconteceu até agora.
   }
 
   patch();

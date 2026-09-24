@@ -7,22 +7,159 @@
     }
   },
   "redirects": [
-    { "source": "/merch", "destination": "/loja", "permanent": false },
-    { "source": "/merch/", "destination": "/loja", "permanent": false },
-    { "source": "/comunidade", "destination": "/newsletter", "permanent": false },
-    { "source": "/comunidade/", "destination": "/newsletter", "permanent": false },
-    { "source": "/produtos-digitais", "destination": "/newsletter", "permanent": false },
-    { "source": "/produtos-digitais/", "destination": "/newsletter", "permanent": false },
-    { "source": "/apps", "destination": "/newsletter", "permanent": false },
-    { "source": "/apps/", "destination": "/newsletter", "permanent": false }
+    {
+      "source": "/loja/produto",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "anti-university-social-club"
+        }
+      ],
+      "destination": "/loja/anti-university-social-club/",
+      "permanent": true
+    },
+    {
+      "source": "/loja/produto/",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "anti-university-social-club"
+        }
+      ],
+      "destination": "/loja/anti-university-social-club/",
+      "permanent": true
+    },
+    {
+      "source": "/loja/produto",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "o-mundo-real"
+        }
+      ],
+      "destination": "/loja/o-mundo-real/",
+      "permanent": true
+    },
+    {
+      "source": "/loja/produto/",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "o-mundo-real"
+        }
+      ],
+      "destination": "/loja/o-mundo-real/",
+      "permanent": true
+    },
+    {
+      "source": "/loja/produto",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "gente-qualificada"
+        }
+      ],
+      "destination": "/loja/gente-qualificada/",
+      "permanent": true
+    },
+    {
+      "source": "/loja/produto/",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "gente-qualificada"
+        }
+      ],
+      "destination": "/loja/gente-qualificada/",
+      "permanent": true
+    },
+    {
+      "source": "/loja/produto",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "no-degree-required"
+        }
+      ],
+      "destination": "/loja/no-degree-required/",
+      "permanent": true
+    },
+    {
+      "source": "/loja/produto/",
+      "has": [
+        {
+          "type": "query",
+          "key": "d",
+          "value": "no-degree-required"
+        }
+      ],
+      "destination": "/loja/no-degree-required/",
+      "permanent": true
+    },
+    {
+      "source": "/merch",
+      "destination": "/loja",
+      "permanent": false
+    },
+    {
+      "source": "/merch/",
+      "destination": "/loja",
+      "permanent": false
+    },
+    {
+      "source": "/comunidade",
+      "destination": "/newsletter",
+      "permanent": false
+    },
+    {
+      "source": "/comunidade/",
+      "destination": "/newsletter",
+      "permanent": false
+    },
+    {
+      "source": "/produtos-digitais",
+      "destination": "/newsletter",
+      "permanent": false
+    },
+    {
+      "source": "/produtos-digitais/",
+      "destination": "/newsletter",
+      "permanent": false
+    },
+    {
+      "source": "/apps",
+      "destination": "/newsletter",
+      "permanent": false
+    },
+    {
+      "source": "/apps/",
+      "destination": "/newsletter",
+      "permanent": false
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
@@ -39,11 +176,39 @@
     },
     {
       "source": "/framerusercontent.com/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/fonts.gstatic.com/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/icons/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
     }
   ]
 }

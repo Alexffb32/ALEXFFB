@@ -8,7 +8,7 @@
   function render() {
     grid.innerHTML = "";
     catalog.DESIGNS.forEach(function (design, i) {
-      var url = "/loja/produto/?d=" + encodeURIComponent(design.slug);
+      var url = catalog.productPath(design.slug);
       var a = document.createElement("a");
       a.className = "shop-card";
       a.href = url;

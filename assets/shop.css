@@ -2263,3 +2263,75 @@
     justify-content: center;
   }
 }
+
+/* ==================================================================== *
+ * Outros designs, no fim da página de produto                          *
+ * ==================================================================== */
+
+.shop-more {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px 96px;
+}
+
+.shop-more-title {
+  font-family: var(--font-title);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0 0 22px;
+}
+
+.shop-more-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.shop-more-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.shop-more-media {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--shop-radius);
+  background: var(--shop-paper);
+  border: 1px solid var(--shop-line);
+}
+
+.shop-more-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.4s var(--shop-ease);
+}
+
+.shop-more-card:hover .shop-more-media img {
+  transform: scale(1.03);
+}
+
+.shop-more-name {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 860px) {
+  .shop-more {
+    padding: 0 20px 72px;
+  }
+
+  .shop-more-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .shop-more-name {
+    font-size: 12.5px;
+  }
+}

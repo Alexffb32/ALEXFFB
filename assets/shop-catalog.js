@@ -24,6 +24,9 @@
     {
       slug: "anti-university-social-club",
       name: "Anti University Social Club",
+      seoTitle: "T-shirt Anti University Social Club",
+      seoDescription:
+        "O logo da coleção: um burro de arreios dentro de um símbolo de proibido. T-shirt ou hoodie oversized, em preto ou branco. Edição limitada, sem reposição.",
       short: "O símbolo da coleção.",
       description:
         "O logo principal da drop: um burro de arreios dentro de um símbolo de proibido. Para quem decidiu não esperar por autorização de ninguém.",
@@ -33,6 +36,9 @@
     {
       slug: "o-mundo-real",
       name: "O Mundo Real",
+      seoTitle: "T-shirt O Mundo Real",
+      seoDescription:
+        "\u201cO mundo real não quer saber do teu 1.º diploma.\u201d Um burro formado, de touca e diploma na boca. T-shirt ou hoodie oversized, edição limitada.",
       short: "O mundo real não quer saber do teu 1º diploma.",
       description:
         "Um burro formado, touca e diploma na boca. O mundo real não vem com boletim de notas — vem com resultados.",
@@ -42,6 +48,9 @@
     {
       slug: "gente-qualificada",
       name: "Gente Qualificada",
+      seoTitle: "T-shirt Gente Qualificada",
+      seoDescription:
+        "\u201cContinuem a estudar... vou precisar de gente qualificada a trabalhar para mim.\u201d T-shirt ou hoodie oversized, edição limitada, sem reposição.",
       short: "Vou precisar de gente qualificada.",
       description:
         "Uma mão com anel de coroa segura um peão de xadrez em forma de burro acorrentado. “Continuem a estudar... vou precisar de gente qualificada a trabalhar para mim.”",
@@ -51,10 +60,13 @@
     {
       slug: "no-degree-required",
       name: "No Degree Required",
+      seoTitle: "T-shirt No Degree Required",
+      seoDescription:
+        "Três homens de fato montados em burros, e um a apontar à câmara. No degree required. T-shirt ou hoodie oversized, edição limitada.",
       short: "Nenhum diploma é necessário.",
       description:
         "Três homens de fato, montados em burros. Um deles aponta à câmara. No degree required.",
-      image: "/assets/products/no-degree-required-back.jpg",
+      image: "/assets/products/no-degree-required-back.webp",
       mockup: "/assets/mockups/no-degree-required.png",
     },
   ];
@@ -235,6 +247,18 @@
     return origin + path;
   }
 
+  /* Cada design tem o seu URL próprio (/loja/<slug>/), servido por uma
+     página estática com título, descrição e dados estruturados próprios.
+     Antes tudo vivia em /loja/produto/?d=<slug>: uma página só, marcada
+     como noindex, que o Google nunca podia mostrar. */
+  function productPath(designSlug) {
+    return "/loja/" + designSlug + "/";
+  }
+
+  function productUrl(designSlug) {
+    return originUrl(productPath(designSlug));
+  }
+
   function photoUrl(designSlug) {
     var d = findDesign(designSlug);
     if (!d) return "";
@@ -259,6 +283,8 @@
     signaturePlace: signaturePlace,
     money: money,
     photoUrl: photoUrl,
+    productPath: productPath,
     productTitle: productTitle,
+    productUrl: productUrl,
   };
 })(window);

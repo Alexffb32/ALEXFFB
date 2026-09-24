@@ -5,8 +5,14 @@
   var cart = window.ShopCart;
   if (!catalog || !cart) return;
 
+  // Cada design tem a sua página estática (/loja/<slug>/), que declara o
+  // design em data-design no <html>. O ?d= antigo continua a funcionar
+  // como alternativa, para não partir links já partilhados.
   var params = new URLSearchParams(window.location.search);
-  var designSlug = params.get("d") || catalog.DESIGNS[0].slug;
+  var designSlug =
+    document.documentElement.getAttribute("data-design") ||
+    params.get("d") ||
+    catalog.DESIGNS[0].slug;
   var design = catalog.findDesign(designSlug);
 
   if (!design) {
@@ -98,7 +104,9 @@
 
   function updatePrice() {
     var format = catalog.FORMATS[state.format];
-    document.title = catalog.productTitle(designSlug, state.format) + ", Anti University Social Club";
+    // O <title> fica como vem do HTML. Reescrevê-lo a cada mudança de
+    // formato apagava o título otimizado da página em qualquer motor que
+    // execute JavaScript, e o Google executa.
     document.getElementById("shop-product-category").textContent = "Anti University Social Club — " + format.label;
 
     var priceEl = document.getElementById("shop-price");
@@ -175,10 +183,37 @@
     }
   }
 
+  /* Ligações para os outros designs. Sem isto cada página de produto era
+     uma folha solta: só se chegava lá pela grelha, e de lá não se ia para
+     lado nenhum a não ser para trás. Ligadas entre si, o rastreador passa
+     de uma para as outras e quem visita também. */
+  function renderOtherDesigns() {
+    var section = document.getElementById("shop-more");
+    var wrap = document.getElementById("shop-more-grid");
+    if (!section || !wrap) return;
+    var others = catalog.DESIGNS.filter(function (d) {
+      return d.slug !== designSlug;
+    });
+    if (!others.length) return;
+    wrap.innerHTML = others
+      .map(function (d) {
+        return (
+          '<a class="shop-more-card" href="' + catalog.productPath(d.slug) + '">' +
+          '<span class="shop-more-media"><img src="' + d.image + '" alt="' +
+          escapeHtml(d.name) + ' — t-shirt vista de costas" loading="lazy"></span>' +
+          '<span class="shop-more-name">' + escapeHtml(d.name) + "</span>" +
+          "</a>"
+        );
+      })
+      .join("");
+    section.hidden = false;
+  }
+
   renderMedia();
   renderFormats();
   renderSwatches();
   renderSizes();
+  renderOtherDesigns();
   updateButtons();
   updatePrice();
 
