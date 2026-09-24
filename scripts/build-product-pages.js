@@ -22,9 +22,6 @@ const ROOT = path.join(__dirname, "..");
 const TEMPLATE = path.join(ROOT, "loja", "produto", "index.html");
 const SITE = "https://alexffb.com";
 const OG_IMAGE = SITE + "/assets/og-alexffb.jpg";
-/* Fim da campanha de lançamento — o mesmo instante que a loja mostra no
-   contador. Entra no schema como validade do preço. */
-const PRICE_VALID_UNTIL = "2026-10-05";
 
 // O catálogo é um IIFE de browser; corre-se com um `window` de mentira.
 global.window = { location: { protocol: "https:", origin: SITE } };
@@ -85,7 +82,6 @@ function buildHead(design, url) {
       highPrice: high.toFixed(2),
       offerCount: Object.keys(catalog.FORMATS).length,
       availability: "https://schema.org/InStock",
-      priceValidUntil: PRICE_VALID_UNTIL,
       seller: { "@type": "Person", name: "Alexandre Bento", url: SITE },
     },
   };

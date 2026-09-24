@@ -26,7 +26,7 @@
       name: "Anti University Social Club",
       seoTitle: "T-shirt Anti University Social Club",
       seoDescription:
-        "O logo da coleção: um burro de arreios dentro de um símbolo de proibido. T-shirt ou hoodie oversized, em preto ou branco. Edição limitada, sem reposição.",
+        "O logo da coleção: um burro de arreios dentro de um símbolo de proibido. T-shirt ou hoodie oversized, em preto ou branco, com assinatura à mão se quiseres.",
       short: "O símbolo da coleção.",
       description:
         "O logo principal da drop: um burro de arreios dentro de um símbolo de proibido. Para quem decidiu não esperar por autorização de ninguém.",
@@ -38,7 +38,7 @@
       name: "O Mundo Real",
       seoTitle: "T-shirt O Mundo Real",
       seoDescription:
-        "\u201cO mundo real não quer saber do teu 1.º diploma.\u201d Um burro formado, de touca e diploma na boca. T-shirt ou hoodie oversized, edição limitada.",
+        "\u201cO mundo real não quer saber do teu 1.º diploma.\u201d Um burro formado, de touca e diploma na boca. T-shirt ou hoodie oversized, em preto ou branco.",
       short: "O mundo real não quer saber do teu 1º diploma.",
       description:
         "Um burro formado, touca e diploma na boca. O mundo real não vem com boletim de notas — vem com resultados.",
@@ -50,7 +50,7 @@
       name: "Gente Qualificada",
       seoTitle: "T-shirt Gente Qualificada",
       seoDescription:
-        "\u201cContinuem a estudar... vou precisar de gente qualificada a trabalhar para mim.\u201d T-shirt ou hoodie oversized, edição limitada, sem reposição.",
+        "\u201cContinuem a estudar... vou precisar de gente qualificada a trabalhar para mim.\u201d T-shirt ou hoodie oversized, em preto ou branco.",
       short: "Vou precisar de gente qualificada.",
       description:
         "Uma mão com anel de coroa segura um peão de xadrez em forma de burro acorrentado. “Continuem a estudar... vou precisar de gente qualificada a trabalhar para mim.”",
@@ -62,7 +62,7 @@
       name: "No Degree Required",
       seoTitle: "T-shirt No Degree Required",
       seoDescription:
-        "Três homens de fato montados em burros, e um a apontar à câmara. No degree required. T-shirt ou hoodie oversized, edição limitada.",
+        "Três homens de fato montados em burros, e um a apontar à câmara. No degree required. T-shirt ou hoodie oversized, em preto ou branco.",
       short: "Nenhum diploma é necessário.",
       description:
         "Três homens de fato, montados em burros. Um deles aponta à câmara. No degree required.",

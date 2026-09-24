@@ -61,17 +61,6 @@
   }
 }
 
-@keyframes shop-pulse-dot {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.75);
-  }
-}
-
 @keyframes shop-pop {
   0% {
     transform: scale(1);
@@ -82,37 +71,6 @@
   100% {
     transform: scale(1);
   }
-}
-
-.shop-countdown-bar {
-  background: var(--shop-ink);
-  color: var(--shop-bg);
-  text-align: center;
-  padding: 10px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.shop-countdown-bar::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--shop-accent);
-  flex: none;
-  animation: shop-pulse-dot 1.6s ease-in-out infinite;
-}
-
-.shop-countdown-bar strong {
-  color: var(--shop-accent);
-  font-variant-numeric: tabular-nums;
 }
 
 .shop-header {
@@ -359,21 +317,6 @@
   transform: scale(1.06);
 }
 
-.shop-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: var(--shop-accent);
-  color: #fff;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 6px 10px;
-  border-radius: 999px;
-  z-index: 2;
-}
-
 .shop-card-quickview {
   position: absolute;
   left: 10px;
@@ -494,20 +437,6 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 7px 12px;
-  border-radius: 999px;
-}
-
-.shop-product-badge {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  background: var(--shop-accent);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 7px 12px;
   border-radius: 999px;
@@ -1269,6 +1198,13 @@
   padding-top: 30px;
 }
 
+.shop-soon-panel-text {
+  margin: 0 0 22px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(250, 249, 245, 0.72);
+}
+
 .shop-soon-panel-label {
   font-size: 12px;
   font-weight: 700;
@@ -1276,37 +1212,6 @@
   text-transform: uppercase;
   color: rgba(250, 249, 245, 0.6);
   margin: 0 0 14px;
-}
-
-.shop-countdown-grid {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 26px;
-}
-
-.shop-countdown-unit {
-  min-width: 74px;
-  border: 1px solid rgba(250, 249, 245, 0.18);
-  border-radius: 12px;
-  padding: 12px 10px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.shop-countdown-unit strong {
-  display: block;
-  font-size: 26px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-}
-
-.shop-countdown-unit span {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(250, 249, 245, 0.55);
 }
 
 /* --- Formulários de newsletter --------------------------------------- */
@@ -1531,21 +1436,6 @@
     display: none;
   }
 
-  .shop-countdown-unit {
-    flex: 1 1 calc(25% - 8px);
-    min-width: 0;
-    padding: 10px 4px;
-  }
-
-  .shop-countdown-unit strong {
-    font-size: 21px;
-  }
-
-  .shop-countdown-unit span {
-    font-size: 10px;
-    letter-spacing: 0.04em;
-  }
-
   .shop-news-row .shop-btn,
   .shop-soon .shop-news-row .shop-btn,
   .shop-news-panel .shop-news-row .shop-btn {
@@ -1579,15 +1469,10 @@
     font-size: 26px;
   }
 
-  .shop-badge,
   .shop-badge-discount {
     font-size: 10px;
     padding: 5px 9px;
     top: 10px;
-  }
-
-  .shop-badge {
-    left: 10px;
   }
 
   .shop-badge-discount {
@@ -1631,10 +1516,6 @@
 }
 
 @media (max-width: 380px) {
-  .shop-countdown-bar {
-    font-size: 10.5px;
-    padding: 8px 12px;
-  }
 
   .shop-soon-censored {
     font-size: 10px;

@@ -35,7 +35,6 @@
 
   function renderMedia() {
     document.getElementById("shop-main-media").innerHTML =
-      '<span class="shop-product-badge">Edição Limitada</span>' +
       '<span class="shop-product-badge-discount">' + catalog.DISCOUNT_LABEL + "</span>" +
       '<img src="' + design.image + '" alt="' + escapeHtml(design.name) + " — vista de costas\">" +
       '<span class="shop-media-label">Vista de costas</span>';

@@ -16,7 +16,6 @@
       var tshirt = catalog.FORMATS.tshirt;
       a.innerHTML =
         '<div class="shop-card-media">' +
-        '<span class="shop-badge">Edição Limitada</span>' +
         '<span class="shop-badge-discount">' +
         catalog.DISCOUNT_LABEL +
         "</span>" +
