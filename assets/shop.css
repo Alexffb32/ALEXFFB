@@ -234,30 +234,6 @@
   animation: shop-fade-up 0.7s 0.1s var(--shop-ease) both;
 }
 
-.shop-trust {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 28px;
-  margin: 0 0 36px;
-  animation: shop-fade-up 0.7s 0.15s var(--shop-ease) both;
-}
-
-.shop-trust-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--shop-ink);
-}
-
-.shop-trust-item svg {
-  width: 17px;
-  height: 17px;
-  flex: none;
-  color: var(--shop-accent);
-}
-
 .shop-divider {
   border: none;
   border-top: 1px solid var(--shop-line);
@@ -713,27 +689,32 @@
   box-shadow: 0 -12px 24px -18px rgba(0, 0, 0, 0.25);
   transform: translateY(100%);
   transition: transform 0.3s var(--shop-ease);
-  display: none;
 }
 
 .shop-sticky-cta.is-visible {
   transform: translateY(0);
 }
 
-@media (max-width: 640px) {
-  .shop-sticky-cta {
-    display: block;
-  }
-}
-
 .shop-sticky-cta-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  max-width: 1240px;
+  margin: 0 auto;
 }
 
 .shop-sticky-cta-info {
   min-width: 0;
+  flex: 1 1 auto;
+}
+
+.shop-sticky-cta-meta {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--shop-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .shop-sticky-cta-title {
@@ -746,8 +727,9 @@
 }
 
 .shop-sticky-cta-price {
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 800;
+  color: var(--shop-ink);
 }
 
 .shop-sticky-cta .shop-btn {
@@ -1538,11 +1520,6 @@
   .shop-eyebrow,
   .shop-h1,
   .shop-lede,
-  .shop-trust {
-    animation: none !important;
-    opacity: 1 !important;
-  }
-
   .shop *,
   .shop *::before,
   .shop *::after {
@@ -2215,4 +2192,558 @@
   .shop-more-name {
     font-size: 12.5px;
   }
+}
+
+
+/* ==================================================================== *
+ * Faixa de garantias, logo abaixo do menu                              *
+ * ==================================================================== */
+
+.shop-trustbar {
+  background: var(--shop-paper);
+  border-bottom: 1px solid var(--shop-line);
+  overflow: hidden;
+}
+
+.shop-trustbar-track {
+  display: flex;
+  justify-content: center;
+}
+
+.shop-trustbar-list {
+  display: flex;
+  flex: none;
+  gap: 34px;
+  margin: 0;
+  padding: 11px 17px;
+  list-style: none;
+}
+
+.shop-trustbar-list[aria-hidden="true"] {
+  display: none;
+}
+
+.shop-trustbar-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: var(--shop-ink);
+}
+
+.shop-trustbar-list svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  color: var(--shop-accent);
+}
+
+/* Em ecrã estreito as quatro não cabem numa linha: correm em fita. A
+   segunda lista é a cópia que faz o ciclo parecer contínuo. */
+@media (max-width: 900px) {
+  .shop-trustbar-track {
+    justify-content: flex-start;
+    width: max-content;
+    animation: shop-trustbar-run 26s linear infinite;
+  }
+
+  .shop-trustbar-list[aria-hidden="true"] {
+    display: flex;
+  }
+
+  .shop-trustbar:hover .shop-trustbar-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes shop-trustbar-run {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .shop-trustbar {
+    overflow-x: auto;
+  }
+
+  .shop-trustbar-track {
+    animation: none;
+  }
+
+  .shop-trustbar-list[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+/* ==================================================================== *
+ * Pack dos 4, em destaque antes da grelha                              *
+ * ==================================================================== */
+
+.shop-bundle-slot:empty {
+  display: none;
+}
+
+.shop-bundle {
+  display: grid;
+  /* A foto tem proporção fixa (3:4); dar-lhe uma coluna fracionária
+     deixava um vazio ao lado dela em ecrãs largos. */
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+  margin: 0 0 44px;
+  padding: 22px;
+  border: 1px solid var(--shop-line);
+  border-radius: var(--shop-radius);
+  background: var(--shop-paper);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s var(--shop-ease), box-shadow 0.2s var(--shop-ease);
+}
+
+.shop-bundle:hover {
+  border-color: var(--shop-ink);
+  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.45);
+}
+
+.shop-bundle-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  aspect-ratio: 3 / 4;
+  max-height: 440px;
+}
+
+.shop-bundle-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--shop-ease);
+}
+
+.shop-bundle:hover .shop-bundle-media img {
+  transform: scale(1.03);
+}
+
+.shop-bundle-title {
+  font-family: var(--font-title);
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1.02;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.shop-bundle-text {
+  max-width: 44ch;
+  margin: 0 0 18px;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--shop-muted);
+}
+
+.shop-bundle-price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 6px;
+}
+
+.shop-bundle-price .shop-card-price-now {
+  font-size: 30px;
+}
+
+.shop-bundle-saving {
+  margin: 0 0 22px;
+  font-size: 14px;
+  color: var(--shop-ink);
+}
+
+.shop-bundle-saving strong {
+  color: var(--shop-accent);
+}
+
+.shop-bundle-cta {
+  display: inline-flex;
+  min-width: 0;
+  flex: none;
+}
+
+@media (max-width: 760px) {
+  .shop-bundle {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 14px;
+  }
+
+  .shop-bundle-media {
+    max-height: none;
+  }
+
+  .shop-bundle-cta {
+    width: 100%;
+  }
+}
+
+/* ==================================================================== *
+ * Upsell do pack (página de produto e carrinho)                        *
+ * ==================================================================== */
+
+.shop-upsell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 0 4px;
+  padding: 12px 14px;
+  border: 1px dashed var(--shop-accent);
+  border-radius: 12px;
+  background: rgba(255, 70, 46, 0.05);
+  color: var(--shop-ink);
+  text-decoration: none;
+  font-size: 13.5px;
+  line-height: 1.45;
+  transition: background 0.2s var(--shop-ease);
+}
+
+.shop-upsell:hover {
+  background: rgba(255, 70, 46, 0.1);
+}
+
+.shop-upsell img {
+  width: 52px;
+  height: 68px;
+  flex: none;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.shop-upsell strong {
+  display: block;
+  font-size: 14px;
+}
+
+.shop-upsell-go {
+  margin-left: auto;
+  font-size: 18px;
+  color: var(--shop-accent);
+}
+
+.shop-cart-upsell {
+  margin: 4px 0 14px;
+}
+
+.shop-summary-free {
+  color: #1a7f37;
+}
+
+/* ==================================================================== *
+ * Avaliações — só aparecem com avaliações reais                        *
+ * ==================================================================== */
+
+.shop-stars {
+  color: var(--shop-accent);
+  letter-spacing: 1px;
+}
+
+.shop-stars-off {
+  color: var(--shop-line);
+}
+
+.shop-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 13.5px;
+  color: var(--shop-ink);
+  text-decoration: none;
+}
+
+.shop-rating:hover {
+  text-decoration: underline;
+}
+
+.shop-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 2px;
+  font-size: 12.5px;
+  color: var(--shop-muted);
+}
+
+.shop-reviews {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px 64px;
+  scroll-margin-top: 110px;
+}
+
+.shop-reviews-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.shop-review {
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--shop-line);
+  border-radius: 12px;
+  background: var(--shop-paper);
+}
+
+.shop-review blockquote {
+  margin: 10px 0 12px;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.shop-review figcaption {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--shop-muted);
+}
+
+@media (max-width: 860px) {
+  .shop-reviews {
+    padding: 0 20px 48px;
+  }
+
+  .shop-reviews-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==================================================================== *
+ * Página do pack                                                        *
+ * ==================================================================== */
+
+.shop-includes {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  font-size: 14.5px;
+  line-height: 1.8;
+}
+
+.shop-includes a {
+  color: var(--shop-ink);
+}
+
+.shop-sig-pack {
+  margin: 0;
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* A barra fixa não pode tapar o rodapé quando está à vista. */
+body.has-sticky-cta {
+  padding-bottom: 84px;
+}
+
+@media (max-width: 640px) {
+  .shop-sticky-cta-title {
+    display: none;
+  }
+
+  .shop-sticky-cta-meta {
+    margin: 0;
+    font-size: 13px;
+  }
+
+  .shop-sticky-cta .shop-btn {
+    padding: 13px 14px;
+  }
+}
+
+/* --- Deixar uma avaliação (/loja/avaliar/) ---------------------------- */
+
+.shop-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.shop-review-main {
+  max-width: 680px;
+}
+
+.shop-review-form {
+  display: grid;
+  gap: 20px;
+}
+
+.shop-review-field {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.shop-review-field > span,
+.shop-review-field > legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.shop-review-field em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--shop-muted);
+}
+
+.shop-review-field input[type="text"],
+.shop-review-field select,
+.shop-review-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid var(--shop-line);
+  border-radius: 12px;
+  background: var(--shop-paper);
+  color: var(--shop-ink);
+  padding: 13px 15px;
+  font-family: inherit;
+  font-size: 16px; /* abaixo de 16px o iOS faz zoom ao focar */
+  transition: border-color 0.2s var(--shop-ease);
+}
+
+.shop-review-field textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.5;
+}
+
+.shop-review-field input:focus,
+.shop-review-field select:focus,
+.shop-review-field textarea:focus {
+  outline: none;
+  border-color: var(--shop-ink);
+}
+
+.shop-review-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Estrelas: no HTML vão de 5 para 1, e a linha inverte-se; assim a
+   estrela escolhida e as que ficam à esquerda dela acendem só com CSS. */
+.shop-review-stars-row {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.shop-review-stars-row input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.shop-review-stars-row label {
+  font-size: 34px;
+  line-height: 1;
+  color: var(--shop-line);
+  cursor: pointer;
+  transition: color 0.15s var(--shop-ease), transform 0.15s var(--shop-ease);
+}
+
+.shop-review-stars-row input:checked ~ label,
+.shop-review-stars-row label:hover,
+.shop-review-stars-row label:hover ~ label {
+  color: var(--shop-accent);
+}
+
+.shop-review-stars-row input:focus-visible + label {
+  outline: 2px solid var(--shop-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.shop-review-stars-row label:active {
+  transform: scale(0.9);
+}
+
+.shop-review-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--shop-muted);
+  cursor: pointer;
+}
+
+.shop-review-consent input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--shop-ink);
+}
+
+.shop-review-consent a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.shop-review-submit {
+  justify-self: start;
+}
+
+.shop-review-status {
+  margin: 0;
+  min-height: 1em;
+  font-size: 13px;
+}
+
+.shop-review-status.is-error {
+  color: #c0321f;
+}
+
+.shop-review-done p {
+  color: var(--shop-muted);
+}
+
+.shop-review-done .shop-btn {
+  display: inline-flex;
+  margin-top: 8px;
+}
+
+.shop-reviews-note {
+  margin: -6px 0 18px;
+  font-size: 13px;
+  color: var(--shop-muted);
+}
+
+@media (max-width: 560px) {
+  .shop-review-pair {
+    grid-template-columns: 1fr;
+  }
+  .shop-review-submit {
+    justify-self: stretch;
+  }
+}
+
+.shop-reviews-note a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.shop-note a {
+  color: inherit;
+  text-decoration: underline;
 }

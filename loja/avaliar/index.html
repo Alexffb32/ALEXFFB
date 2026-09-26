@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deixar uma avaliação — Anti University Social Club</title>
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="Compraste uma peça da Anti University Social Club? Conta como foi.">
+<link rel="canonical" href="https://alexffb.com/loja/avaliar/">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zATjnTNgNq55w.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/shop.css">
+</head>
+<body class="shop">
+  <header class="shop-header">
+    <a href="/loja/" class="shop-logo">Anti University Social Club</a>
+    <div class="shop-header-links">
+      <a href="/">← alexffb.com</a>
+      <a href="/loja/carrinho/" class="shop-cart-link">Carrinho <span class="shop-cart-count" id="shop-cart-count" hidden>0</span></a>
+    </div>
+  </header>
+
+  <main class="shop-main shop-review-main">
+    <p class="shop-eyebrow">Só para quem já comprou</p>
+    <h1 class="shop-h1">Como correu?</h1>
+    <p class="shop-lede">Uma frase chega. Cada avaliação é confirmada contra uma encomenda real antes de aparecer na loja — boa ou má.</p>
+    <hr class="shop-divider">
+
+    <form class="shop-review-form" id="shop-review-form" novalidate>
+      <label class="shop-review-field">
+        <span>Que peça compraste?</span>
+        <select name="product" id="shop-review-product" required></select>
+      </label>
+
+      <fieldset class="shop-review-field shop-review-stars">
+        <legend>Nota</legend>
+        <div class="shop-review-stars-row">
+          <input type="radio" name="rating" id="shop-review-r5" value="5" required><label for="shop-review-r5" title="5 em 5">★<span class="shop-sr">5 estrelas</span></label>
+          <input type="radio" name="rating" id="shop-review-r4" value="4"><label for="shop-review-r4" title="4 em 5">★<span class="shop-sr">4 estrelas</span></label>
+          <input type="radio" name="rating" id="shop-review-r3" value="3"><label for="shop-review-r3" title="3 em 5">★<span class="shop-sr">3 estrelas</span></label>
+          <input type="radio" name="rating" id="shop-review-r2" value="2"><label for="shop-review-r2" title="2 em 5">★<span class="shop-sr">2 estrelas</span></label>
+          <input type="radio" name="rating" id="shop-review-r1" value="1"><label for="shop-review-r1" title="1 em 5">★<span class="shop-sr">1 estrela</span></label>
+        </div>
+      </fieldset>
+
+      <label class="shop-review-field">
+        <span>A tua avaliação</span>
+        <textarea name="text" rows="5" minlength="10" maxlength="800" required placeholder="O tecido, o tamanho, a entrega, o que quiseres."></textarea>
+      </label>
+
+      <div class="shop-review-pair">
+        <label class="shop-review-field">
+          <span>Nome</span>
+          <input type="text" name="name" required minlength="2" maxlength="60" autocomplete="name" placeholder="O nome da encomenda">
+        </label>
+        <label class="shop-review-field">
+          <span>Cidade <em>(opcional)</em></span>
+          <input type="text" name="city" maxlength="60" autocomplete="address-level2">
+        </label>
+      </div>
+
+      <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="shop-news-honeypot">
+
+      <label class="shop-review-consent">
+        <input type="checkbox" name="consent" required>
+        <span>Autorizo que a avaliação seja publicada na loja com o meu primeiro nome e a cidade. Li a <a href="/privacidade/" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>.</span>
+      </label>
+
+      <button type="submit" class="shop-btn shop-btn-primary shop-review-submit">Enviar avaliação</button>
+      <p class="shop-review-status" id="shop-review-status" role="status"></p>
+    </form>
+
+    <div class="shop-review-done" id="shop-review-done" hidden>
+      <h2 class="shop-more-title">Obrigado.</h2>
+      <p>Recebido. Assim que for confirmada, a tua avaliação aparece na página da peça.</p>
+      <p><a href="/loja/" class="shop-btn shop-btn-secondary">Voltar à loja</a></p>
+    </div>
+  </main>
+
+  <footer class="shop-footer">
+    <div class="shop-footer-legal">
+      <a href="/privacidade/">Política de Privacidade</a>
+      <a href="/cookies/">Política de Cookies</a>
+      <a href="/termos/">Termos e Condições</a>
+    </div>
+    <p class="shop-footer-copy">Anti University Social Club × Alexandre Bento © 2026. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="/assets/shop-catalog.js"></script>
+  <script src="/assets/shop-cart-core.js"></script>
+  <script src="/assets/shop-header.js"></script>
+  <script src="/assets/shop-review.js"></script>
+</body>
+</html>

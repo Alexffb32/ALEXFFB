@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/* Gera uma página estática por design em /loja/<slug>/.
+/* Gera uma página estática por produto (cada design e cada pack) em
+ * /loja/<slug>/.
  *
  * Porquê: até aqui todos os produtos viviam em /loja/produto/?d=<slug> —
  * uma página só, com um título só, marcada como `noindex`. Do ponto de
@@ -42,10 +43,35 @@ function jsonld(obj) {
   return JSON.stringify(obj, null, 2).replace(/<\//g, "<\\/");
 }
 
-function priceRange() {
-  const prices = Object.keys(catalog.FORMATS).map((k) => catalog.FORMATS[k].price);
-  return { low: Math.min.apply(null, prices), high: Math.max.apply(null, prices) };
+function priceRange(slug) {
+  const prices = catalog.formatsFor(slug).map((k) => catalog.FORMATS[k].price);
+  return { low: Math.min.apply(null, prices), high: Math.max.apply(null, prices), count: prices.length };
 }
+
+/* Portes e trocas, tal como estão nos Termos (4.4 e 4.6). O Google usa
+   isto para mostrar "Envio grátis" e a política de devolução no resultado;
+   se os Termos mudarem, muda aqui também. */
+const SHIPPING = {
+  "@type": "OfferShippingDetails",
+  shippingRate: { "@type": "MonetaryAmount", value: "0.00", currency: "EUR" },
+  shippingDestination: { "@type": "DefinedRegion", addressCountry: "PT" },
+  deliveryTime: {
+    "@type": "ShippingDeliveryTime",
+    handlingTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "DAY" },
+    transitTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 4, unitCode: "DAY" },
+  },
+};
+
+const RETURNS = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: "PT",
+  returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+  merchantReturnDays: 14,
+  returnMethod: "https://schema.org/ReturnByMail",
+  // Na livre resolução (Termos 4.5) os portes de devolução são do cliente;
+  // a troca de tamanho (4.6) é grátis, mas é troca, não devolução.
+  returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+};
 
 const COLLECTION = "Anti University Social Club";
 
@@ -62,7 +88,35 @@ function buildHead(design, url) {
   const title = pageTitle(design);
   const description = design.seoDescription;
   const image = SITE + design.image;
-  const { low, high } = priceRange();
+  const { low, high, count } = priceRange(design.slug);
+  const seller = { "@type": "Person", name: "Alexandre Bento", url: SITE };
+
+  // Um pack tem um preço só; um design tem vários formatos.
+  const offers =
+    count === 1
+      ? {
+          "@type": "Offer",
+          url: url,
+          priceCurrency: "EUR",
+          price: low.toFixed(2),
+          availability: "https://schema.org/InStock",
+          itemCondition: "https://schema.org/NewCondition",
+          shippingDetails: SHIPPING,
+          hasMerchantReturnPolicy: RETURNS,
+          seller: seller,
+        }
+      : {
+          "@type": "AggregateOffer",
+          url: url,
+          priceCurrency: "EUR",
+          lowPrice: low.toFixed(2),
+          highPrice: high.toFixed(2),
+          offerCount: count,
+          availability: "https://schema.org/InStock",
+          shippingDetails: SHIPPING,
+          hasMerchantReturnPolicy: RETURNS,
+          seller: seller,
+        };
 
   const product = {
     "@context": "https://schema.org",
@@ -74,17 +128,29 @@ function buildHead(design, url) {
     brand: { "@type": "Brand", name: "Anti University Social Club" },
     category: "Vestuário",
     material: "Algodão",
-    offers: {
-      "@type": "AggregateOffer",
-      url: url,
-      priceCurrency: "EUR",
-      lowPrice: low.toFixed(2),
-      highPrice: high.toFixed(2),
-      offerCount: Object.keys(catalog.FORMATS).length,
-      availability: "https://schema.org/InStock",
-      seller: { "@type": "Person", name: "Alexandre Bento", url: SITE },
-    },
+    offers: offers,
   };
+
+  /* Avaliações só entram quando existem mesmo (catalog.REVIEWS). Nunca
+     inventadas: além de ilegal, dá penalização manual no Google. */
+  const reviews = catalog.reviewsFor(design.slug);
+  const summary = catalog.ratingSummary(reviews);
+  if (summary) {
+    product.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: summary.average.toFixed(1),
+      reviewCount: summary.count,
+      bestRating: "5",
+      worstRating: "1",
+    };
+    product.review = reviews.slice(0, 10).map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.name },
+      datePublished: r.date,
+      reviewBody: r.text,
+      reviewRating: { "@type": "Rating", ratingValue: String(r.rating), bestRating: "5", worstRating: "1" },
+    }));
+  }
 
   const breadcrumbs = {
     "@context": "https://schema.org",
@@ -135,9 +201,10 @@ function main() {
   if (!bodyMatch) throw new Error("molde sem <body>");
   const body = bodyMatch[0];
 
-  catalog.DESIGNS.forEach((design) => {
+  const products = catalog.allProducts();
+  products.forEach((design) => {
     if (!design.seoTitle || !design.seoDescription) {
-      throw new Error("design sem seoTitle/seoDescription: " + design.slug);
+      throw new Error("produto sem seoTitle/seoDescription: " + design.slug);
     }
     const url = SITE + catalog.productPath(design.slug);
     const html =
@@ -155,7 +222,7 @@ function main() {
     console.log("escrito  loja/" + design.slug + "/index.html  (" + Math.round(html.length / 1024) + " KB)");
   });
 
-  console.log("\n" + catalog.DESIGNS.length + " páginas de produto geradas a partir de loja/produto/index.html");
+  console.log("\n" + products.length + " páginas de produto geradas a partir de loja/produto/index.html");
 }
 
 main();

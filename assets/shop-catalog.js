@@ -15,8 +15,10 @@
    defensável se for mesmo o preço a que as peças passam a ser vendidas
    quando a campanha de lançamento terminar — não pode ser um valor de
    referência inventado só para mostrar o desconto.
-   A poupança do Combo continua a ser uma comparação genuína entre dois
-   preços atuais (combo vs. as duas peças em separado). */
+   A poupança do Combo e do Pack dos 4 são comparações genuínas entre
+   preços atuais (o conjunto vs. as mesmas peças compradas em separado) —
+   por isso o Pack mostra riscado o preço real das 4 t-shirts, e a sua
+   percentagem de desconto é calculada, não fixa. */
 (function (global) {
   "use strict";
 
@@ -71,6 +73,26 @@
     },
   ];
 
+  /* Conjuntos: produtos feitos de peças que já existem sozinhas. Têm
+     página própria (/loja/<slug>/), mas não têm assinatura posicionável —
+     o editor desenha sobre o mockup de UM design, e aqui há quatro. */
+  var BUNDLES = [
+    {
+      slug: "colecao-completa",
+      name: "Coleção Completa",
+      bundle: true,
+      includes: ["anti-university-social-club", "o-mundo-real", "gente-qualificada", "no-degree-required"],
+      formats: ["pack4"],
+      seoTitle: "Pack 4 T-shirts",
+      seoDescription:
+        "Os quatro designs da coleção Anti University Social Club em t-shirt oversized, no mesmo tamanho e cor. Mais barato do que comprá-los em separado.",
+      short: "Os 4 designs, por menos.",
+      description:
+        "A coleção inteira: Anti University Social Club, O Mundo Real, Gente Qualificada e No Degree Required, em t-shirt oversized, todas no tamanho e na cor que escolheres.",
+      image: "/assets/products/colecao-completa.webp",
+    },
+  ];
+
   /* fullPrice é o preço de tabela da peça (o valor a que passa a ser
      vendida depois do lançamento) — a promoção de lançamento é sempre
      exatamente -50% sobre ele. Para o desconto poder ser anunciado assim,
@@ -79,8 +101,16 @@
   var FORMATS = {
     tshirt: { label: "T-shirt Oversized", price: 17.99, fullPrice: 35.98, category: "t-shirts" },
     hoodie: { label: "Hoodie Oversized", price: 27.99, fullPrice: 55.98, category: "sweatshirts" },
-    combo: { label: "Combo — Hoodie + T-shirt", price: 39.99, fullPrice: 79.98, category: "combos" },
+    combo: { label: "Combo — Hoodie + T-shirt", price: 36.99, fullPrice: 73.98, category: "combos" },
+    /* O riscado do Pack não é um preço de tabela: é o que as 4 t-shirts
+       custam hoje compradas uma a uma. Calculado, para nunca desalinhar. */
+    pack4: { label: "Pack 4 T-shirts", price: 54.99, fullPrice: 0, category: "packs", pieces: 4 },
   };
+  FORMATS.pack4.fullPrice = Math.round(FORMATS.tshirt.price * 4 * 100) / 100;
+
+  /* Os formatos de cada produto. Os designs vendem-se nos três formatos
+     habituais; os conjuntos declaram os seus. */
+  var DEFAULT_FORMATS = ["tshirt", "hoodie", "combo"];
 
   var DISCOUNT_LABEL = "-50%";
 
@@ -90,6 +120,28 @@
   ];
 
   var SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+
+  /* Tamanho pré-selecionado ao abrir um produto — o mais pedido em
+     oversized. Quem precisa de outro muda com um clique. */
+  var DEFAULT_SIZE = "M";
+
+  /* ---------------------------------------------------------------- *
+   * Avaliações                                                        *
+   * ---------------------------------------------------------------- *
+   * Só avaliações REAIS de quem comprou. Chegam por email a partir do
+   * formulário /loja/avaliar/ (com autorização para publicar) e entram
+   * aqui à mão, uma por objeto:
+   *
+   *   { product: "o-mundo-real", name: "Rita", city: "Porto",
+   *     rating: 5, date: "2026-10-12", text: "..." }
+   *
+   * `product` é o slug do design ou do pack. Enquanto a lista estiver
+   * vazia, a loja não mostra estrelas nem contagens em lado nenhum —
+   * mostrar "0 avaliações" é pior do que não mostrar nada, e inventá-las
+   * é publicidade enganosa (e motivo de penalização no Google).
+   * Depois de acrescentar, correr scripts/build-product-pages.js para o
+   * aggregateRating entrar nos dados estruturados. */
+  var REVIEWS = [];
 
 
   /* ---------------------------------------------------------------- *
@@ -214,11 +266,59 @@
     return Math.round((separate - combo) * 100) / 100;
   }
 
+  /* Procura em designs e em conjuntos: o carrinho, a mensagem de
+     WhatsApp e a página de produto tratam os dois da mesma maneira. */
   function findDesign(slug) {
-    for (var i = 0; i < DESIGNS.length; i++) {
-      if (DESIGNS[i].slug === slug) return DESIGNS[i];
+    var all = DESIGNS.concat(BUNDLES);
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].slug === slug) return all[i];
     }
     return null;
+  }
+
+  function allProducts() {
+    return DESIGNS.concat(BUNDLES);
+  }
+
+  function formatsFor(slug) {
+    var d = findDesign(slug);
+    return d && d.formats ? d.formats.slice() : DEFAULT_FORMATS.slice();
+  }
+
+  /* Percentagem de desconto de um formato, calculada a partir dos
+     próprios preços: -50% nos formatos de lançamento, -24% no Pack. */
+  function discountPercent(formatKey) {
+    var f = FORMATS[formatKey];
+    if (!f || !f.fullPrice || f.fullPrice <= f.price) return 0;
+    return Math.round((1 - f.price / f.fullPrice) * 100);
+  }
+
+  function discountLabel(formatKey) {
+    var pct = discountPercent(formatKey);
+    return pct ? "-" + pct + "%" : "";
+  }
+
+  /* Poupança real de um formato face às mesmas peças em separado (não
+     face ao preço de tabela). Zero nos formatos de uma peça só. */
+  function bundleSavings(formatKey) {
+    if (formatKey === "combo") return comboSavings();
+    if (formatKey === "pack4") {
+      return Math.round((FORMATS.pack4.fullPrice - FORMATS.pack4.price) * 100) / 100;
+    }
+    return 0;
+  }
+
+  function reviewsFor(slug) {
+    return REVIEWS.filter(function (r) {
+      return !slug || r.product === slug;
+    });
+  }
+
+  function ratingSummary(list) {
+    if (!list || !list.length) return null;
+    var sum = 0;
+    for (var i = 0; i < list.length; i++) sum += Number(list[i].rating) || 0;
+    return { count: list.length, average: Math.round((sum / list.length) * 10) / 10 };
   }
 
   function money(n) {
@@ -267,7 +367,17 @@
 
   global.ShopCatalog = {
     DESIGNS: DESIGNS,
+    BUNDLES: BUNDLES,
     FORMATS: FORMATS,
+    DEFAULT_SIZE: DEFAULT_SIZE,
+    REVIEWS: REVIEWS,
+    allProducts: allProducts,
+    bundleSavings: bundleSavings,
+    discountLabel: discountLabel,
+    discountPercent: discountPercent,
+    formatsFor: formatsFor,
+    ratingSummary: ratingSummary,
+    reviewsFor: reviewsFor,
     COLORS: COLORS,
     SIZES: SIZES,
     DISCOUNT_LABEL: DISCOUNT_LABEL,

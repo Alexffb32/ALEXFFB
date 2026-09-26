@@ -63,12 +63,15 @@ Título, descrição, canonical, `og:*` completo com URL absoluto,
 ### Dados estruturados (JSON-LD)
 - Home: `Person` + `WebSite`
 - `/loja/`: `CollectionPage` + `ItemList` dos 4 produtos + `BreadcrumbList`
-- Cada produto: `Product` com `AggregateOffer` (17,99–39,99 €, validade
-  até 5 de outubro) + `BreadcrumbList`
+- Cada design: `Product` com `AggregateOffer` (17,99–36,99 €); o Pack 4
+  T-shirts com um `Offer` único (54,99 €). Ambos com portes grátis
+  (`shippingDetails`) e política de devolução de 14 dias
+  (`hasMerchantReturnPolicy`). Mais `BreadcrumbList`.
 - Páginas legais e newsletter: `WebPage` + `BreadcrumbList`
 
-Sem `aggregateRating` nem `review`: não há avaliações, e inventá-las é
-motivo de penalização manual além de ser mentira.
+`aggregateRating` e `review` só entram quando há avaliações reais em
+`REVIEWS` (ver `docs/LOJA.md`). Inventá-las é motivo de penalização manual
+além de ser mentira.
 
 ### O caso do `<title>` (vale a pena saber)
 

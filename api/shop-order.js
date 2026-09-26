@@ -20,7 +20,7 @@ const signatureSchema = z
 const itemSchema = z.object({
   designSlug: z.string().trim().min(1).max(80),
   designName: z.string().trim().min(1).max(120),
-  format: z.enum(["tshirt", "hoodie", "combo"]),
+  format: z.enum(["tshirt", "hoodie", "combo", "pack4"]),
   formatLabel: z.string().trim().min(1).max(80),
   color: z.enum(["preto", "branco"]),
   size: z.enum(["XS", "S", "M", "L", "XL", "XXL"]),
@@ -102,7 +102,7 @@ function orderEmailHtml(data) {
     `</tr></thead><tbody>${rows}</tbody></table>` +
     mockups +
     `<p style="margin-top:14px;"><strong>Total: ${money(data.total)}</strong>` +
-    (data.comboSavings > 0 ? `<br>Poupança com combos: ${money(data.comboSavings)}` : "") +
+    (data.comboSavings > 0 ? `<br>Poupança em packs e combos: ${money(data.comboSavings)}` : "") +
     `</p>`
   );
 }

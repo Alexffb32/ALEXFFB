@@ -38,6 +38,12 @@
     </div>
   </header>
 
+  <!-- Garantias da loja, logo abaixo do menu. Em ecrã estreito correm
+       em fita; a segunda lista é só a cópia que fecha o ciclo da fita. -->
+  <div class="shop-trustbar" role="region" aria-label="Garantias da loja">
+    <div class="shop-trustbar-track"><ul class="shop-trustbar-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="7" width="14" height="10"/><path d="M15 10h4l3 3v4h-7z"/><circle cx="6.5" cy="19" r="1.8"/><circle cx="17.5" cy="19" r="1.8"/></svg><span>Portes grátis para Portugal Continental</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg><span>Troca de tamanho grátis</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 14.5 16 10 4 20"/><path d="M4 20c0-8 4-14 16-16-1 11-6 16-16 16z"/></svg><span>100% algodão</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21c3-1 5-3 7-6"/><path d="m14.5 4.5 5 5L10 19l-6 1 1-6z"/></svg><span>Assinatura à mão de oferta</span></li></ul><ul class="shop-trustbar-list" aria-hidden="true"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="7" width="14" height="10"/><path d="M15 10h4l3 3v4h-7z"/><circle cx="6.5" cy="19" r="1.8"/><circle cx="17.5" cy="19" r="1.8"/></svg><span>Portes grátis para Portugal Continental</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg><span>Troca de tamanho grátis</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 14.5 16 10 4 20"/><path d="M4 20c0-8 4-14 16-16-1 11-6 16-16 16z"/></svg><span>100% algodão</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21c3-1 5-3 7-6"/><path d="m14.5 4.5 5 5L10 19l-6 1 1-6z"/></svg><span>Assinatura à mão de oferta</span></li></ul></div>
+  </div>
+
   <main class="shop-main" id="shop-product-root">
     <a href="/loja/" class="shop-back">← Voltar à loja</a>
 
@@ -47,6 +53,7 @@
       </div>
 
       <div>
+        <a class="shop-rating" id="shop-rating" href="#avaliacoes" hidden></a>
         <p class="shop-product-category" id="shop-product-category"></p>
         <h1 class="shop-product-title" id="shop-product-title"></h1>
 
@@ -54,9 +61,10 @@
           <span class="shop-price" id="shop-price"></span>
           <span class="shop-price-was" id="shop-price-was"></span>
           <span class="shop-price-off" id="shop-price-off"></span>
-          <span class="shop-price-tag">Preço de lançamento</span>
+          <span class="shop-price-tag" id="shop-price-tag">Preço de lançamento</span>
         </div>
         <p class="shop-combo-savings" id="shop-combo-savings" hidden></p>
+        <a class="shop-upsell" id="shop-upsell" hidden></a>
 
         <hr class="shop-hr">
 
@@ -68,7 +76,7 @@
         <p class="shop-field-label">Cor</p>
         <div class="shop-swatches" id="shop-swatches"></div>
 
-        <p class="shop-field-label">Tamanho <span>— seleciona um</span></p>
+        <p class="shop-field-label">Tamanho <span>— o M vem escolhido; muda se precisares</span></p>
         <div class="shop-sizes" id="shop-sizes"></div>
         <p class="shop-size-hint" id="shop-size-hint">Escolhe um tamanho antes de comprar ou adicionar ao carrinho.</p>
 
@@ -130,13 +138,19 @@
           <button type="button" class="shop-btn shop-btn-secondary" id="shop-add-cart" disabled>Adicionar ao Carrinho</button>
         </div>
 
-        <p class="shop-note">Só temos preto e branco disponíveis nesta drop. Envio para Portugal Continental, combinado diretamente pelo WhatsApp após a encomenda.</p>
+        <p class="shop-note">Portes grátis para Portugal Continental e troca de tamanho grátis até 14 dias após a entrega (<a href="/termos/">condições</a>). Morada e pagamento combinam-se pelo WhatsApp.</p>
       </div>
     </div>
   </main>
 
+  <section class="shop-reviews" id="avaliacoes" hidden>
+    <h2 class="shop-more-title">Avaliações</h2>
+    <p class="shop-reviews-note">De clientes, cada uma confirmada contra uma encomenda real. <a href="/loja/avaliar/">Compraste? Deixa a tua.</a></p>
+    <div class="shop-reviews-list" id="shop-reviews-list"></div>
+  </section>
+
   <section class="shop-more" id="shop-more" hidden>
-    <h2 class="shop-more-title">Os outros designs</h2>
+    <h2 class="shop-more-title" id="shop-more-title">Os outros designs</h2>
     <div class="shop-more-grid" id="shop-more-grid"></div>
   </section>
 
@@ -144,8 +158,9 @@
     <div class="shop-sticky-cta-row">
       <div class="shop-sticky-cta-info">
         <p class="shop-sticky-cta-title" id="shop-sticky-cta-title"></p>
-        <p class="shop-sticky-cta-price" id="shop-sticky-cta-price"></p>
+        <p class="shop-sticky-cta-meta"><span id="shop-sticky-cta-meta"></span> · <strong class="shop-sticky-cta-price" id="shop-sticky-cta-price"></strong></p>
       </div>
+      <button type="button" class="shop-btn shop-btn-secondary" id="shop-sticky-cta-add" disabled>Adicionar</button>
       <button type="button" class="shop-btn shop-btn-primary" id="shop-sticky-cta-buy" disabled>Comprar</button>
     </div>
   </div>

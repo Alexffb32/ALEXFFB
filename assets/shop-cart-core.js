@@ -99,10 +99,12 @@
     items = items || readCart();
     var total = 0;
     var comboSavings = 0;
-    var comboUnit = global.ShopCatalog.comboSavings();
+    // "comboSavings" ficou com o nome antigo por compatibilidade com o
+    // registo de encomendas; conta agora a poupança real de combos E packs
+    // face às mesmas peças compradas em separado.
     items.forEach(function (it) {
       total += priceOf(it) * it.qty;
-      if (it.format === "combo") comboSavings += comboUnit * it.qty;
+      comboSavings += global.ShopCatalog.bundleSavings(it.format) * it.qty;
     });
     return {
       total: Math.round(total * 100) / 100,
@@ -147,6 +149,17 @@
       var subtotal = Math.round(unit * it.qty * 100) / 100;
       lines.push("*" + (idx + 1) + ". " + (design ? design.name : it.designSlug) + "*");
       lines.push("Formato: " + (format ? format.label : it.format));
+      if (design && design.includes) {
+        lines.push(
+          "Inclui: " +
+            design.includes
+              .map(function (slug) {
+                var d = catalog.findDesign(slug);
+                return d ? d.name : slug;
+              })
+              .join(", "),
+        );
+      }
       lines.push("Cor: " + (it.color === "branco" ? "Branco" : "Preto"));
       lines.push("Tamanho: " + it.size);
       lines.push("Quantidade: " + it.qty);
@@ -166,10 +179,10 @@
 
     lines.push("*TOTAL: " + catalog.money(totalsInfo.total) + "*");
     if (totalsInfo.comboSavings > 0) {
-      lines.push("Poupança com combos: " + catalog.money(totalsInfo.comboSavings));
+      lines.push("Poupança em packs e combos: " + catalog.money(totalsInfo.comboSavings));
     }
     lines.push("");
-    lines.push("Envio para Portugal Continental, a combinar aqui.");
+    lines.push("Portes grátis para Portugal Continental. Morada e pagamento combinamos aqui.");
 
     return lines.join("\n");
   }
