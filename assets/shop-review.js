@@ -63,8 +63,10 @@
       return;
     }
 
-    submit.disabled = true;
     setStatus("A enviar…", false);
+    if (window.ButtonFeedback) window.ButtonFeedback.busy(submit);
+    else submit.disabled = true;
+
     fetch("/api/review", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -72,12 +74,14 @@
     })
       .then(function (res) {
         if (!res.ok) throw new Error(String(res.status));
+        if (window.ButtonFeedback) window.ButtonFeedback.success(submit, 600);
         form.hidden = true;
         done.hidden = false;
         done.scrollIntoView({ block: "center", behavior: "smooth" });
       })
       .catch(function () {
-        submit.disabled = false;
+        if (window.ButtonFeedback) window.ButtonFeedback.idle(submit);
+        else submit.disabled = false;
         setStatus("Não foi possível enviar agora. Tenta outra vez, ou manda-nos a avaliação pelo WhatsApp.", true);
       });
   });

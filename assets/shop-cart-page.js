@@ -80,7 +80,10 @@
         catalog.money(subtotal) +
         "</div>" +
         '<div class="shop-cart-item-buy">' +
-        '<button type="button" class="shop-btn shop-btn-secondary" data-action="buy-single">Comprar este artigo pelo WhatsApp</button>' +
+        '<button type="button" class="shop-btn shop-btn-secondary" data-action="buy-single">' +
+        '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.3-1.5 8.7 8.7 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.2-.3v-.3c0-.1-.6-1.6-.9-2.1-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3 2 3.1 4.8 4.3c2.9 1.2 2.9.8 3.4.8s1.7-.7 2-1.4.3-1.2.2-1.4-.2-.2-.5-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3a8.2 8.2 0 1 1 7 4z"/></svg>' +
+        "Comprar este artigo pelo WhatsApp" +
+        "</button>" +
         "</div>";
 
       row.querySelector('[data-action="dec"]').addEventListener("click", function () {

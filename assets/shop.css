@@ -622,52 +622,193 @@
   flex-wrap: wrap;
 }
 
+/* ==================================================================== *
+ * Botões — sistema de 6 decisões                                       *
+ * ==================================================================== *
+ * 1. Tamanho:   48px de alto, 24px de reentrância — polegar acerta.
+ * 2. Rótulo:    17px, semi-negrito, frase normal (nunca versaletes) —
+ *               verbo + objeto ("Adicionar ao carrinho", não "Submit").
+ * 3. Contraste: gradiente cetim + rebordo de 1px; o texto e o rebordo
+ *               ficam sempre acima de 4,5:1 e 3:1 (o preto e o branco já
+ *               batem isto de sobra contra o fundo bege/branco da loja).
+ * 4. Profundidade: sombra suave a cair, brilho no topo, rebordo fino.
+ * 5. Forma:     pílula (raio = metade da altura); no máximo um ícone,
+ *               20px, a 10px do texto.
+ * 6. Movimento: a luz corre no rebordo ao passar o rato (200ms), o botão
+ *               afunda 1px ao clicar. O estado de carregar/sucesso (o
+ *               spinner que vira visto) fica em assets/shop-btn-feedback.js,
+ *               usado nos botões que fazem uma chamada de verdade.
+ */
 .shop-btn {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: 1.5px solid var(--shop-ink);
-  border-radius: 999px;
-  padding: 16px 24px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  gap: 10px;
+  height: 48px;
+  border: none;
+  border-radius: 24px;
+  padding: 0 24px;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1;
   cursor: pointer;
   flex: 1;
   min-width: 200px;
   text-decoration: none;
-  transition: transform 0.2s var(--shop-ease), opacity 0.2s var(--shop-ease), background 0.2s var(--shop-ease),
-    box-shadow 0.2s var(--shop-ease);
+  transition: transform 0.15s var(--shop-ease), box-shadow 0.2s var(--shop-ease),
+    background 0.2s var(--shop-ease);
+}
+
+.shop-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
 }
 
 .shop-btn-primary {
-  background: var(--shop-ink);
-  color: var(--shop-bg);
+  background: linear-gradient(180deg, #262626 0%, var(--shop-ink) 55%, #000 100%);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 8px 24px -10px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* O rebordo fino que se acende e "corre" ao passar o rato — uma faixa de
+   luz em diagonal, mascarada para só aparecer no anel de 1px do botão. */
+.shop-btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 108, 84, 0.9) 50%, transparent 65%);
+  background-size: 260% 100%;
+  background-position: 140% 0;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.2s var(--shop-ease);
+  pointer-events: none;
+}
+
+.shop-btn-primary:hover:not(:disabled)::after {
+  opacity: 1;
+  animation: shop-btn-rim-run 0.6s var(--shop-ease);
+}
+
+@keyframes shop-btn-rim-run {
+  from {
+    background-position: 140% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
 }
 
 .shop-btn-primary:hover:not(:disabled) {
-  background: var(--shop-accent);
-  border-color: var(--shop-accent);
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px -12px rgba(255, 70, 46, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 16px 32px -10px rgba(255, 70, 46, 0.5),
+    0 0 0 1px rgba(255, 70, 46, 0.6);
+}
+
+.shop-btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.55),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 3px 10px -6px rgba(0, 0, 0, 0.5);
 }
 
 .shop-btn-secondary {
-  background: var(--shop-paper);
+  background: linear-gradient(180deg, #ffffff 0%, #f2efe6 100%);
   color: var(--shop-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1.5px var(--shop-ink),
+    0 8px 20px -14px rgba(0, 0, 0, 0.3);
 }
 
 .shop-btn-secondary:hover:not(:disabled) {
-  background: var(--shop-ink);
-  color: var(--shop-bg);
   transform: translateY(-2px);
+  background: linear-gradient(180deg, #ffffff 0%, #ece7da 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1.5px var(--shop-ink),
+    0 14px 28px -14px rgba(0, 0, 0, 0.32);
+}
+
+.shop-btn-secondary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 3px rgba(0, 0, 0, 0.12),
+    0 0 0 1.5px var(--shop-ink);
 }
 
 .shop-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Botões que giram um spinner até virar um visto (assets/button-feedback.js).
+   O contrato é sempre o mesmo par de <span>: um para o ícone, um para o
+   texto — para o JS poder trocar um sem tocar no outro. */
+.shop-btn .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.shop-btn .btn-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Um botão compacto (a barra fixa) pode não ter ícone nenhum até o
+   spinner/visto entrarem — o span fica vazio e não gasta espaço. */
+.shop-btn .btn-icon:empty {
+  display: none;
+}
+
+.shop-btn.is-busy {
+  cursor: progress;
+}
+
+@keyframes shop-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-spinner {
+  animation: shop-btn-spin 0.7s linear infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-spinner {
+    animation-duration: 1.4s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-btn-primary::after {
+    display: none;
+  }
 }
 
 .shop-note {
@@ -734,7 +875,9 @@
 
 .shop-sticky-cta .shop-btn {
   min-width: 0;
-  padding: 13px 18px;
+  height: 44px;
+  padding: 0 18px;
+  font-size: 15px;
   flex: none;
 }
 
@@ -989,8 +1132,8 @@
 }
 
 .wa-icon {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   flex: none;
 }
 
@@ -1238,16 +1381,30 @@
 .shop-news-panel .shop-news-row .shop-btn {
   flex: 0 0 auto;
   min-width: 140px;
-  background: var(--shop-accent);
-  border-color: var(--shop-accent);
+  background: linear-gradient(180deg, #ff6b52 0%, var(--shop-accent) 55%, #d63a20 100%);
   color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 8px 24px -10px rgba(255, 70, 46, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.shop-soon .shop-news-row .shop-btn::after,
+.shop-news-panel .shop-news-row .shop-btn::after {
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%);
+  background-size: 260% 100%;
+  background-position: 140% 0;
 }
 
 .shop-soon .shop-news-row .shop-btn:hover:not(:disabled),
 .shop-news-panel .shop-news-row .shop-btn:hover:not(:disabled) {
-  background: #fff;
-  border-color: #fff;
+  background: linear-gradient(180deg, #fff 0%, #f4f2ec 100%);
   color: var(--shop-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 16px 32px -12px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
 .shop-news-honeypot {
@@ -2603,7 +2760,8 @@ body.has-sticky-cta {
   }
 
   .shop-sticky-cta .shop-btn {
-    padding: 13px 14px;
+    padding: 0 14px;
+    font-size: 14px;
   }
 }
 

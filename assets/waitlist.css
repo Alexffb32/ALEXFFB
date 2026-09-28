@@ -182,27 +182,126 @@ body.wl-body {
   border-color: var(--accent);
 }
 
+/* Botão de 6 decisões: 48px de alto, rótulo de 17px semi-negrito, satin
+   + rebordo + sombra a dar profundidade, pílula, um ícone só, luz a
+   correr no rebordo ao passar o rato, e o spinner→visto que vem de
+   assets/button-feedback.js quando o pedido está mesmo a acontecer. */
 .wl-submit {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
   margin-top: 6px;
-  padding: 16px 24px;
-  border-radius: 100px;
+  padding: 0 24px;
+  border-radius: 24px;
   border: none;
-  background: var(--accent);
+  background: linear-gradient(180deg, #ff6b52 0%, var(--accent) 55%, #c92a10 100%);
   color: #fff;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 17px;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 8px 24px -10px rgba(255, 46, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-.wl-submit:hover {
-  opacity: 0.85;
+.wl-submit svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.wl-submit .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.wl-submit .btn-icon:empty {
+  display: none;
+}
+
+.wl-submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.9) 50%, transparent 65%);
+  background-size: 260% 100%;
+  background-position: 140% 0;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.wl-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 14px 32px -10px rgba(255, 46, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.wl-submit:hover:not(:disabled)::after {
+  opacity: 1;
+  animation: wl-submit-rim-run 0.6s ease;
+}
+
+@keyframes wl-submit-rim-run {
+  from {
+    background-position: 140% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
+}
+
+.wl-submit:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.4),
+    0 3px 10px -6px rgba(0, 0, 0, 0.5);
 }
 
 .wl-submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none !important;
+}
+
+@keyframes wl-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.wl-submit .btn-spinner {
+  animation: wl-btn-spin 0.7s linear infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-submit::after {
+    display: none;
+  }
+  .wl-submit .btn-spinner {
+    animation-duration: 1.4s;
+  }
 }
 
 .wl-honeypot {

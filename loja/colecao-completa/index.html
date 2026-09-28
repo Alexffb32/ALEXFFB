@@ -226,7 +226,10 @@
             <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.3-1.5 8.7 8.7 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.2-.3v-.3c0-.1-.6-1.6-.9-2.1-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3 2 3.1 4.8 4.3c2.9 1.2 2.9.8 3.4.8s1.7-.7 2-1.4.3-1.2.2-1.4-.2-.2-.5-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3a8.2 8.2 0 1 1 7 4z"/></svg>
             Comprar pelo WhatsApp
           </button>
-          <button type="button" class="shop-btn shop-btn-secondary" id="shop-add-cart" disabled>Adicionar ao Carrinho</button>
+          <button type="button" class="shop-btn shop-btn-secondary" id="shop-add-cart" disabled>
+            <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l1 13H5z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>
+            <span class="btn-label">Adicionar ao carrinho</span>
+          </button>
         </div>
 
         <p class="shop-note">Portes grátis para Portugal Continental e troca de tamanho grátis até 14 dias após a entrega (<a href="/termos/">condições</a>). Morada e pagamento combinam-se pelo WhatsApp.</p>
@@ -251,7 +254,10 @@
         <p class="shop-sticky-cta-title" id="shop-sticky-cta-title"></p>
         <p class="shop-sticky-cta-meta"><span id="shop-sticky-cta-meta"></span> · <strong class="shop-sticky-cta-price" id="shop-sticky-cta-price"></strong></p>
       </div>
-      <button type="button" class="shop-btn shop-btn-secondary" id="shop-sticky-cta-add" disabled>Adicionar</button>
+      <button type="button" class="shop-btn shop-btn-secondary" id="shop-sticky-cta-add" disabled>
+        <span class="btn-icon"></span>
+        <span class="btn-label">Adicionar</span>
+      </button>
       <button type="button" class="shop-btn shop-btn-primary" id="shop-sticky-cta-buy" disabled>Comprar</button>
     </div>
   </div>
@@ -271,6 +277,7 @@
   <script src="/assets/shop-cart-core.js"></script>
   <script src="/assets/shop-header.js"></script>
   <script src="/assets/shop-signature.js"></script>
+  <script src="/assets/button-feedback.js"></script>
   <script src="/assets/shop-product.js"></script>
 </body>
 </html>

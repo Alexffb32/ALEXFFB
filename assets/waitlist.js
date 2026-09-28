@@ -6,8 +6,14 @@
 
   var list = form.getAttribute("data-list");
   var submitBtn = form.querySelector('button[type="submit"]');
-  var submitLabel = submitBtn.textContent;
+  var submitLabelEl = submitBtn.querySelector(".btn-label");
+  var submitLabel = submitLabelEl ? submitLabelEl.textContent : submitBtn.textContent;
   var messageEl = document.getElementById("waitlist-message");
+
+  function setSubmitLabel(text) {
+    if (submitLabelEl) submitLabelEl.textContent = text;
+    else submitBtn.textContent = text;
+  }
 
   function showMessage(text, isError) {
     messageEl.textContent = text;
@@ -40,8 +46,9 @@
       return;
     }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = "A juntar…";
+    setSubmitLabel("A juntar…");
+    if (window.ButtonFeedback) window.ButtonFeedback.busy(submitBtn);
+    else submitBtn.disabled = true;
 
     fetch("/api/waitlist", {
       method: "POST",
@@ -57,18 +64,24 @@
         if (result.ok) {
           showMessage("Feito! Já estás na lista, avisamos-te assim que houver novidades.", false);
           form.reset();
+          if (window.ButtonFeedback) window.ButtonFeedback.success(submitBtn, 800);
+          else submitBtn.disabled = false;
         } else if (result.status === 429) {
           showMessage("Demasiadas tentativas, tenta novamente daqui a um minuto.", true);
+          if (window.ButtonFeedback) window.ButtonFeedback.idle(submitBtn);
+          else submitBtn.disabled = false;
         } else {
           showMessage("Algo correu mal. Tenta novamente daqui a instantes.", true);
+          if (window.ButtonFeedback) window.ButtonFeedback.idle(submitBtn);
+          else submitBtn.disabled = false;
         }
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitLabel;
+        setSubmitLabel(submitLabel);
       })
       .catch(function () {
         showMessage("Algo correu mal. Tenta novamente daqui a instantes.", true);
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitLabel;
+        if (window.ButtonFeedback) window.ButtonFeedback.idle(submitBtn);
+        else submitBtn.disabled = false;
+        setSubmitLabel(submitLabel);
       });
   });
 })();

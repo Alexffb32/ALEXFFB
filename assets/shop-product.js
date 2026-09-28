@@ -333,10 +333,12 @@
   updateButtons();
   updatePrice();
 
-  document.getElementById("shop-add-cart").addEventListener("click", function () {
+  var addCartBtn = document.getElementById("shop-add-cart");
+  addCartBtn.addEventListener("click", function () {
     if (!state.size) return;
     cart.add(designSlug, state.format, state.color, state.size, 1, state.signature);
     showToast(state.signature ? "Adicionado ao carrinho, já assinado." : "Adicionado ao carrinho.");
+    if (window.ButtonFeedback) window.ButtonFeedback.pulse(addCartBtn, { doneLabel: "Adicionado" });
   });
 
   document.getElementById("shop-buy-whatsapp").addEventListener("click", function () {
@@ -350,6 +352,7 @@
       if (!state.size) return;
       cart.add(designSlug, state.format, state.color, state.size, 1, state.signature);
       showToast(state.signature ? "Adicionado ao carrinho, já assinado." : "Adicionado ao carrinho.");
+      if (window.ButtonFeedback) window.ButtonFeedback.pulse(stickyAddBtn, { doneLabel: "Adicionado" });
     });
   }
 
