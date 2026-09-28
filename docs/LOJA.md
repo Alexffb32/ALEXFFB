@@ -92,6 +92,13 @@ encomenda.
 
 ### Requisitos
 
-`/api/review` precisa de `RESEND_API_KEY` e `CONTACT_NOTIFY_EMAIL` (as
-mesmas das encomendas). Sem elas, o formulário diz ao cliente que não
-conseguiu enviar, em vez de agradecer por uma avaliação que se perdeu.
+`/api/review` usa as mesmas variáveis de ambiente que `/api/shop-order` e
+`/api/contact` (não são novas, nem precisam de conta Resend à parte):
+
+- `RESEND_API_KEY` — a mesma chave do resto do site.
+- `CONTACT_NOTIFY_EMAIL` — `contacto@alexffb.com`. É para onde chegam as
+  encomendas, os contactos e agora também as avaliações por confirmar.
+
+Sem estas duas, o formulário diz ao cliente que não conseguiu enviar, em
+vez de agradecer por uma avaliação que se perdeu — confirma em Vercel →
+Project Settings → Environment Variables que estão as duas lá postas.

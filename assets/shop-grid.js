@@ -18,15 +18,18 @@
     );
   }
 
-  /* O pack aparece antes dos designs soltos, em destaque: é a forma de
-     comprar uma peça só começar a parecer a opção cara. */
+  /* Os dois cartões de conjunto — o pack dos 4 designs e o combo de cada
+     design — aparecem depois da grelha: quem entra na loja vê primeiro as
+     peças, e só depois a forma mais barata de as levar. */
   function renderBundles() {
-    if (!bundleSlot || !catalog.BUNDLES.length) return;
-    bundleSlot.innerHTML = catalog.BUNDLES.map(function (b) {
+    if (!bundleSlot) return;
+    var cards = [];
+    if (catalog.BUNDLES.length) {
+      var b = catalog.BUNDLES[0];
       var fk = catalog.formatsFor(b.slug)[0];
       var f = catalog.FORMATS[fk];
       var saving = catalog.bundleSavings(fk);
-      return (
+      cards.push(
         '<a class="shop-bundle" href="' + catalog.productPath(b.slug) + '">' +
         '<div class="shop-bundle-media">' +
         '<span class="shop-badge-discount">' + catalog.discountLabel(fk) + "</span>" +
@@ -47,7 +50,36 @@
         "</div>" +
         "</a>"
       );
-    }).join("");
+    }
+    if (catalog.DESIGNS.length) {
+      // O combo é hoodie + t-shirt do MESMO design — não é um produto à
+      // parte, é um formato dentro da página de cada design. O cartão usa
+      // o primeiro design como exemplo e liga já com o combo escolhido.
+      var flagship = catalog.DESIGNS[0];
+      var combo = catalog.FORMATS.combo;
+      var comboSaving = catalog.bundleSavings("combo");
+      cards.push(
+        '<a class="shop-bundle shop-bundle-combo" href="' + catalog.productPath(flagship.slug) + '?f=combo">' +
+        '<div class="shop-bundle-media">' +
+        '<span class="shop-badge-discount">' + catalog.discountLabel("combo") + "</span>" +
+        '<img src="' + flagship.image + '" alt="Hoodie e t-shirt do mesmo design" loading="lazy">' +
+        "</div>" +
+        '<div class="shop-bundle-body">' +
+        '<p class="shop-eyebrow">Para levar dois</p>' +
+        '<p class="shop-bundle-title">Combo — Hoodie + T-shirt</p>' +
+        '<p class="shop-bundle-text">O hoodie e a t-shirt do mesmo design, no tamanho e na cor que escolheres. ' +
+        "Disponível nos " + catalog.DESIGNS.length + " designs da coleção.</p>" +
+        '<p class="shop-bundle-price">' +
+        '<span class="shop-card-price-now">' + catalog.money(combo.price) + "</span>" +
+        '<span class="shop-card-price-was">' + catalog.money(combo.fullPrice) + "</span>" +
+        "</p>" +
+        '<p class="shop-bundle-saving">Poupas <strong>' + catalog.money(comboSaving) + "</strong> face às duas peças em separado</p>" +
+        '<span class="shop-btn shop-btn-primary shop-bundle-cta">Escolher o meu design</span>' +
+        "</div>" +
+        "</a>"
+      );
+    }
+    bundleSlot.innerHTML = cards.join("");
   }
 
   function render() {

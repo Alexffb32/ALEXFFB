@@ -1962,6 +1962,53 @@
   color: var(--shop-bg);
 }
 
+/* Números que giram como tambor de slot machine antes de assentar (ver
+   assets/shop-story-stats.js). display:inline-block é o que permite o
+   scale() do "pop" final funcionar num elemento de texto. */
+.shop-stat-num {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.shop-stat-num.is-rolling {
+  animation: shop-stat-shudder 0.1s linear infinite;
+  color: var(--shop-accent);
+}
+
+.shop-stat-num.is-landed {
+  animation: shop-stat-pop 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes shop-stat-shudder {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shop-stat-pop {
+  0% {
+    transform: scale(1.35);
+  }
+  60% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-stat-num.is-rolling,
+  .shop-stat-num.is-landed {
+    animation: none;
+  }
+}
+
 .shop-story-stat dd {
   margin: 8px 0 0;
   font-size: 12.5px;

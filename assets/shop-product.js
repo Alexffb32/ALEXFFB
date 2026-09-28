@@ -184,18 +184,19 @@
 
   /* Upsell do pack em cada página de design: é aqui que comprar uma peça
      só tem de começar a parecer a escolha cara. */
+  // Na página de cada design, o upsell é o combo DESSE design (hoodie +
+  // t-shirt, a mesma peça que já está à venda ali) — não o pack dos 4,
+  // que é um produto diferente e já tem destaque próprio na loja.
   function renderUpsell() {
     var el = document.getElementById("shop-upsell");
-    if (!el || isBundle || !catalog.BUNDLES.length) return;
-    var b = catalog.BUNDLES[0];
-    var fk = catalog.formatsFor(b.slug)[0];
-    var f = catalog.FORMATS[fk];
-    el.href = catalog.productPath(b.slug);
+    if (!el || isBundle) return;
+    if (allowedFormats.indexOf("combo") === -1 || state.format === "combo") return;
+    var combo = catalog.FORMATS.combo;
+    el.href = catalog.productPath(designSlug) + "?f=combo";
     el.innerHTML =
-      '<img src="' + b.image + '" alt="" loading="lazy">' +
-      "<span><strong>Leva os 4 designs por " + catalog.money(f.price) + "</strong>" +
-      "Cada t-shirt fica a " + catalog.money(Math.round((f.price / f.pieces) * 100) / 100) +
-      " — poupas " + catalog.money(catalog.bundleSavings(fk)) + ".</span>" +
+      '<img src="' + design.image + '" alt="" loading="lazy">' +
+      "<span><strong>Leva o hoodie + a t-shirt por " + catalog.money(combo.price) + "</strong>" +
+      "Poupas " + catalog.money(catalog.bundleSavings("combo")) + " face às duas peças em separado.</span>" +
       '<span class="shop-upsell-go" aria-hidden="true">→</span>';
     el.hidden = false;
   }
@@ -272,12 +273,13 @@
       : "");
 
   // O editor desenha a assinatura sobre o mockup de UM design; no pack há
-  // quatro. Quem quiser as peças do pack assinadas pede no WhatsApp.
+  // quatro, e a assinatura sai igual nas 4 t-shirts (não há escolha por
+  // peça). Quem quiser um local específico combina no WhatsApp.
   if (isBundle) {
     var sigBox = document.getElementById("shop-signature");
     if (sigBox) {
       sigBox.innerHTML =
-        '<p class="shop-sig-pack">Queres as 4 assinadas à mão? Diz-nos na conversa de WhatsApp — continua a ser oferta.</p>';
+        '<p class="shop-sig-pack">As 4 t-shirts levam a assinatura no mesmo sítio. Diz-nos onde na conversa de WhatsApp — continua a ser oferta.</p>';
     }
   }
 
